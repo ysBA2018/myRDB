@@ -3,9 +3,9 @@
   <component name="FacetManager">
     <facet type="django" name="Django">
       <configuration>
-        <option name="rootFolder" value="" />
-        <option name="settingsModule" value="" />
-        <option name="manageScript" value="" />
+        <option name="rootFolder" value="$MODULE_DIR$/myRDB_Project" />
+        <option name="settingsModule" value="myRDB_Project/settings.py" />
+        <option name="manageScript" value="manage.py" />
         <option name="environment" value="&lt;map/&gt;" />
         <option name="doNotUseTestRunner" value="false" />
         <option name="trackFilePattern" value="" />
@@ -16,6 +16,9 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="PackageRequirementsSettings">
+    <option name="requirementsPath" value="C:\Users\Yannick Simchen\PycharmProjects\myRDB\myRDB_Project\requirements.txt" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

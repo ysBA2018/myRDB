@@ -1,0 +1,11 @@
+{% extends 'myRDB/base.html' %}
+{% block content %}
+<h1>hier wird aus csv mongo</h1>
+<form action="?start_import" method="post">
+    {% csrf_token %}
+    <label for="start_import">start your csv-import: </label>
+    <input id="start_import" type="file" name="start_import">
+    <input type="submit" value="start import">
+</form>
+{# TODO: Assynchron & ProgressBar #}
+{% endblock %}

@@ -27,6 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.BasicAuthentication',
+                                      'rest_framework.authentication.SessionAuthentication',
+                                      'rest_framework.authentication.TokenAuthentication'),
+    'PAGE_SIZE': 10
+}
+
 
 # Application definition
 
@@ -37,6 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'myRDB_app',
 ]
 
 MIDDLEWARE = [
@@ -50,11 +62,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'myRDB_Project.urls'
+LOGIN_REDIRECT_URL = '/myRDB/'
+LOGOUT_REDIRECT_URL = '/myRDB/'
+REGISTER_REDIRECT_URL = '/myRDB/'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'myRDB_app','templates','myRDB')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,11 +90,16 @@ WSGI_APPLICATION = 'myRDB_Project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'myRDB_app',
     }
 }
 
+AUTH_USER_MODEL = 'myRDB_app.User'
+ACCOUNT_AUTHENTICATION_METHOD = 'identity'
+ACCOUNT_IDENTITY_REQUIRED = True
+ACCOUNT_UNIQUE_IDENTITY = True
+ACCOUNT_USERNAME_REQUIRED = False
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -105,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
