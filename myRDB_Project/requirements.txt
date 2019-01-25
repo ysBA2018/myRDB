@@ -1,0 +1,10 @@
+Django == 2.1.5
+pytz == 2018.9
+
+dataclasses == 0.6
+djongo == 1.2.31
+pymongo == 3.7.2
+sqlparse == 0.2.4
+
+django-rest-framework == 0.1.0
+djangorestframework == 3.9.1
