@@ -1,31 +1,31 @@
 {
-  "url": "http://127.0.0.1:8000/users/1/",
-  "identity": "xv42983",
-  "name": "Simchen",
-  "first_name": "Yannick",
+  "url": "http://127.0.0.1:8000/users/5/",
+  "identity": "xv09012",
+  "name": "Neerakkal",
+  "first_name": "Melisa",
   "deleted": false,
-  "orga_id": {
+  "orga": {
     "url": null,
     "team": "",
     "theme_owner": ""
   },
-  "department_id": {
+  "department": {
     "url": null,
     "department_name": ""
   },
-  "group_id": {
+  "group": {
     "url": null,
     "group_name": ""
   },
-  "zi_organisation_id": {
+  "zi_organisation": {
     "url": null,
     "zi_organisation_name": ""
   },
   "roles": [],
   "direct_connect_gfs": [],
   "direct_connect_tfs": [],
-  "is_staff": true,
-  "password": "pbkdf2_sha256$120000$IF2MxFUYaqWn$CbqhxaYB8MUppUzfnNyyhlScro3ulTOQbZwEjVzcaDM=",
+  "is_staff": false,
+  "password": "",
   "children": [
     {
       "url": "http://127.0.0.1:8000/afs/1/",
@@ -2539,268 +2539,6 @@
               "criticality": "K",
               "highest_criticality_in_AF": "K",
               "name": "CN=A_00788_CONFLUENCE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-              "size": 3000
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "url": "http://127.0.0.1:8000/afs/8/",
-      "af_description": "ZI-SE-AS  : SG9200 Methoden und Tools (Bereitstellung)",
-      "af_applied": "2018-03-08T00:00:00+01:00",
-      "af_valid_from": null,
-      "af_valid_till": null,
-      "name": "rva_00023_se_sg9200e",
-      "children": [
-        {
-          "url": "http://127.0.0.1:8000/gfs/35/",
-          "gf_description": "ZI-SE-AS  : SG9200 Methoden und Tools (Bereitstellung)",
-          "name": "rvg_00023_se_sg9200e",
-          "children": [
-            {
-              "url": "http://127.0.0.1:8000/tfs/17/",
-              "tf_description": "SE-PROGRAMMFREIGABE-DATEIEN",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "K",
-              "highest_criticality_in_AF": "K",
-              "name": "#SE0000E",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/18/",
-              "tf_description": "SG92 SCLM/DD ZENTR. COPYBIBLIOTHEKEN",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "U",
-              "highest_criticality_in_AF": "K",
-              "name": "#SE9298E",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/73/",
-              "tf_description": "9200 Verfahrenstechnik DB2-B-TEST",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "u",
-              "highest_criticality_in_AF": "K",
-              "name": "#QBSE921",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/74/",
-              "tf_description": "9200 Verfahrenstechnik DB2-P-Produktions-Clearing",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "u",
-              "highest_criticality_in_AF": "K",
-              "name": "#QPSE921",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/75/",
-              "tf_description": "9200 Verfahrenstechnik DB2-R-TEST",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "u",
-              "highest_criticality_in_AF": "K",
-              "name": "#QRSE921",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/76/",
-              "tf_description": "9200 Verfahrenstechnik DB2-S-TEST",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "u",
-              "highest_criticality_in_AF": "K",
-              "name": "#QSSE921",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/77/",
-              "tf_description": "SG92\u00ef\u00bf\u00bd  Verfahrenstechnik \u00ef\u00bf\u00bdDB2-T-TEST",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "U",
-              "highest_criticality_in_AF": "K",
-              "name": "#QTSE921",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/78/",
-              "tf_description": "SCLM UNTERSTUETZUNG /ALTER/",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "",
-              "highest_criticality_in_AF": "K",
-              "name": "#SCLM01",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/79/",
-              "tf_description": "9200 Verfahrenstechnik SCLM promote bis R-TEST",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "U",
-              "highest_criticality_in_AF": "K",
-              "name": "#SE9200E",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/80/",
-              "tf_description": "9200 Verfahrenstechnik Tabellen-Pflege",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "00104_Tabex_Tabellen",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "u",
-              "highest_criticality_in_AF": "K",
-              "name": "#TXT925",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/81/",
-              "tf_description": "Software Deployments z/OS Unix System Services                                                                                                                                                                                                                    ,alle Teststufen und Produktion",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "",
-              "highest_criticality_in_AF": "K",
-              "name": "#USSSC#1",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/82/",
-              "tf_description": "9200 Verfahrenstechnik Produktions-Clearing",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "ZI-SE-E1-EW",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "k",
-              "highest_criticality_in_AF": "K",
-              "name": "#92MT#61",
-              "size": 3000
-            }
-          ]
-        },
-        {
-          "url": "http://127.0.0.1:8000/gfs/36/",
-          "gf_description": "TABEX SG 92 STUFE 5",
-          "name": "rvg_00788_#txt925",
-          "children": [
-            {
-              "url": "http://127.0.0.1:8000/tfs/80/",
-              "tf_description": "9200 Verfahrenstechnik Tabellen-Pflege",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "00104_Tabex_Tabellen",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "u",
-              "highest_criticality_in_AF": "K",
-              "name": "#TXT925",
-              "size": 3000
-            },
-            {
-              "url": "http://127.0.0.1:8000/tfs/83/",
-              "tf_description": "TABEX ALLE SG STUFE 1 (nur Lesen)",
-              "tf_owner_orga": {
-                "url": null,
-                "team": "00104_Tabex_Tabellen",
-                "theme_owner": ""
-              },
-              "tf_application": {
-                "url": null,
-                "application_name": "RACF - P"
-              },
-              "criticality": "U",
-              "highest_criticality_in_AF": "K",
-              "name": "#TXTAA1",
               "size": 3000
             }
           ]
@@ -5589,6 +5327,833 @@
               "criticality": "",
               "highest_criticality_in_AF": "",
               "name": "CN=V_ZI_KFZ,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:8000/afs/29/",
+      "af_description": "SQL-Zugriff Server SVC0371 und SVC0381 durch Entwickler KV f\u00ef\u00bf\u00bdr PKVKonnektor+MUW",
+      "af_applied": "2018-08-03T00:00:00+02:00",
+      "af_valid_from": null,
+      "af_valid_till": null,
+      "name": "rva_00458_60ewkv_consql",
+      "children": [
+        {
+          "url": "http://127.0.0.1:8000/gfs/74/",
+          "gf_description": "SQL-Zugriff Server SVC0371 und SVC0381 durch Entwickler KV f\u00ef\u00bf\u00bdr PKVKonnektor+MUW",
+          "name": "rvg_00458_60ewkv_consql",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/246/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=A_KRANKEN_SQL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:8000/afs/30/",
+      "af_description": "rva_00458 6000 Krankenversicherung Bereitstellung /Deployment Aufgaben",
+      "af_applied": "2018-08-03T00:00:00+02:00",
+      "af_valid_from": null,
+      "af_valid_till": null,
+      "name": "rva_00458_kranken",
+      "children": [
+        {
+          "url": "http://127.0.0.1:8000/gfs/75/",
+          "gf_description": "6000 Krankenversicherung Entwicklung",
+          "name": "rvg_00458_60ewkv",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/239/",
+              "tf_description": "PROP Datenablage LVProjektarbeit",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "PL-TE",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "k",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=D_PROJEKTARBEIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/244/",
+              "tf_description": "PROP Datenablage P:LV\\\\PPL",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "PL-TE",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "k",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=D_00028_PPL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/247/",
+              "tf_description": "SG60 KV HOST BV Termine KV FD Spezialisten",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "PK-XX-BV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "CICS - T"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "BKVNM601_1",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/248/",
+              "tf_description": "SG60 KV HOST BV Infoberechtigung IES",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "PK-XX-BV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "CICS - T"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "BKVNM129_1",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/249/",
+              "tf_description": "SG60 KV HOST BV Termin Standardberechtigung",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "PK-XX-BV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "CICS - T"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "BKVNM901_1",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/250/",
+              "tf_description": "SG60 KV HOST BV UniversalBerechtigung Termine",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "PK-XX-BV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "CICS - T"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "BKVNM980_1",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/251/",
+              "tf_description": "6000 Kranken DB2-R-TEST",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "u",
+              "highest_criticality_in_AF": "K",
+              "name": "#QRSE601",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/252/",
+              "tf_description": "6000 Kranken DB2-R-TEST",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "u",
+              "highest_criticality_in_AF": "K",
+              "name": "#QRSE602",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/253/",
+              "tf_description": "6000 Kranken DB2-S-TEST",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "u",
+              "highest_criticality_in_AF": "K",
+              "name": "#QSSE601",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/254/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "u",
+              "highest_criticality_in_AF": "K",
+              "name": "#QSSE602",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/255/",
+              "tf_description": "SG60\u00ef\u00bf\u00bd  Kranken \u00ef\u00bf\u00bdDB2-T-TEST",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "#QTSE601",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/256/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "#QTSE602",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/257/",
+              "tf_description": "6000 Kranken SCLM promote bis R-TEST",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "u",
+              "highest_criticality_in_AF": "K",
+              "name": "#SE6000E",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/258/",
+              "tf_description": "6000 Kranken Tabellen-Pflege",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "00104_Tabex_Tabellen",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "RACF - P"
+              },
+              "criticality": "u",
+              "highest_criticality_in_AF": "K",
+              "name": "#TXT605",
+              "size": 3000
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8000/gfs/76/",
+          "gf_description": "Zusammenfassung Unix-Funktionen f\u00ef\u00bf\u00bdr private Krankenversicherung in einer GF",
+          "name": "rvg_00458_60ewkv_unix",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/197/",
+              "tf_description": "Anwendung zur Rechnungspr\u00ef\u00bf\u00bdfung der Krankenversicherung Ansprechpartner alt Uwe Kleinmann",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "zabas",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/259/",
+              "tf_description": "ZABAS01 PKV Leist. Wes. AZUBI",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "00876 KVPAL - KV-ProzessAutom-Leistung",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "LDAP - R"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "zabas01",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/260/",
+              "tf_description": "ZABAS11 PKV Leist. Wes. Regeladministrator mit allen Regelrechten",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "00876 KVPAL - KV-ProzessAutom-Leistung",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "LDAP - R"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "zabas11",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/261/",
+              "tf_description": "ZABAS12 PKV Leist. Wes.  Regeladministrator mit allen Regelrechten ohne Freigabe",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "00876 KVPAL - KV-ProzessAutom-Leistung",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "LDAP - R"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "zabas12",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/262/",
+              "tf_description": "ZABAS Basisanmeldung",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "00876 KVPAL - KV-ProzessAutom-Leistung",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "LDAP - R"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "zabas_user",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/263/",
+              "tf_description": "LINUX_Server im Test fuer die Entwicklung JBOSS mit X4 und WSX-Betreuung",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-ST-AK",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "tx4lan",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/264/",
+              "tf_description": "R+V PKV Projekt AMNOG Software Vespucci von Fa Innovas zur Verwaltung von Arzneimittelraba",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "vespucci",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/265/",
+              "tf_description": "Portal UnionInvest ProfiRente",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "x4upr",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/266/",
+              "tf_description": "PKV Serviceportal",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "pkvsp",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/267/",
+              "tf_description": "UNIX_SRV:-Testumgebung zabas Rechnungspr\u00ef\u00bf\u00bdfung Krankenvers.",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "tzabas",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/268/",
+              "tf_description": "Unix-Funktion \"kolumbus\" f\u00ef\u00bf\u00bdr PKV",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "kolumbus",
+              "size": 3000
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8000/gfs/77/",
+          "gf_description": "Web-Entwicklung Log UNIX R-Test und WIN",
+          "name": "rvg_00763_web_log_r",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/269/",
+              "tf_description": "PROP Web P:/ZI/Internet/ 95_Intranet_Logs",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "k",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=D_00380_WEB_LOG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/270/",
+              "tf_description": "Login fuer Log4u-Portal R-Test  (AD)",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=A_LOG4U_R,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/271/",
+              "tf_description": "Login fuer Log4u-Portal",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "LDAP - R"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "log4u",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/272/",
+              "tf_description": "Linux_SRV WEB R-Test",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-ST-US",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "rtest",
+              "size": 3000
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8000/gfs/78/",
+          "gf_description": "Web-Entwicklung Log UNIX S-Test und WIN",
+          "name": "rvg_00763_web_log_s",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/269/",
+              "tf_description": "PROP Web P:/ZI/Internet/ 95_Intranet_Logs",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "k",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=D_00380_WEB_LOG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/271/",
+              "tf_description": "Login fuer Log4u-Portal",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "LDAP - R"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "log4u",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/273/",
+              "tf_description": "Login fuer Log4u-Portal S-Test (AD)",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=A_LOG4U_S,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/274/",
+              "tf_description": "LINUX UNIX Betriebs-System Server Zugriff auf Servergruppen",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-ST-US",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "linux65",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/275/",
+              "tf_description": "LINUX UNIX Betriebs-System Server Zugriff auf Servergruppen",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-ST-US",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "linux66",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/276/",
+              "tf_description": "Abgesicherter T-Test",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-XA-DV",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "linux35",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/277/",
+              "tf_description": "Linux-SRV f\u00ef\u00bf\u00bdr alle WEB-Portale  S-Test",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-ST-US",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "stest",
+              "size": 3000
+            },
+            {
+              "url": "http://127.0.0.1:8000/tfs/278/",
+              "tf_description": "Servergruppe f\u00ef\u00bf\u00bdr das Betriebssystem Linux mit Scriptbereitstellung f\u00ef\u00bf\u00bdr techn.Use",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-ST-US",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "UBA - P"
+              },
+              "criticality": "U",
+              "highest_criticality_in_AF": "K",
+              "name": "linux1",
+              "size": 3000
+            }
+          ]
+        },
+        {
+          "url": "http://127.0.0.1:8000/gfs/79/",
+          "gf_description": "JenkinsUserG, Tomcat auf einem Linux oder Windows-Server",
+          "name": "rvg_00788_jenkg_puser03",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/279/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-SE-E1-EW",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=D_00456_JENKG_PUSER03,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:8000/afs/31/",
+      "af_description": "VerwaltungsUser  f\u00ef\u00bf\u00bdr Anwendungen BUZ-Server",
+      "af_applied": "2018-08-09T00:00:00+02:00",
+      "af_valid_from": null,
+      "af_valid_till": null,
+      "name": "rvz_00458_buz_admin",
+      "children": [
+        {
+          "url": "http://127.0.0.1:8000/gfs/80/",
+          "gf_description": "VerwaltungsUser  f\u00ef\u00bf\u00bdr Anwendungen BUZ-Server",
+          "name": "rvg_00458_buz_admin",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/281/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "k",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=A_00458_BUZ_ADMIN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:8000/afs/32/",
+      "af_description": "Datentransport -DFS-Share- f. PKVKonn+MUW f. TEST-Umgebung : SVM1499 bis SVM1503",
+      "af_applied": "2018-08-09T00:00:00+02:00",
+      "af_valid_from": null,
+      "af_valid_till": null,
+      "name": "rvz_00458_60dvkv_pkvcon",
+      "children": [
+        {
+          "url": "http://127.0.0.1:8000/gfs/81/",
+          "gf_description": "Admin-RechtPKVKonn+MUW: SVM1497, SVM1498, SVM1499, SVM1500, .1501, .1502, .1503",
+          "name": "rvg_00458_60dvkv_pkvcon",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/282/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=A_KRANKEN_ADMIN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+              "size": 3000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:8000/afs/33/",
+      "af_description": "Admin-Recht f\u00ef\u00bf\u00bdr PKVKonn+MUW TEST:  SVM1499, SVM1500, SVM1501, SVM1502, SVM1503",
+      "af_applied": "2018-08-09T00:00:00+02:00",
+      "af_valid_from": null,
+      "af_valid_till": null,
+      "name": "rvz_00458_60dvkvtstserv",
+      "children": [
+        {
+          "url": "http://127.0.0.1:8000/gfs/82/",
+          "gf_description": "Admin-Recht f\u00ef\u00bf\u00bdr PKVKonn+MUW TEST:  SVM1499, SVM1500, SVM1501, SVM1502, SVM1503",
+          "name": "rvg_00458_60dvkvtstserv",
+          "children": [
+            {
+              "url": "http://127.0.0.1:8000/tfs/283/",
+              "tf_description": "",
+              "tf_owner_orga": {
+                "url": null,
+                "team": "ZI-AI-BA",
+                "theme_owner": ""
+              },
+              "tf_application": {
+                "url": null,
+                "application_name": "AD - RUVDE"
+              },
+              "criticality": "K",
+              "highest_criticality_in_AF": "K",
+              "name": "CN=A_KRANKEN_TEST_ADMIN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             }
           ]
