@@ -13,7 +13,8 @@ from rest_framework.response import Response
 
 #from .filters import UserFilter
 from .forms import CustomUserCreationForm, SomeForm
-from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application
+from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application, User_AF, User_TF, \
+    User_GF
 from rest_framework import viewsets
 from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSerializer, TFSerializer, OrgaSerializer, \
     GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer, ProfileSerializer
@@ -35,7 +36,7 @@ class CSVtoMongoDB(generic.FormView):
     def start_import_action(self):
         firstline = True
         # TODO: dateiimportfield und pfad müssen noch verbunden werden!
-        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv") as csvfile:
+        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817.csv") as csvfile:
             csvreader = csv.reader(csvfile, delimiter=';', quotechar='"')
             for line in csvreader:
                 if firstline == True:
@@ -74,6 +75,7 @@ class CSVtoMongoDB(generic.FormView):
                         gf.save()
                     gf.tfs.add(tf)
                     gf.save()
+
 
                     af = None
                     try:
@@ -132,6 +134,42 @@ class CSVtoMongoDB(generic.FormView):
                             user.direct_connect_gfs = [GF()]
                         if not user.direct_connect_tfs:
                             user.direct_connect_tfs = [TF()]
+                        if not user.user_afs:
+                            user.user_afs=[]
+                    if user.user_afs.__len__()==0:
+                        user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)
+                        user_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[])
+                        user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk,gfs=[])
+                        user_gf.tfs.append(user_tf)
+                        user_af.gfs.append(user_gf)
+                        user.user_afs.append(user_af)
+                    else:
+                        afcount=0
+                        for uaf in user.user_afs:
+                            if uaf.af_name != af.af_name:
+                                afcount+=1
+                            else:
+                                gfcount=0
+                                for ugf in uaf.gfs:
+                                    if ugf.gf_name != gf.gf_name:
+                                        gfcount += 1
+                                    else:
+                                        tfcount=0
+                                        for utf in ugf.tfs:
+                                            if utf.tf_name != tf.tf_name:
+                                                tfcount += 1
+                                            else:
+                                                break
+                                        if tfcount==ugf.tfs.__len__():
+                                            ugf.tfs.append(User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk))
+                                if gfcount == uaf.gfs.__len__():
+                                    uaf.gfs.append(User_GF(gf_name=gf.gf_name,model_gf_pk=gf.pk,tfs=[User_TF(tf_name=tf.tf_name,model_tf_pk=tf.pk)]))
+                        if afcount == user.user_afs.__len__():
+                            user.user_afs.append(User_AF(af_name=af.af_name,model_af_pk=af.pk,gfs=[User_GF(gf_name=gf.gf_name,model_gf_pk=gf.pk,tfs=[User_TF(tf_name=tf.tf_name,model_tf_pk=tf.pk)])]))
+
+
+
+
 
                     user.direct_connect_afs.add(af)
                     user.save()
@@ -290,12 +328,12 @@ class Compare(generic.ListView):
         user_json_data = res.json()
 
         compUserRoles = user_json_data['roles']
-        compUserAfs = user_json_data['direct_connect_afs']
+        compUserAfs = user_json_data['user_afs']
 
         data, comp_gf_count, comp_tf_count = prepareTableData(compareUser, compUserRoles, compUserAfs, headers)
 
         try:
-            prepareJSONdata(compareUserIdentity, user_json_data, True)
+            prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
         except(IOError):
             print("error while prparing json for graph")
 
@@ -333,11 +371,11 @@ class Compare(generic.ListView):
         userid = user.id
         roles = user_json_data['roles']
         print(userid, user)
-        afs = user_json_data['direct_connect_afs']
+        afs = user_json_data['user_afs']
 
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
         try:
-            prepareJSONdata(user.identity, user_json_data, False)
+            prepareJSONdata(user.identity, user_json_data, False, headers)
         except(IOError):
             print("error while prparing json for graph")
 
@@ -378,12 +416,14 @@ class Profile(generic.ListView):
         userid = user.id
         roles = user_json_data['roles']
         print(userid, user)
-        afs = user_json_data['direct_connect_afs']
+        afs = user_json_data['user_afs']
 
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
         try:
-            prepareJSONdata(user.identity, user_json_data, False)
+            prepareJSONdata(user.identity, user_json_data, False, headers)
         except(IOError):
+            IOError.__traceback__
+            print(IOError.__traceback__)
             print("error while prparing json for graph")
 
         self.extra_context['role_count'] = len(roles)
@@ -433,25 +473,33 @@ def prepareTableData(user, roles, afs, headers):
     tf_count = len(tfList)
     return data, gf_count, tf_count
 
+def get_af_by_key(pk, headers):
+    url = 'http://127.0.0.1:8000/afs/%d' % pk
+    res = requests.get(url, headers=headers)
+    af_json = res.json()
+    return af_json
 
-def prepareJSONdata(identity, user_json_data, compareUser):
+
+
+def prepareJSONdata(identity, user_json_data, compareUser, headers):
     print(type(user_json_data), user_json_data)
-    user_json_data['children'] = user_json_data.pop('direct_connect_afs')
+    user_json_data['children'] = user_json_data.pop('user_afs')
     scatterData = []
     i = 1
     for af in user_json_data['children']:
         af['name'] = af.pop('af_name')
         af['children'] = af.pop('gfs')
+        model_af = get_af_by_key(pk=af['model_af_pk'],headers=headers)
+        if model_af['af_applied'] is None:
+            af_applied = ""
+        else:
+            af_applied = model_af['af_applied']
         for gf in af['children']:
             gf['name'] = gf.pop('gf_name')
             gf['children'] = gf.pop('tfs')
             for tf in gf['children']:
                 tf['name'] = tf.pop('tf_name')
                 tf['size'] = 3000
-                if af['af_applied'] is None:
-                    af_applied = ""
-                else:
-                    af_applied = af['af_applied']
                 scatterData.append({"name": tf['name'], "index": i, "af_applied": af_applied})
 
                 i += 1
@@ -531,6 +579,7 @@ class AFViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return AF.objects.all()
+
 
 
 class GFViewSet(viewsets.ModelViewSet):

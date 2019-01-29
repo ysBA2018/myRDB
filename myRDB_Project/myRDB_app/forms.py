@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Orga, Group, Department, ZI_Organisation, Role, AF, GF, TF
+from .models import User, Orga, Group, Department, ZI_Organisation, Role, AF, GF, TF, User_AF, User_GF, User_TF
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -90,6 +90,8 @@ class CustomUserCreationForm(UserCreationForm):
                     user.direct_connect_gfs = [GF()]
                 if not user.direct_connect_tfs:
                     user.direct_connect_tfs = [TF()]
+                if not user.user_afs:
+                    user.user_afs = []
                 if commit:
                     user.save()
         return user

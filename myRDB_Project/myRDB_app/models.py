@@ -15,6 +15,7 @@ from rest_framework.authtoken.models import Token
 
 from myRDB_Project import settings
 
+
 # Create your models here.
 class Orga(models.Model):
     team = models.CharField(max_length=100)
@@ -69,12 +70,39 @@ class TF(models.Model):
         return self.tf_name
 
 
+class User_TF(models.Model):
+    tf_name = models.CharField(max_length=100)
+    model_tf_pk = models.IntegerField()
+
+    objects = djongomodels.DjongoManager()
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.tf_name
+
+
 class GF(models.Model):
     gf_name = models.CharField(max_length=150)
     gf_description = models.CharField(max_length=250)
     tfs = djongomodels.ArrayReferenceField(to=TF, on_delete=models.CASCADE)
 
     objects = djongomodels.DjongoManager()
+
+    def __str__(self):
+        return self.gf_name
+
+
+class User_GF(models.Model):
+    gf_name = models.CharField(max_length=150)
+    model_gf_pk = models.IntegerField()
+    tfs = djongomodels.ArrayModelField(model_container=User_TF)
+
+    objects = djongomodels.DjongoManager()
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return self.gf_name
@@ -89,6 +117,20 @@ class AF(models.Model):
     gfs = djongomodels.ArrayReferenceField(to=GF, on_delete=models.CASCADE)
 
     objects = djongomodels.DjongoManager()
+
+    def __str__(self):
+        return self.af_name
+
+
+class User_AF(models.Model):
+    af_name = models.CharField(max_length=150)
+    model_af_pk = models.IntegerField()
+    gfs = djongomodels.ArrayModelField(model_container=User_GF)
+
+    objects = djongomodels.DjongoManager()
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return self.af_name
@@ -117,7 +159,7 @@ class CustomAccountManager(BaseUserManager):
         if not user.group:
             user.group = Group()
         if not user.department:
-            user.department= Department()
+            user.department = Department()
         if not user.zi_organisation:
             user.zi_organisation = ZI_Organisation()
         if not user.roles:
@@ -128,6 +170,8 @@ class CustomAccountManager(BaseUserManager):
             user.direct_connect_gfs = [GF()]
         if not user.direct_connect_tfs:
             user.direct_connect_tfs = [TF()]
+        if not user.user_afs:
+            user.user_afs = []
 
         user.save(using=self.db)
         return user
@@ -166,6 +210,7 @@ class User(AbstractUser):
     direct_connect_afs = djongomodels.ArrayReferenceField(to=AF, on_delete=models.CASCADE)
     direct_connect_gfs = djongomodels.ArrayReferenceField(to=GF, on_delete=models.CASCADE)
     direct_connect_tfs = djongomodels.ArrayReferenceField(to=TF, on_delete=models.CASCADE)
+    user_afs = djongomodels.ArrayModelField(model_container=User_AF)
     is_staff = models.BooleanField(default=False)
     password = models.CharField(max_length=32)
 
@@ -184,8 +229,7 @@ class User(AbstractUser):
         return self.identity
 
 
-
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False,**kwargs):
+def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)

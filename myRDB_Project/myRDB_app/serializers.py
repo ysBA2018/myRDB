@@ -57,22 +57,39 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'role_name', 'role_description', 'afs')
     afs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='role-detail')
 
+class UserTFSerializer(serializers.Serializer):
+    tf_name = serializers.CharField(max_length=150)
+    model_tf_pk = serializers.IntegerField()
+
+class UserGFSerializer(serializers.Serializer):
+    gf_name = serializers.CharField(max_length=150)
+    model_gf_pk = serializers.IntegerField()
+    tfs = UserTFSerializer(many=True, read_only=True)
+
+class UserAFSerializer(serializers.Serializer):
+    af_name = serializers.CharField(max_length=150)
+    model_af_pk = serializers.IntegerField()
+    gfs = UserGFSerializer(many=True, read_only=True)
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = (
         'url', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
-        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password')
+        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password','user_afs')
 
     roles = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='role-detail')
     direct_connect_afs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='af-detail')
     direct_connect_gfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='gf-detail')
     direct_connect_tfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='tf-detail')
+    user_afs = UserAFSerializer(many=True, read_only=True)
 
     orga = OrgaSerializer()
     department = DepartmentSerializer()
     group = GroupSerializer()
     zi_organisation = ZI_OrganisationSerializer()
+
 
 
 class ProfileGFSerializer(serializers.HyperlinkedModelSerializer):
@@ -101,12 +118,13 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = (
         'url', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
-        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password')
+        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password','user_afs')
 
     roles = ProfileRoleSerializer(many=True, read_only=True)
     direct_connect_afs = ProfileAFSerializer(many=True, read_only=True)
     direct_connect_gfs = ProfileGFSerializer(many=True, read_only=True)
     direct_connect_tfs = TFSerializer(many=True, read_only=True)
+    user_afs = UserAFSerializer(many=True, read_only=True)
 
     orga = OrgaSerializer()
     department = DepartmentSerializer()
