@@ -15,7 +15,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url, include
+from rest_framework import routers
+from myRDB_app import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet, 'user')
+router.register(r'roles', views.RoleViewSet, 'role')
+router.register(r'afs', views.AFViewSet, 'af')
+router.register(r'gfs', views.GFViewSet, 'gf')
+router.register(r'tfs', views.TFViewSet, 'tf')
+router.register(r'orgas', views.OrgaViewSet, 'orga')
+router.register(r'groups', views.GroupViewSet, 'group')
+router.register(r'departments', views.DepartmentViewSet, ' department')
+router.register(r'zi_organisations', views.ZI_OrganisationViewSet, 'zi_organisation')
+router.register(r'tf_application', views.TF_ApplicationViewSet, 'tf_application')
 
 urlpatterns = [
+    url(r'^', include(router.urls)),
+    path('', include('django.contrib.auth.urls')),
+    path('myRDB/', include('myRDB_app.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 ]

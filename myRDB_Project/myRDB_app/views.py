@@ -17,7 +17,7 @@ from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, 
     User_GF
 from rest_framework import viewsets
 from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSerializer, TFSerializer, OrgaSerializer, \
-    GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer, ProfileSerializer
+    GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer
 from django.views import generic
 
 from django.contrib.auth import get_user_model
@@ -322,7 +322,7 @@ class Compare(generic.ListView):
         compareUser = User.objects.get(identity=compareUserIdentity)
 
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/profiles/%d' % compareUser.pk
+        url = 'http://127.0.0.1:8000/users/%d' % compareUser.pk
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
@@ -332,10 +332,7 @@ class Compare(generic.ListView):
 
         data, comp_gf_count, comp_tf_count = prepareTableData(compareUser, compUserRoles, compUserAfs, headers)
 
-        try:
-            prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
-        except(IOError):
-            print("error while prparing json for graph")
+        prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
 
         compare_paginator = Paginator(list(data), 10)
         page = self.request.GET.get('compare_page')
@@ -363,7 +360,7 @@ class Compare(generic.ListView):
             # TODO: hier noch lösung mit Params über API finden!
             user = User.objects.get(identity=self.request.GET['user_identity'])
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/profiles/%d' % user.pk
+        url = 'http://127.0.0.1:8000/users/%d' % user.pk
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
@@ -374,10 +371,8 @@ class Compare(generic.ListView):
         afs = user_json_data['user_afs']
 
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
-        try:
-            prepareJSONdata(user.identity, user_json_data, False, headers)
-        except(IOError):
-            print("error while prparing json for graph")
+
+        prepareJSONdata(user.identity, user_json_data, False, headers)
 
         self.extra_context['role_count'] = len(roles)
         self.extra_context['af_count'] = len(afs)
@@ -408,7 +403,7 @@ class Profile(generic.ListView):
             user = User.objects.get(identity=self.request.GET['identity'])
 
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/profiles/%d' % user.pk
+        url = 'http://127.0.0.1:8000/users/%d' % user.pk
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
@@ -419,12 +414,8 @@ class Profile(generic.ListView):
         afs = user_json_data['user_afs']
 
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
-        try:
-            prepareJSONdata(user.identity, user_json_data, False, headers)
-        except(IOError):
-            IOError.__traceback__
-            print(IOError.__traceback__)
-            print("error while prparing json for graph")
+
+        prepareJSONdata(user.identity, user_json_data, False, headers)
 
         self.extra_context['role_count'] = len(roles)
         self.extra_context['af_count'] = len(afs)
@@ -519,17 +510,6 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
         path = 'myRDB_app/static/myRDB/data/scatterGraphData.json'
         with open(path, 'w') as outfile:
             json.dump(scatterData, outfile, indent=2)
-
-
-class ProfileViewSet(viewsets.ModelViewSet):
-    """
-        API endpoint that allows all Profiles including nested rights to be viewed or edited.
-    """
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ProfileSerializer
-
-    def get_queryset(self):
-        return User.objects.all()
 
 
 class UserViewSet(viewsets.ModelViewSet):
