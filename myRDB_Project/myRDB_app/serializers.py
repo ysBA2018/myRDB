@@ -92,44 +92,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class ProfileGFSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = GF
-        fields = ('url', 'gf_name', 'gf_description', 'tfs')
-    tfs = TFSerializer(many=True, read_only=True)
-
-
-class ProfileAFSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = AF
-        fields = ('url', 'af_name', 'af_description', 'af_applied', 'af_valid_from', 'af_valid_till', 'gfs')
-    gfs = ProfileGFSerializer(many=True, read_only=True)
-
-
-class ProfileRoleSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Role
-        fields = ('url', 'role_name', 'role_description', 'afs')
-    afs = ProfileAFSerializer(many=True, read_only=True)
-
-
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-        'url', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
-        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password','user_afs')
-
-    roles = ProfileRoleSerializer(many=True, read_only=True)
-    direct_connect_afs = ProfileAFSerializer(many=True, read_only=True)
-    direct_connect_gfs = ProfileGFSerializer(many=True, read_only=True)
-    direct_connect_tfs = TFSerializer(many=True, read_only=True)
-    user_afs = UserAFSerializer(many=True, read_only=True)
-
-    orga = OrgaSerializer()
-    department = DepartmentSerializer()
-    group = GroupSerializer()
-    zi_organisation = ZI_OrganisationSerializer()
-
-
 
