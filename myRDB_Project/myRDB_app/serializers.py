@@ -91,5 +91,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     zi_organisation = ZI_OrganisationSerializer()
 
 
+class UserListingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('url', 'identity', 'name', 'first_name', 'deleted', )
 
 

@@ -17,7 +17,7 @@ from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, 
     User_GF
 from rest_framework import viewsets
 from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSerializer, TFSerializer, OrgaSerializer, \
-    GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer
+    GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer, UserListingSerializer
 from django.views import generic
 
 from django.contrib.auth import get_user_model
@@ -222,7 +222,7 @@ class Users(generic.ListView):
 
     def get_queryset(self):
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/'
+        url = 'http://127.0.0.1:8000/userlistings/'
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         lis = ['zi_organisations', 'orgas', 'departments', 'roles', 'groups']
         for e in lis:
@@ -267,8 +267,10 @@ class Users(generic.ListView):
             self.extra_context["group"] = group
         if 'entries_per_page' in self.request.GET:
             self.paginate_by = self.request.GET['entries_per_page']
+            if self.paginate_by == '':
+                self.paginate_by = 10
         else:
-            self.paginate_by = 8
+            self.paginate_by = 10
         if params == "":
             prefix="?"
         else:
@@ -276,10 +278,14 @@ class Users(generic.ListView):
         params = params + prefix +"entries_per_page="+ self.paginate_by.__str__()
         url = url + params
         self.extra_context['params_for_pagination'] = params
-
-        res = requests.get(url, headers=headers)
-        user_json_data = res.json()
-        users = {'users': user_json_data['results']}
+        if "search_what" in url or not self.extra_context.keys().__contains__('paginated_users'):
+            res = requests.get(url, headers=headers)
+            user_json_data = res.json()
+            #user_count= user_json_data['count']
+            users = {'users': user_json_data['results']}
+            self.extra_context['paginated_users'] = users
+        else:
+            users= self.extra_context['paginated_users']
         response = Response(users)
         print(response.data['users'])
 
@@ -401,6 +407,7 @@ class Profile(generic.ListView):
         else:
             # TODO: hier noch lösung mit Params über API finden!
             user = User.objects.get(identity=self.request.GET['identity'])
+            self.extra_context['identity_param'] = self.request.GET['identity']
 
         logged_in_user_token = self.request.user.auth_token
         url = 'http://127.0.0.1:8000/users/%d' % user.pk
@@ -511,17 +518,16 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
         with open(path, 'w') as outfile:
             json.dump(scatterData, outfile, indent=2)
 
-
-class UserViewSet(viewsets.ModelViewSet):
+class UserListingViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
-    """
+        API endpoint that allows users to be listed and detail-viewed
+        """
     permission_classes = (IsAuthenticated,)
-    serializer_class = UserSerializer
-    #filter_backends = (DjangoFilterBackend,)
-    #filterset_class = UserFilter
+    serializer_class = UserListingSerializer
 
     def get_queryset(self):
+        self.paginator.page_size = 1000
+
         if 'search_what' in self.request.GET:
             search_what = self.request.GET["search_what"]
             user_search = self.request.GET["userSearch"]
@@ -537,6 +543,21 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return User.objects.all().order_by('name')
         return users
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+    page_size = 10
+    #filter_backends = (DjangoFilterBackend,)
+    #filterset_class = UserFilter
+
+    def get_queryset(self):
+        return User.objects.all().order_by('name')
+
 
 
 class RoleViewSet(viewsets.ModelViewSet):

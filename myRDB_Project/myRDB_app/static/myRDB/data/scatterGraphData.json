@@ -1,1472 +1,2232 @@
 [
   {
-    "name": "rvgroup",
-    "index": 285,
+    "name": "CN=V_VERPFLICHTUNG_DATENGEHEIMNIS_ID,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 373,
     "af_applied": ""
   },
   {
     "name": "CN=Dom\u00ef\u00bf\u00bdnen-Benutzer,CN=Users,DC=RUV,DC=DE",
-    "index": 286,
+    "index": 374,
     "af_applied": ""
   },
   {
-    "name": "CN=ZZV_EXCHANGE_ID,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 287,
+    "name": "BNDOX100_1",
+    "index": 375,
     "af_applied": ""
   },
   {
-    "name": "CN=V_AlleUserIDohneRSC,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 288,
+    "name": "BBLU9614_1",
+    "index": 376,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM013_1",
+    "index": 377,
+    "af_applied": ""
+  },
+  {
+    "name": "BM37S002_2",
+    "index": 378,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=ZZV_IPC_K_ZIAIBAPS_SGSS4911,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 379,
     "af_applied": ""
   },
   {
     "name": "CN=V_RESSORT_ZI_ALLE (SAP),OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 289,
+    "index": 380,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_GIT_ZI-TESTER,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 381,
+    "af_applied": ""
+  },
+  {
+    "name": "BCCMB003_5",
+    "index": 382,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM015_1",
+    "index": 383,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_COBOL,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 384,
+    "af_applied": ""
+  },
+  {
+    "name": "BABRM501_1",
+    "index": 385,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_SQS_USER,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 386,
+    "af_applied": ""
+  },
+  {
+    "name": "BHSAG038_1",
+    "index": 387,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_CBU,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 388,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMZ041_5",
+    "index": 389,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_AlleUserIDohneRSC,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 390,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMZ919_5",
+    "index": 391,
+    "af_applied": ""
+  },
+  {
+    "name": "BM37S004_2",
+    "index": 392,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMZ950_5",
+    "index": 393,
+    "af_applied": ""
+  },
+  {
+    "name": "BAVOM001_5",
+    "index": 394,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDM2210_5",
+    "index": 395,
+    "af_applied": ""
+  },
+  {
+    "name": "BBLU9611_1",
+    "index": 396,
     "af_applied": ""
   },
   {
     "name": "CN=V_STANDORT_WI_ALLE (SAP),OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 290,
+    "index": 397,
     "af_applied": ""
   },
   {
-    "name": "CN=V_BETRIEB_INNENDIENST_WI (SAP),OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 291,
+    "name": "CN=ZZV_IPC_K_ZIAIBAPS_SGSS4904,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 398,
+    "af_applied": ""
+  },
+  {
+    "name": "BM37S003_2",
+    "index": 399,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_NDOX-PROGRAMMIERER,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 400,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_CLP_AD_CE-Runde,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 401,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDM2105_5",
+    "index": 402,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDM1999_5",
+    "index": 403,
+    "af_applied": ""
+  },
+  {
+    "name": "BTERM001_5",
+    "index": 404,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMH916_5",
+    "index": 405,
+    "af_applied": ""
+  },
+  {
+    "name": "BNDOX101_1",
+    "index": 406,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMZ125_5",
+    "index": 407,
+    "af_applied": ""
+  },
+  {
+    "name": "BREVM001_1",
+    "index": 408,
+    "af_applied": ""
+  },
+  {
+    "name": "BTALL001_3",
+    "index": 409,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDM4105_5",
+    "index": 410,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMZ971_5",
+    "index": 411,
     "af_applied": ""
   },
   {
     "name": "$ZIAIBA",
-    "index": 292,
+    "index": 412,
     "af_applied": ""
   },
   {
-    "name": "CN=ZZV_EXCHANGE_EM,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 293,
+    "name": "BEDMP095_5",
+    "index": 413,
     "af_applied": ""
   },
   {
-    "name": "CN=V_ZI_KFZ,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 294,
+    "name": "BDVSM022_1",
+    "index": 414,
     "af_applied": ""
   },
   {
-    "name": "CN=A_SP_I_MA_ID_PORTAL                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 1,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "name": "CN=ZZV_IPC_K_ZIAIBAPS_SGSS4513,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 415,
+    "af_applied": ""
   },
   {
-    "name": "CN=A_SP_I_MA_ID_ZI                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=ZZV_EXCHANGE_ID,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 416,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDM4090_5",
+    "index": 417,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM012_1",
+    "index": 418,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMZ090_5",
+    "index": 419,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_ZI_ANFODB_ANWENDER,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 420,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_ZIAIBA_GL UND CONSULTANTS,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 421,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMH951_5",
+    "index": 422,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM032_1",
+    "index": 423,
+    "af_applied": ""
+  },
+  {
+    "name": "BADMM000_5",
+    "index": 424,
+    "af_applied": ""
+  },
+  {
+    "name": "BBLUF104_5",
+    "index": 425,
+    "af_applied": ""
+  },
+  {
+    "name": "BITVM000_1",
+    "index": 426,
+    "af_applied": ""
+  },
+  {
+    "name": "BHSAG031_1",
+    "index": 427,
+    "af_applied": ""
+  },
+  {
+    "name": "BKONZ101_1",
+    "index": 428,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_ZI_CHEFENTWICKLER,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 429,
+    "af_applied": ""
+  },
+  {
+    "name": "BITVM010_1",
+    "index": 430,
+    "af_applied": ""
+  },
+  {
+    "name": "BBLUF901_1",
+    "index": 431,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_LEBENUPR_BPM-TASK_AM,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 432,
+    "af_applied": ""
+  },
+  {
+    "name": "BNDOX102_1",
+    "index": 433,
+    "af_applied": ""
+  },
+  {
+    "name": "BBLU9606_1",
+    "index": 434,
+    "af_applied": ""
+  },
+  {
+    "name": "BTERM002_5",
+    "index": 435,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM011_1",
+    "index": 436,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM014_1",
+    "index": 437,
+    "af_applied": ""
+  },
+  {
+    "name": "BEDMH952_5",
+    "index": 438,
+    "af_applied": ""
+  },
+  {
+    "name": "BDVSM042_1",
+    "index": 439,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_ZIAIBAPS (PERSONEN),OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 440,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_CITI-Leben_MA_Host-Migration,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 441,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_ZIAI_ADCE_Austausch,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 442,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_CLP_TP2,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 443,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_BETRIEB_INNENDIENST_WI (SAP),OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 444,
+    "af_applied": ""
+  },
+  {
+    "name": "CN=V_Workplace2017,OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 445,
+    "af_applied": ""
+  },
+  {
+    "name": "#NMG9999",
+    "index": 446,
+    "af_applied": ""
+  },
+  {
+    "name": "#NMG0400",
+    "index": 164,
+    "af_applied": "2003-02-24T00:00:00+01:00"
+  },
+  {
+    "name": "#CTSAUSR",
+    "index": 165,
+    "af_applied": "2003-02-24T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_INSIDERS,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 67,
+    "af_applied": "2003-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "BEDMZ090_3",
+    "index": 68,
+    "af_applied": "2003-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "BEDMZ125_3",
+    "index": 69,
+    "af_applied": "2003-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "CN=W_ZISE_VORHABENDOK,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 70,
+    "af_applied": "2003-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "CN=W_ZISE_VSS,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 71,
+    "af_applied": "2003-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "CN=W_ZISE_EDMDOKALLG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 72,
+    "af_applied": "2003-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "BTALL001_1",
     "index": 2,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2004-08-17T00:00:00+02:00"
+  },
+  {
+    "name": "CN=CTSA_LOGON_2,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 37,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=CTSA_HOMEDIR_2,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 38,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_00606_PRN_QUEUE1,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 39,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "BCICS001_1",
+    "index": 40,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "ctsa_usr",
+    "index": 41,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "#CTSAUSR",
+    "index": 42,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "#NMG0400",
+    "index": 43,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_SP_I_MA_AD_VDVVV_TM,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 44,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_SP_I_MA_MA_INFO,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 45,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_SP_I_MA_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 46,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_SP_I_MA_MA_ID,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 47,
+    "af_applied": "2004-11-16T00:00:00+01:00"
   },
   {
     "name": "CN=A_SP_I_MA_ID_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 48,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_IPC_P_PB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 49,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_IPC_P_IB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 50,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_IPC_P_CB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 51,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_ARIS_CON_VIEWER,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 52,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_INTERNET,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 53,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_00808_PP_MA,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 54,
+    "af_applied": "2004-11-16T00:00:00+01:00"
+  },
+  {
+    "name": "BOMIB001_1",
+    "index": 66,
+    "af_applied": "2005-11-08T00:00:00+01:00"
+  },
+  {
+    "name": "BBLUF000_1",
+    "index": 125,
+    "af_applied": "2005-11-08T00:00:00+01:00"
+  },
+  {
+    "name": "BEDMZ971_1",
+    "index": 128,
+    "af_applied": "2005-11-08T00:00:00+01:00"
+  },
+  {
+    "name": "CN=W_00447_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 162,
+    "af_applied": "2005-11-21T00:00:00+01:00"
+  },
+  {
+    "name": "#A15KO01",
+    "index": 73,
+    "af_applied": "2007-04-25T00:00:00+02:00"
+  },
+  {
+    "name": "BTERM001_2",
+    "index": 127,
+    "af_applied": "2007-05-02T00:00:00+02:00"
+  },
+  {
+    "name": "BTERM002_1",
+    "index": 65,
+    "af_applied": "2007-07-04T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_PROJEKTARBEIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 166,
+    "af_applied": "2009-11-18T00:00:00+01:00"
+  },
+  {
+    "name": "#CMDDOCS",
+    "index": 129,
+    "af_applied": "2010-01-01T00:00:00+01:00"
+  },
+  {
+    "name": "BEDMZ041_3",
+    "index": 64,
+    "af_applied": "2012-07-19T00:00:00+02:00"
+  },
+  {
+    "name": "BITVM036_1",
+    "index": 1,
+    "af_applied": "2012-10-24T00:00:00+02:00"
+  },
+  {
+    "name": "BITVM010_1",
+    "index": 126,
+    "af_applied": "2014-03-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_PLATIN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 36,
+    "af_applied": "2015-01-07T00:00:00+01:00"
+  },
+  {
+    "name": "SAP_SRM_ANTRAG_MIT",
     "index": 3,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_SP_I_MA_ID_ZI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 4,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#ZIINT",
-    "index": 5,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-08-17T00:00:00+02:00"
   },
   {
     "name": "#GSE0001",
-    "index": 6,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 4,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#GSE0002",
-    "index": 7,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 5,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#GSE0003",
-    "index": 8,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 6,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#GSE0004",
-    "index": 9,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 7,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#GSE0005",
-    "index": 10,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#QBSE001",
-    "index": 11,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#QFSE001",
-    "index": 12,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#QKSE001",
-    "index": 13,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#QLSE001",
-    "index": 14,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#QSSE001",
-    "index": 15,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 8,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#QTBNDAG",
-    "index": 16,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#QTSE001",
-    "index": 17,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 9,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#SE0000A",
-    "index": 18,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 10,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#SE0000E",
-    "index": 19,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 11,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#SE9298E",
-    "index": 20,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 12,
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
     "name": "#TSOSEGM",
+    "index": 13,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#TXTAA1",
+    "index": 14,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#TXT155",
+    "index": 15,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "BMQSM983_1",
+    "index": 16,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#A44CL03",
+    "index": 17,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#A44EAL",
+    "index": 18,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#A98CL01",
+    "index": 19,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#A98KO01",
+    "index": 20,
+    "af_applied": "2015-10-01T00:00:00+02:00"
+  },
+  {
+    "name": "#IMI01",
     "index": 21,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "#TXTAA5",
+    "name": "#LGZADK",
     "index": 22,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "#USSSC#2",
+    "name": "#POSTSTR",
     "index": 23,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "#USSSCB1",
+    "name": "#QBSE981",
     "index": 24,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "TF existiert nicht mehr",
+    "name": "#QPSE944",
     "index": 25,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QPSE982",
     "index": 26,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00452_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QRSE981",
     "index": 27,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00458_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QSSE981",
     "index": 28,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_LW_O                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#SE0000A",
     "index": 29,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#SE9800E",
     "index": 30,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#SE9830E",
     "index": 31,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_LW_O,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#SE9850E",
     "index": 32,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00458_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#TXT155",
     "index": 33,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#ZAALL",
     "index": 34,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00452_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#15IT#61",
     "index": 35,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "af_applied": "2015-10-01T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00458_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 36,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "name": "#T00CBU",
+    "index": 130,
+    "af_applied": "2016-03-16T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_VORLAGEN                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 37,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "name": "CN=D_00456_SCM_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 131,
+    "af_applied": "2016-03-16T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00458_INTERN                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 38,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 39,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 40,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00439_VORLAGEN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 41,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00458_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 42,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00458_INTERN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 43,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "name": "BCPTM001_1",
+    "index": 132,
+    "af_applied": "2016-03-16T00:00:00+01:00"
   },
   {
     "name": "BCPTM002_1",
-    "index": 44,
-    "af_applied": "2017-12-10T00:00:00+01:00"
+    "index": 133,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#GSE0001",
+    "index": 134,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#GSE0002",
+    "index": 135,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#GSE0003",
+    "index": 136,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#GSE0004",
+    "index": 137,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#GSE0005",
+    "index": 138,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#NMG5000",
+    "index": 139,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QBSE001",
+    "index": 140,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QBSE011",
+    "index": 141,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QKSE001",
+    "index": 142,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QLSE001",
+    "index": 143,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QRSE011",
+    "index": 144,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QRSE981",
+    "index": 145,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QSSE001",
+    "index": 146,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QSSE011",
+    "index": 147,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QSSE981",
+    "index": 148,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QTBNDAG",
+    "index": 149,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QTSE001",
+    "index": 150,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#QTSE982",
+    "index": 151,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#SE0000A",
+    "index": 152,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#SE0000E",
+    "index": 153,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#SE9298E",
+    "index": 154,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#TSOSEGM",
+    "index": 155,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#TXTAA1",
+    "index": 156,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#TXT985",
+    "index": 157,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#USSSC#2",
+    "index": 158,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "#USSSCB1",
+    "index": 159,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "E010201A",
+    "index": 160,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "OPCINFO",
+    "index": 161,
+    "af_applied": "2016-03-16T00:00:00+01:00"
+  },
+  {
+    "name": "BFTES001_1",
+    "index": 167,
+    "af_applied": "2016-06-15T00:00:00+02:00"
   },
   {
     "name": "",
-    "index": 45,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_SP_O_MA00001090                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 46,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_SP_O_MA00001090,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 47,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=W_00407_DA_ZIAI                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 48,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=W_00407_DA_ZIAI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 49,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "BCPTM001_1",
-    "index": 50,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "BCPTM001_1",
-    "index": 51,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_01218_PVB_L                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 52,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_01218_PVB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 53,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_01225_UM_LWL_TRASSE                                                                                                                                                                                                                                                   ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 54,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_01225_UM_LWL_TRASSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 55,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_ZISCM_L                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_O_MA00001090,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 56,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_ZISCM_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=W_00407_DA_ZIAI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 57,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_AUSTAU_FH_ZI                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "BCPTM001_1",
     "index": 58,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_AUSTAU_FH_ZI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "BCPTM001_1",
     "index": 59,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_KFALL                                                                                                                                                                                                                                                                 ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_01218_PVB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 60,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_KFALL_DOKU_SB_L                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_01225_UM_LWL_TRASSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 61,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_KFALL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_ZISCM_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 62,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_KFALL_DOKU_SB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 63,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 64,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00606_P_ANALYSE                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 65,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00606_DOKU_BTRKZPT_L                                                                                                                                                                                                                                                  ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 66,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=W_IMSDC                                                                                                                                                                                                                                                                 ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 67,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_BCM_NOTFALL_DOKU                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 68,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#BIT",
-    "index": 69,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "#ZIALL",
-    "index": 70,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00606_P_ANALYSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 71,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 72,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=D_00606_DOKU_BTRKZPT_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 73,
-    "af_applied": "2017-12-10T00:00:00+01:00"
-  },
-  {
-    "name": "CN=W_IMSDC,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#GSE0001",
     "index": 74,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_BCM_NOTFALL_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#GSE0002",
     "index": 75,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#GSE0003",
     "index": 76,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_LW_O                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#GSE0004",
     "index": 77,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_VORLAGEN                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#GSE0005",
     "index": 78,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QBSE001",
     "index": 79,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_VORLAGEN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QFSE001",
     "index": 80,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00439_LW_O,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QKSE001",
     "index": 81,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_F4S_SPEEDIT                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QLSE001",
     "index": 82,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_F4S_SPEEDIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QSSE001",
     "index": 83,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=W_2018_KH                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QTBNDAG",
     "index": 84,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=W_2018_KH,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QTSE001",
     "index": 85,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_FIREWALL_KONFIG                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#SE0000A",
     "index": 86,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_FIREWALL_KONFIG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#SE0000E",
     "index": 87,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_UCP_VP_NATION                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#SE9298E",
     "index": 88,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_UCP_VP_NATION,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#TSOSEGM",
     "index": 89,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_TWS_NETZPLAENE                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#TXTAA5",
     "index": 90,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "OPCINFO",
+    "name": "#USSSC#2",
     "index": 91,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#USSSCB1",
     "index": 92,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_IPC_P_DOITB                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "TF existiert nicht mehr",
     "index": 93,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_IPC_P_DOITB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 94,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_REMOTE_SUPPORT_XV                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 95,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_REMOTE_SUPPORT_XV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_00458_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 96,
     "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=CTSA_LOGON_2                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_LW_O,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 97,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=CTSA_HOMEDIR_2                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 98,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_00606_PRN_QUEUE1                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_VORLAGEN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 99,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "BCICS001_1",
+    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 100,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "ctsa_usr",
+    "name": "CN=D_00458_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 101,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "#CTSAUSR",
+    "name": "CN=D_00458_INTERN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 102,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "#NMG0400",
+    "name": "BCPTM002_1",
     "index": 103,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=CTSA_LOGON_2,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_AUSTAU_FH_ZI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 104,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=CTSA_HOMEDIR_2,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_KFALL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 105,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_00606_PRN_QUEUE1,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_KFALL_DOKU_SB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 106,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_AD_VDVVV_TM                                                                                                                                                                                                                                                   ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00606_P_ANALYSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 107,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_AD_VDVVV_TM,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 108,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_ID_PORTAL                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00606_DOKU_BTRKZPT_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 109,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_MA_INFO                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=W_IMSDC,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 110,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_PORTAL                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_BCM_NOTFALL_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 111,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_MA_ID                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#BIT",
     "index": 112,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_MA_INFO,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#ZIALL",
     "index": 113,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 114,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "CN=A_SP_I_MA_MA_ID,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_00439_VORLAGEN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 115,
-    "af_applied": "2017-12-11T00:00:00+01:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00439_LW_O,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 116,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_F4S_SPEEDIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 117,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=W_2018_KH,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 118,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_FIREWALL_KONFIG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 119,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_UCP_VP_NATION,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 120,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 121,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "OPCINFO",
+    "index": 122,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_IPC_P_DOITB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 123,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "CN=A_REMOTE_SUPPORT_XV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 124,
+    "af_applied": "2017-12-10T00:00:00+01:00"
+  },
+  {
+    "name": "#ZIINT",
+    "index": 163,
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
     "name": "CN=A_SP_I_MA_ID_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 116,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_IPC_P_PB                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 117,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_IPC_P_IB                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 118,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_IPC_P_CB                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 119,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_IPC_P_PB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 120,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_IPC_P_IB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 121,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_IPC_P_CB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 122,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_ARIS_CON_VIEWER                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 123,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_ARIS_CON_VIEWER,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 124,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_INTERNET                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 125,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_INTERNET,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 126,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_00808_PP_MA                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 127,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_00808_PP_MA,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 128,
-    "af_applied": "2017-12-11T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_00788_CONFLUENCE                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 129,
-    "af_applied": "2018-02-13T00:00:00+01:00"
-  },
-  {
-    "name": "CN=A_00788_CONFLUENCE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 130,
-    "af_applied": "2018-02-13T00:00:00+01:00"
-  },
-  {
-    "name": "#SE0000E",
-    "index": 131,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#SE9298E",
-    "index": 132,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#QBSE921",
-    "index": 133,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#QPSE921",
-    "index": 134,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#QRSE921",
-    "index": 135,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#QSSE921",
-    "index": 136,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#QTSE921",
-    "index": 137,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#SCLM01",
-    "index": 138,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#SE9200E",
-    "index": 139,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#TXT925",
-    "index": 140,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#USSSC#1",
-    "index": 141,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#92MT#61",
-    "index": 142,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#TXT925",
-    "index": 143,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "#TXTAA1",
-    "index": 144,
-    "af_applied": "2018-03-08T00:00:00+01:00"
-  },
-  {
-    "name": "BMQSM007_1",
-    "index": 145,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_UNF_PROJEKTE                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 146,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_PLANUNG_UNF                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 147,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_DOKU_HOST                                                                                                                                                                                                                                                             ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 148,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#AIMS07R",
-    "index": 149,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QRSE071",
-    "index": 150,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QSSE071",
-    "index": 151,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QTSE071",
-    "index": 152,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#SE0700E",
-    "index": 153,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_UNF_PROJEKTE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 154,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_PLANUNG_UNF,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 155,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_DOKU_HOST,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 156,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_PROJEKTE_RKV_2008                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 157,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_PROJEKTE_RKV_2009                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
-    "index": 158,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#AIMS40R",
-    "index": 159,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QRSE401",
-    "index": 160,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QRSE421",
-    "index": 161,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QSSE401",
-    "index": 162,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QSSE421",
-    "index": 163,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QTSE401",
-    "index": 164,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QTSE421",
-    "index": 165,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_PROJEKTE_RKV_2008,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 166,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "CN=D_PROJEKTE_RKV_2009,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
-    "index": 167,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#TXT425",
     "index": 168,
-    "af_applied": "2018-07-17T00:00:00+02:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "#AIMS44R",
+    "name": "CN=A_SP_I_MA_ID_ZI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 169,
-    "af_applied": "2018-07-17T00:00:00+02:00"
+    "af_applied": "2017-12-10T00:00:00+01:00"
   },
   {
-    "name": "#QRSE441",
+    "name": "BAVOM001_1",
+    "index": 303,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "BPPNM002_1",
+    "index": 304,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00447_ZFA,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 305,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00458_BUZ_LOG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 306,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00458_BUZ_DBADMIN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 307,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00458_BUZ_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 308,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00458_BUZ_USER02,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 309,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00458_BUZ_USER05,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 310,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_00458_BUZ_USER04,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 311,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "CN=D_ZMV_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 312,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "BOMZB001_1",
+    "index": 313,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "BFKVM003_1",
+    "index": 314,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#AIMS49P",
+    "index": 315,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#A49KO01",
+    "index": 316,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#A49STG",
+    "index": 317,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#QPSE491",
+    "index": 318,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#49BA#61",
+    "index": 319,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#49KO#01",
+    "index": 320,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#49KO#02",
+    "index": 321,
+    "af_applied": "2018-01-29T00:00:00+01:00"
+  },
+  {
+    "name": "#AIMS44P",
+    "index": 326,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#A44KO01",
+    "index": 327,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#A44KO02",
+    "index": 328,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#A44MVS",
+    "index": 329,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#A44MVS1",
+    "index": 330,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#A44RKR1",
+    "index": 331,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#A44STG",
+    "index": 332,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#LEBEN",
+    "index": 333,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#LRLGP",
+    "index": 334,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "#QPSE441",
+    "index": 335,
+    "af_applied": "2018-02-05T00:00:00+01:00"
+  },
+  {
+    "name": "BAVOM001_1",
     "index": 170,
-    "af_applied": "2018-07-17T00:00:00+02:00"
+    "af_applied": "2018-05-14T00:00:00+02:00"
   },
   {
-    "name": "#QSSE441",
+    "name": "BBLUF000_1",
+    "index": 228,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A45KO01",
+    "index": 229,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A45MVS",
+    "index": 230,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A45STG",
+    "index": 231,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#QPSE151",
+    "index": 232,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#QPSE451",
+    "index": 233,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#QPSE983",
+    "index": 234,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "admiral",
+    "index": 235,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_LVAG_02,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 336,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER09,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 337,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER03,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 338,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 339,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER06,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 340,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER25,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 341,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER23,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 342,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER52,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 343,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER40,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 344,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER41,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 345,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER04,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 346,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_RBM_USER02,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 347,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER81,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 348,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER83,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 349,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER82,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 350,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER84,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 351,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER09,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 352,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 353,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER04,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 354,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER41,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 355,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER52,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 356,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER06,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 357,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER03,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 358,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER02,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 359,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER25,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 360,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER40,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 361,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "CN=A_00028_RBM_USER23,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 362,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "BOMIB001_1",
+    "index": 363,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#AIMS46P",
+    "index": 364,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A46CL01",
+    "index": 365,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A46KO01",
+    "index": 366,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A46STG",
+    "index": 367,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A4600",
+    "index": 368,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A42KO01",
+    "index": 369,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A42MVS",
+    "index": 370,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A42STG",
+    "index": 371,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#QPSE421",
+    "index": 372,
+    "af_applied": "2018-05-16T00:00:00+02:00"
+  },
+  {
+    "name": "#A48KO01",
+    "index": 322,
+    "af_applied": "2018-05-30T00:00:00+02:00"
+  },
+  {
+    "name": "#A48MVS",
+    "index": 323,
+    "af_applied": "2018-05-30T00:00:00+02:00"
+  },
+  {
+    "name": "#A48STG",
+    "index": 324,
+    "af_applied": "2018-05-30T00:00:00+02:00"
+  },
+  {
+    "name": "#QPSE481",
+    "index": 325,
+    "af_applied": "2018-05-30T00:00:00+02:00"
+  },
+  {
+    "name": "#QPSE011",
+    "index": 63,
+    "af_applied": "2018-06-20T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_KFALL_DOKU_SB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 171,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE441",
+    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 172,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4400E",
+    "name": "CN=D_ZISCM_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 173,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4406E",
+    "name": "CN=D_01218_PVB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 174,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_ZBRW_IASFC                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_01225_UM_LWL_TRASSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 175,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_ZBRW_IASFC,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 176,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00455_BPM_USER03                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#BIT",
     "index": 177,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00455_BPM_USER03,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#OPCTINF",
     "index": 178,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_PROJEKTARBEIT                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#TXTAA5",
     "index": 179,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=W_NBF_PV                                                                                                                                                                                                                                                                ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "rvgroup",
     "index": 180,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=W_00447_DOKU                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QRSE974",
     "index": 181,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=A_CC_T_KB                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QSSE974",
     "index": 182,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_ADMIRAL                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#QTSE974",
     "index": 183,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00028_PPL                                                                                                                                                                                                                                                             ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00456_SCM_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 184,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#OPCT45",
+    "name": "BCPTM001_1",
     "index": 185,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE031",
+    "name": "BCPTM002_1",
     "index": 186,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE451",
+    "name": "#GSE0001",
     "index": 187,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE451",
+    "name": "#GSE0002",
     "index": 188,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE45R",
+    "name": "#GSE0003",
     "index": 189,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE451",
+    "name": "#GSE0004",
     "index": 190,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4500E",
+    "name": "#GSE0005",
     "index": 191,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_PROJEKTARBEIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#NMG5000",
     "index": 192,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=W_NBF_PV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QBSE001",
     "index": 193,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=W_00447_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QBSE011",
     "index": 194,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=A_CC_T_KB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QKSE001",
     "index": 195,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_ADMIRAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QLSE001",
     "index": 196,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00028_PPL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QRSE011",
     "index": 197,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SU4600T",
+    "name": "#QRSE981",
     "index": 198,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#AIMS46R",
+    "name": "#QSSE001",
     "index": 199,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE461",
+    "name": "#QSSE011",
     "index": 200,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE461",
+    "name": "#QSSE981",
     "index": 201,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE03R",
+    "name": "#QTBNDAG",
     "index": 202,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE461",
+    "name": "#QTSE001",
     "index": 203,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4600E",
+    "name": "#QTSE982",
     "index": 204,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "rbm",
+    "name": "#SE0000A",
     "index": 205,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE481",
+    "name": "#SE0000E",
     "index": 206,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE481",
+    "name": "#SE9298E",
     "index": 207,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE481",
+    "name": "#TSOSEGM",
     "index": 208,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4800E",
+    "name": "#TXTAA1",
     "index": 209,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00028_ZMV                                                                                                                                                                                                                                                             ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "#TXT985",
     "index": 210,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#AIMS49R",
+    "name": "#USSSC#2",
     "index": 211,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE491",
+    "name": "#USSSCB1",
     "index": 212,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE491",
+    "name": "E010201A",
     "index": 213,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE49R",
+    "name": "OPCINFO",
     "index": 214,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE491",
+    "name": "#QRSE151",
     "index": 215,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4200E",
+    "name": "#QSSE151",
     "index": 216,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4207E",
+    "name": "#QTSE151",
     "index": 217,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE4900E",
+    "name": "#DB2TOOL",
     "index": 218,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00028_ZMV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_KFALL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 219,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "BMQSM040_1",
+    "name": "CN=D_KFALL_DOKU_SB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 220,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#AIMS80R",
+    "name": "CN=D_KFALL_SYSSTEUER,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 221,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE801",
+    "name": "CN=D_K_KONZEPT_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 222,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE801",
+    "name": "CN=W_ZISE_VSS,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 223,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE801",
+    "name": "#QFSE001",
     "index": 224,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE8000E",
+    "name": "#QRSE641",
     "index": 225,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#OPCTINF",
+    "name": "#QSSE641",
     "index": 226,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#OPCT60",
+    "name": "scm-user",
     "index": 227,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE151",
-    "index": 228,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QSSE151",
-    "index": 229,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QTSE151",
-    "index": 230,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#DB2TOOL",
-    "index": 231,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QRSE974",
-    "index": 232,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QSSE974",
-    "index": 233,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#QTSE974",
-    "index": 234,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#GSE0001",
-    "index": 235,
-    "af_applied": "2018-07-17T00:00:00+02:00"
-  },
-  {
-    "name": "#GSE0002",
+    "name": "BMQSM007_1",
     "index": 236,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#GSE0003",
+    "name": "CN=D_UNF_PROJEKTE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 237,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#GSE0004",
+    "name": "CN=D_PLANUNG_UNF,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 238,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#GSE0005",
+    "name": "CN=D_DOKU_HOST,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 239,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QBSE001",
+    "name": "#AIMS07R",
     "index": 240,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QKSE001",
+    "name": "#QRSE071",
     "index": 241,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QLSE001",
+    "name": "#QSSE071",
     "index": 242,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE001",
+    "name": "#QTSE071",
     "index": 243,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTBNDAG",
+    "name": "#SE0700E",
     "index": 244,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE001",
+    "name": "CN=D_PROJEKTE_RKV_2008,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 245,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE0000A",
+    "name": "CN=D_PROJEKTE_RKV_2009,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 246,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE0000E",
+    "name": "#AIMS40R",
     "index": 247,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#SE9298E",
+    "name": "#QRSE401",
     "index": 248,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#TSOSEGM",
+    "name": "#QRSE421",
     "index": 249,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#USSSC#2",
+    "name": "#QSSE401",
     "index": 250,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#USSSCB1",
+    "name": "#QSSE421",
     "index": 251,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "BCPTM002_1",
+    "name": "#QTSE401",
     "index": 252,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "BCPTM001_1",
+    "name": "#QTSE421",
     "index": 253,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "OPCINFO",
+    "name": "#TXT425",
     "index": 254,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#TXTAA1",
+    "name": "#AIMS44R",
     "index": 255,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00456_SCM_USER01,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QRSE441",
     "index": 256,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#NMG5000",
+    "name": "#QSSE441",
     "index": 257,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QBSE011",
+    "name": "#QTSE441",
     "index": 258,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE011",
+    "name": "#SE4400E",
     "index": 259,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE981",
+    "name": "#SE4406E",
     "index": 260,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE011",
+    "name": "CN=D_ZBRW_IASFC,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 261,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE981",
+    "name": "CN=D_00455_BPM_USER03,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 262,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QTSE982",
+    "name": "CN=D_PROJEKTARBEIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 263,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#TXT985",
+    "name": "CN=W_NBF_PV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 264,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "E010201A",
+    "name": "CN=W_00447_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 265,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QFSE001",
+    "name": "CN=A_CC_T_KB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 266,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_KFALL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_ADMIRAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 267,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_KFALL_DOKU_SB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "CN=D_00028_PPL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 268,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_KFALL_SYSSTEUER,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#OPCT45",
     "index": 269,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_K_KONZEPT_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QRSE031",
     "index": 270,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=W_ZISE_VSS,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QRSE451",
     "index": 271,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QRSE641",
+    "name": "#QSSE451",
     "index": 272,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#QSSE641",
+    "name": "#QTSE45R",
     "index": 273,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "scm-user",
+    "name": "#QTSE451",
     "index": 274,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#TXTAA5",
+    "name": "#SE4500E",
     "index": 275,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#BIT",
+    "name": "#SU4600T",
     "index": 276,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "#OPCTINF",
+    "name": "#AIMS46R",
     "index": 277,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_KFALL_DOKU_SB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QRSE461",
     "index": 278,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QSSE461",
     "index": 279,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_ZISCM_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QTSE03R",
     "index": 280,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_01218_PVB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#QTSE461",
     "index": 281,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_01225_UM_LWL_TRASSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "#SE4600E",
     "index": 282,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "name": "rbm",
     "index": 283,
     "af_applied": "2018-07-17T00:00:00+02:00"
   },
   {
-    "name": "rvgroup",
+    "name": "#QRSE481",
     "index": 284,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QSSE481",
+    "index": 285,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QTSE481",
+    "index": 286,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#SE4800E",
+    "index": 287,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "CN=D_00028_ZMV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
+    "index": 288,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#AIMS49R",
+    "index": 289,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QRSE491",
+    "index": 290,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QSSE491",
+    "index": 291,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QTSE49R",
+    "index": 292,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QTSE491",
+    "index": 293,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#SE4200E",
+    "index": 294,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#SE4207E",
+    "index": 295,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#SE4900E",
+    "index": 296,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "BMQSM040_1",
+    "index": 297,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#AIMS80R",
+    "index": 298,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QRSE801",
+    "index": 299,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QSSE801",
+    "index": 300,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#QTSE801",
+    "index": 301,
+    "af_applied": "2018-07-17T00:00:00+02:00"
+  },
+  {
+    "name": "#SE8000E",
+    "index": 302,
     "af_applied": "2018-07-17T00:00:00+02:00"
   }
 ]
