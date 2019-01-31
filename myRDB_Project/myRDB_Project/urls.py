@@ -22,6 +22,7 @@ from myRDB_app import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, 'user')
 router.register(r'userlistings', views.UserListingViewSet, 'userlisting')
+router.register(r'searchlistings', views.CompleteUserListingViewSet, 'searchlisting')
 router.register(r'roles', views.RoleViewSet, 'role')
 router.register(r'afs', views.AFViewSet, 'af')
 router.register(r'gfs', views.GFViewSet, 'gf')
@@ -30,7 +31,7 @@ router.register(r'orgas', views.OrgaViewSet, 'orga')
 router.register(r'groups', views.GroupViewSet, 'group')
 router.register(r'departments', views.DepartmentViewSet, ' department')
 router.register(r'zi_organisations', views.ZI_OrganisationViewSet, 'zi_organisation')
-router.register(r'tf_application', views.TF_ApplicationViewSet, 'tf_application')
+router.register(r'tf_applications', views.TF_ApplicationViewSet, 'tf_application')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

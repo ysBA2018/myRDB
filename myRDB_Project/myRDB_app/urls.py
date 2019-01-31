@@ -14,5 +14,6 @@ urlpatterns = [
     path('profile/compare/', views.Compare.as_view(), name='compare'),
     path('csvToMongo/', views.CSVtoMongoDB.as_view(), name='csvToMongo'),
     path('users/', views.Users.as_view(), name='users'),
+    path('search_all/', views.Search_All.as_view(), name='search_all'),
     url(r'^ajax_calls/search/', views.Profile.autocompleteModel),
 ]

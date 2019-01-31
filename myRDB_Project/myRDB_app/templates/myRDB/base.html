@@ -36,8 +36,11 @@
         <ul class="nav navbar-nav navbar-left">
             {% if user.is_authenticated %}
             <li><a class="nav-item nav-link" href="{% url 'myRDB:profile' %}">Profile</a></li>
+                {% if user.is_staff %}
             <li><a class="nav-item nav-link" href="{% url 'myRDB:csvToMongo' %}">CSVintoMongoDB</a></li>
             <li><a class="nav-item nav-link" href="{% url 'myRDB:users' %}">Users</a></li>
+            <li><a class="nav-item nav-link" href="{% url 'myRDB:search_all' %}">Search</a></li>
+                {% endif %}
             {% endif %}
         </ul>
 

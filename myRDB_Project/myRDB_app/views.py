@@ -1,28 +1,33 @@
 import csv
 import json
+import re
 
+from json2html import *
 import requests
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from django.shortcuts import render
 import datetime
 
-#from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
+from mongoengine import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-#from .filters import UserFilter
+# from .filters import UserFilter
 from .forms import CustomUserCreationForm, SomeForm
 from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application, User_AF, User_TF, \
     User_GF
 from rest_framework import viewsets
 from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSerializer, TFSerializer, OrgaSerializer, \
-    GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer, UserListingSerializer
+    GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer, UserListingSerializer, \
+    CompleteUserListingSerializer
 from django.views import generic
 
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
 
 class CSVtoMongoDB(generic.FormView):
     template_name = 'myRDB/csvToMongo.html'
@@ -75,7 +80,6 @@ class CSVtoMongoDB(generic.FormView):
                         gf.save()
                     gf.tfs.add(tf)
                     gf.save()
-
 
                     af = None
                     try:
@@ -135,41 +139,40 @@ class CSVtoMongoDB(generic.FormView):
                         if not user.direct_connect_tfs:
                             user.direct_connect_tfs = [TF()]
                         if not user.user_afs:
-                            user.user_afs=[]
-                    if user.user_afs.__len__()==0:
+                            user.user_afs = []
+                    if user.user_afs.__len__() == 0:
                         user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)
                         user_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[])
-                        user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk,gfs=[])
+                        user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[])
                         user_gf.tfs.append(user_tf)
                         user_af.gfs.append(user_gf)
                         user.user_afs.append(user_af)
                     else:
-                        afcount=0
+                        afcount = 0
                         for uaf in user.user_afs:
                             if uaf.af_name != af.af_name:
-                                afcount+=1
+                                afcount += 1
                             else:
-                                gfcount=0
+                                gfcount = 0
                                 for ugf in uaf.gfs:
                                     if ugf.gf_name != gf.gf_name:
                                         gfcount += 1
                                     else:
-                                        tfcount=0
+                                        tfcount = 0
                                         for utf in ugf.tfs:
                                             if utf.tf_name != tf.tf_name:
                                                 tfcount += 1
                                             else:
                                                 break
-                                        if tfcount==ugf.tfs.__len__():
+                                        if tfcount == ugf.tfs.__len__():
                                             ugf.tfs.append(User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk))
                                 if gfcount == uaf.gfs.__len__():
-                                    uaf.gfs.append(User_GF(gf_name=gf.gf_name,model_gf_pk=gf.pk,tfs=[User_TF(tf_name=tf.tf_name,model_tf_pk=tf.pk)]))
+                                    uaf.gfs.append(User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
+                                                           tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)]))
                         if afcount == user.user_afs.__len__():
-                            user.user_afs.append(User_AF(af_name=af.af_name,model_af_pk=af.pk,gfs=[User_GF(gf_name=gf.gf_name,model_gf_pk=gf.pk,tfs=[User_TF(tf_name=tf.tf_name,model_tf_pk=tf.pk)])]))
-
-
-
-
+                            user.user_afs.append(User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[
+                                User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
+                                        tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)])]))
 
                     user.direct_connect_afs.add(af)
                     user.save()
@@ -214,11 +217,84 @@ class IndexView(generic.ListView):
         return Response({'user': logged_in_user})
 
 
+class Search_All(generic.ListView):
+    template_name = 'myRDB/search_all.html'
+    extra_context = {}
+
+    def get_queryset(self):
+        logged_in_user_token = self.request.user.auth_token
+        url = 'http://127.0.0.1:8000/searchlistings/'
+        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
+        lis = ['zi_organisations', 'orgas','tf_applications', 'departments', 'roles', 'groups']
+        for e in lis:
+            self.extra_context[e] = populate_choice_fields(headers, e)
+        params, changed = build_url_params(self.request, self.extra_context)
+        if 'entries_per_page' in self.request.GET:
+            self.paginate_by = self.request.GET['entries_per_page']
+            if self.paginate_by == '':
+                self.paginate_by = 20
+        else:
+            self.paginate_by = 20
+        if params == "":
+            prefix = "?"
+        else:
+            prefix = "&"
+        params = params + prefix + "entries_per_page=" + self.paginate_by.__str__()
+        url = url + params
+
+        if not self.extra_context.keys().__contains__('data') or changed == True:
+            res = requests.get(url, headers=headers)
+            user_json_data = res.json()
+            self.extra_context['data'] = self.prepare_table_data(user_json_data, headers)
+        self.extra_context['params_for_pagination'] = params
+        return self.extra_context['data']
+
+        # table=json2html.convert(json=user_json_data['results'])
+        # print(table)
+        # return Response(data=user_json_data, content_type='application/html')
+
+    def prepare_table_data(self, json_data, headers):
+        lines = []
+
+        url = 'http://127.0.0.1:8000/tfs/'
+        res = requests.get(url, headers=headers)
+        tf_json_data = res.json()
+        for user in json_data['results']:
+            for af in user['user_afs']:
+                if self.request.GET.keys().__contains__('af_name'):
+                    if not af['af_name'].__contains__(self.request.GET['af_name']):
+                        continue
+                for gf in af['gfs']:
+                    if self.request.GET.keys().__contains__('gf_name'):
+                        if not gf['gf_name'].__contains__(self.request.GET['gf_name']):
+                            continue
+                    for tf in gf['tfs']:
+                        if self.request.GET.keys().__contains__('tf_name'):
+                            if not tf['tf_name'].__contains__(self.request.GET['tf_name']):
+                                continue
+                        model_tf = [x for x in tf_json_data['results'] if x['pk'] == tf['model_tf_pk']].pop(0)
+                        line = [user['identity'], user['name'], user['first_name'], tf['tf_name'], gf['gf_name'],
+                                af['af_name'],
+                                model_tf['tf_owner_orga']['team'],
+                                model_tf['tf_application']['application_name'], model_tf['tf_description'], '',
+                                user['deleted']]
+                        if self.extra_context.keys().__contains__('tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
+                            if model_tf['tf_owner_orga']['team'] == self.request.GET['tf_owner_orga'] and model_tf['tf_application']['application_name']==self.request.GET['tf_application']:
+                                lines.append(line)
+                        elif self.extra_context.keys().__contains__('tf_owner_orga') and not self.extra_context.keys().__contains__('tf_application'):
+                            if model_tf['tf_owner_orga']['team'] == self.request.GET['tf_owner_orga']:
+                                lines.append(line)
+                        elif not self.extra_context.keys().__contains__('tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
+                            if model_tf['tf_application']['application_name']==self.request.GET['tf_application']:
+                                lines.append(line)
+                        else:
+                            lines.append(line)
+        return lines
+
+
 class Users(generic.ListView):
     template_name = 'myRDB/users.html'
-    #form_class = FilterUserForm
     extra_context = {}
-    #paginate_by = 8
 
     def get_queryset(self):
         logged_in_user_token = self.request.user.auth_token
@@ -226,45 +302,8 @@ class Users(generic.ListView):
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         lis = ['zi_organisations', 'orgas', 'departments', 'roles', 'groups']
         for e in lis:
-            self.extra_context[e]=self.populate_choice_fields(headers,e)
-
-        params=""
-        if 'userSearch' in self.request.GET:
-            user_search =self.request.GET['userSearch']
-            search_what = self.request.GET['search_what']
-            self.extra_context["userSearch"] = user_search
-            self.extra_context["search_what"] = search_what
-            params = "?userSearch=" + user_search + "&search_what="+search_what
-        if 'zi_organisation' in self.request.GET:
-            zi_organisation='----'
-            if not self.request.GET['zi_organisation'] == '----':
-                zi_organisation = self.request.GET['zi_organisation']
-                params = params+"&zi_organisation="+zi_organisation
-            self.extra_context["zi_organisation"] = zi_organisation
-        if 'department' in self.request.GET:
-            department='----'
-            if not self.request.GET['department'] == '----':
-                department = self.request.GET['department']
-                params = params + "&department=" + department
-            self.extra_context["department"] = department
-        if 'orga' in self.request.GET :
-            orga='----'
-            if not self.request.GET['orga'] == '----':
-                orga = self.request.GET['orga']
-                params = params + "&orga=" + orga
-            self.extra_context["orga"] = orga
-        if 'role' in self.request.GET:
-            role='----'
-            if not self.request.GET['role'] == '----':
-                role = self.request.GET['role']
-                params = params + "&role=" + role
-            self.extra_context["role"] = role
-        if 'group' in self.request.GET:
-            group='----'
-            if not self.request.GET['group'] == '----':
-                group = self.request.GET['group']
-                params = params + "&group=" + group
-            self.extra_context["group"] = group
+            self.extra_context[e] = populate_choice_fields(headers, e)
+        params, changed = build_url_params(self.request, self.extra_context)
         if 'entries_per_page' in self.request.GET:
             self.paginate_by = self.request.GET['entries_per_page']
             if self.paginate_by == '':
@@ -272,20 +311,21 @@ class Users(generic.ListView):
         else:
             self.paginate_by = 10
         if params == "":
-            prefix="?"
+            prefix = "?"
         else:
-            prefix="&"
-        params = params + prefix +"entries_per_page="+ self.paginate_by.__str__()
+            prefix = "&"
+        params = params + prefix + "entries_per_page=" + self.paginate_by.__str__()
         url = url + params
         self.extra_context['params_for_pagination'] = params
-        if "search_what" in url or not self.extra_context.keys().__contains__('paginated_users'):
+
+        if changed == True or not self.extra_context.keys().__contains__('paginated_users'):
             res = requests.get(url, headers=headers)
             user_json_data = res.json()
-            #user_count= user_json_data['count']
+            # user_count= user_json_data['count']
             users = {'users': user_json_data['results']}
             self.extra_context['paginated_users'] = users
         else:
-            users= self.extra_context['paginated_users']
+            users = self.extra_context['paginated_users']
         response = Response(users)
         print(response.data['users'])
 
@@ -301,14 +341,142 @@ class Users(generic.ListView):
         self.extra_context['paged_data'] = user_paged_data
         return response.data['users']
 
-    def populate_choice_fields(self, headers, field):
-        url = 'http://127.0.0.1:8000/'+field+'/'
-        res = requests.get(url, headers=headers)
-        zi_json_data = res.json()
-        zi_organisations = {field: zi_json_data['results']}
-        response = Response(zi_organisations)
-        return response.data[field]
 
+def populate_choice_fields(headers, field):
+    url = 'http://127.0.0.1:8000/' + field + '/'
+    res = requests.get(url, headers=headers)
+    json_data = res.json()
+    results = {field: json_data['results']}
+    response = Response(results)
+    return response.data[field]
+
+
+def build_url_params(request, extra_context):
+    params = ""
+    changed = False
+    if 'userSearch' in request.GET:
+        user_search = request.GET['userSearch']
+        search_what = request.GET['search_what']
+        if extra_context.keys().__contains__("user_search"):
+            if user_search != extra_context["user_search"] or search_what != extra_context["search_what"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["userSearch"] = user_search
+        extra_context["search_what"] = search_what
+        params = "?userSearch=" + user_search + "&search_what=" + search_what
+    if 'zi_organisation' in request.GET:
+        zi_organisation = '----'
+        if not request.GET['zi_organisation'] == '----':
+            zi_organisation = request.GET['zi_organisation']
+            params = params + "&zi_organisation=" + zi_organisation
+        if extra_context.keys().__contains__("zi_organisation"):
+            if zi_organisation != extra_context["zi_organisation"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["zi_organisation"] = zi_organisation
+    if 'department' in request.GET:
+        department = '----'
+        if not request.GET['department'] == '----':
+            department = request.GET['department']
+            params = params + "&department=" + department
+        if extra_context.keys().__contains__("department"):
+            if department != extra_context["department"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["department"] = department
+    if 'orga' in request.GET:
+        orga = '----'
+        if not request.GET['orga'] == '----':
+            orga = request.GET['orga']
+            params = params + "&orga=" + orga
+        if extra_context.keys().__contains__("orga"):
+            if orga != extra_context["orga"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["orga"] = orga
+    if 'tf_owner_orga' in request.GET:
+        tf_owner_orga = '----'
+        if not request.GET['tf_owner_orga'] == '----':
+            tf_owner_orga = request.GET['tf_owner_orga']
+            params = params + "&tf_owner_orga=" + tf_owner_orga
+        if extra_context.keys().__contains__("tf_owner_orga"):
+            if tf_owner_orga != extra_context["tf_owner_orga"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["tf_owner_orga"] = tf_owner_orga
+    if 'tf_application' in request.GET:
+        tf_application = '----'
+        if not request.GET['tf_application'] == '----':
+            tf_application = request.GET['tf_application']
+            params = params + "&tf_application=" + tf_application
+        if extra_context.keys().__contains__("tf_application"):
+            if tf_application != extra_context["tf_application"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["tf_application"] = tf_application
+    if 'role' in request.GET:
+        role = '----'
+        if not request.GET['role'] == '----':
+            role = request.GET['role']
+            params = params + "&role=" + role
+        if extra_context.keys().__contains__("role"):
+            if role != extra_context["role"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["role"] = role
+    if 'group' in request.GET:
+        group = '----'
+        if not request.GET['group'] == '----':
+            group = request.GET['group']
+            params = params + "&group=" + group
+        if extra_context.keys().__contains__("group"):
+            if group != extra_context["group"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["group"] = group
+    if 'af_name' in request.GET:
+        af_name =''
+        if not request.GET['af_name'] == '':
+            af_name = request.GET['af_name']
+            params = params + "&af_name=" + af_name
+        if extra_context.keys().__contains__("af_name"):
+            if af_name != extra_context["af_name"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["af_name"] = af_name
+    if 'gf_name' in request.GET:
+        gf_name = ''
+        if not request.GET['gf_name'] == '':
+            gf_name = request.GET['gf_name']
+            params = params + "&gf_name=" + gf_name
+        if extra_context.keys().__contains__("gf_name"):
+            if gf_name != extra_context["gf_name"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["gf_name"] = gf_name
+    if 'tf_name' in request.GET:
+        tf_name = ''
+        if not request.GET['tf_name'] == '':
+            tf_name = request.GET['tf_name']
+            params = params + "&tf_name=" + tf_name
+        if extra_context.keys().__contains__("tf_name"):
+            if tf_name != extra_context["tf_name"]:
+                changed = True
+        else:
+            changed = True
+        extra_context["tf_name"] = tf_name
+
+    return params, changed
 
 
 class Compare(generic.ListView):
@@ -324,7 +492,7 @@ class Compare(generic.ListView):
         compareUserIdentity = self.request.GET['userSearch']
         print(compareUserIdentity)
 
-        #TODO: hier noch lösung mit Params über API finden!
+        # TODO: hier noch lösung mit Params über API finden!
         compareUser = User.objects.get(identity=compareUserIdentity)
 
         logged_in_user_token = self.request.user.auth_token
@@ -471,12 +639,12 @@ def prepareTableData(user, roles, afs, headers):
     tf_count = len(tfList)
     return data, gf_count, tf_count
 
+
 def get_af_by_key(pk, headers):
     url = 'http://127.0.0.1:8000/afs/%d' % pk
     res = requests.get(url, headers=headers)
     af_json = res.json()
     return af_json
-
 
 
 def prepareJSONdata(identity, user_json_data, compareUser, headers):
@@ -487,7 +655,7 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
     for af in user_json_data['children']:
         af['name'] = af.pop('af_name')
         af['children'] = af.pop('gfs')
-        model_af = get_af_by_key(pk=af['model_af_pk'],headers=headers)
+        model_af = get_af_by_key(pk=af['model_af_pk'], headers=headers)
         if model_af['af_applied'] is None:
             af_applied = ""
         else:
@@ -518,6 +686,34 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
         with open(path, 'w') as outfile:
             json.dump(scatterData, outfile, indent=2)
 
+
+class CompleteUserListingViewSet(viewsets.ModelViewSet):
+    """
+        API endpoint that allows users to be listed and detail-viewed
+        """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CompleteUserListingSerializer
+
+    def get_queryset(self):
+        self.paginator.page_size = 1000
+        if 'search_what' in self.request.GET:
+            search_what = self.request.GET["search_what"]
+            user_search = self.request.GET["userSearch"]
+            if search_what == "identity":
+                users = User.objects.filter(identity__startswith=user_search).order_by('name')
+            elif search_what == "name":
+                users = User.objects.filter(name__startswith=user_search).order_by('name')
+            elif search_what == "first_name":
+                users = User.objects.filter(first_name__startswith=user_search).order_by('name')
+            if 'orga' in self.request.GET:
+                orga = self.request.GET['orga']
+                users = users.filter(orga={'team': orga})
+
+        else:
+            return User.objects.all().order_by('name')
+        return users
+
+
 class UserListingViewSet(viewsets.ModelViewSet):
     """
         API endpoint that allows users to be listed and detail-viewed
@@ -532,14 +728,14 @@ class UserListingViewSet(viewsets.ModelViewSet):
             search_what = self.request.GET["search_what"]
             user_search = self.request.GET["userSearch"]
             if search_what == "identity":
-                users= User.objects.filter(identity__startswith=user_search).order_by('name')
+                users = User.objects.filter(identity__startswith=user_search).order_by('name')
             elif search_what == "name":
-                users= User.objects.filter(name__startswith=user_search).order_by('name')
+                users = User.objects.filter(name__startswith=user_search).order_by('name')
             elif search_what == "first_name":
-                users= User.objects.filter(first_name__startswith=user_search).order_by('name')
+                users = User.objects.filter(first_name__startswith=user_search).order_by('name')
             if 'orga' in self.request.GET:
                 orga = self.request.GET['orga']
-                users = users.filter(orga={'team':orga})
+                users = users.filter(orga={'team': orga})
         else:
             return User.objects.all().order_by('name')
         return users
@@ -552,12 +748,12 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     page_size = 10
-    #filter_backends = (DjangoFilterBackend,)
-    #filterset_class = UserFilter
+
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_class = UserFilter
 
     def get_queryset(self):
         return User.objects.all().order_by('name')
-
 
 
 class RoleViewSet(viewsets.ModelViewSet):
@@ -582,7 +778,6 @@ class AFViewSet(viewsets.ModelViewSet):
         return AF.objects.all()
 
 
-
 class GFViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows GF's to be viewed or edited.
@@ -602,6 +797,7 @@ class TFViewSet(viewsets.ModelViewSet):
     serializer_class = TFSerializer
 
     def get_queryset(self):
+        self.paginator.page_size = 5000
         return TF.objects.all()
 
 
@@ -613,6 +809,7 @@ class OrgaViewSet(viewsets.ModelViewSet):
     serializer_class = OrgaSerializer
 
     def get_queryset(self):
+        self.paginator.page_size = 1000
         return Orga.objects.all()
 
 
@@ -659,4 +856,3 @@ class TF_ApplicationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return TF_Application.objects.all()
 # Create your views here.
-
