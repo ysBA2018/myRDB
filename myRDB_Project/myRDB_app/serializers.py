@@ -5,56 +5,56 @@ from .models import Orga, Department, Group, ZI_Organisation, TF_Application, TF
 class OrgaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Orga
-        fields = ('url', 'team', 'theme_owner')
+        fields = ('url','pk', 'team', 'theme_owner')
 
 
 class DepartmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Department
-        fields = ('url', 'department_name')
+        fields = ('url','pk', 'department_name')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
-        fields = ('url', 'group_name')
+        fields = ('url','pk', 'group_name')
 
 
 class ZI_OrganisationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ZI_Organisation
-        fields = ('url', 'zi_organisation_name')
+        fields = ('url','pk', 'zi_organisation_name')
 
 
 class TF_ApplicationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TF_Application
-        fields = ('url', 'application_name')
+        fields = ('url','pk', 'application_name')
 
 
 class TFSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TF
-        fields = ('url', 'tf_name', 'tf_description', 'tf_owner_orga', 'tf_application', 'criticality',
+        fields = ('url','pk', 'tf_name', 'tf_description', 'tf_owner_orga', 'tf_application', 'criticality',
                   'highest_criticality_in_AF')
     tf_owner_orga = OrgaSerializer()
     tf_application = TF_ApplicationSerializer()
 class GFSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GF
-        fields = ('url', 'gf_name', 'gf_description', 'tfs')
+        fields = ('url','pk', 'gf_name', 'gf_description', 'tfs')
     tfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='tf-detail')
 
 class AFSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AF
-        fields = ('url', 'af_name', 'af_description', 'af_applied', 'af_valid_from', 'af_valid_till', 'gfs')
+        fields = ('url','pk', 'af_name', 'af_description', 'af_applied', 'af_valid_from', 'af_valid_till', 'gfs')
     gfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='gf-detail')
 
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Role
-        fields = ('url', 'role_name', 'role_description', 'afs')
+        fields = ('url','pk', 'role_name', 'role_description', 'afs')
     afs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='role-detail')
 
 class UserTFSerializer(serializers.Serializer):
@@ -76,7 +76,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = (
-        'url', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
+        'url','pk', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
         'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password','user_afs')
 
     roles = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='role-detail')
@@ -94,6 +94,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class UserListingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'identity', 'name', 'first_name', 'deleted', )
+        fields = ('url', 'pk','identity', 'name', 'first_name', 'deleted', )
+
+class CompleteUserListingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('url','pk', 'identity', 'name', 'first_name', 'deleted','user_afs' )
+
+    user_afs = UserAFSerializer(many=True, read_only=True)
+
 
 
