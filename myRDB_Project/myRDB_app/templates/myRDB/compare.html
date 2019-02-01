@@ -1,0 +1,94 @@
+{% extends 'myRDB/base.html' %}
+{% block content %}
+<div class="row top-buffer">
+    <div class="col-6" id="user_card">
+        {% include 'myRDB/profile_head.html' %}
+        <div class="card">
+            <div class="card-body">
+                {#{% if viewMode.one %}#}
+                {% include 'myRDB/circlePackingTemplate.html' %}
+                {#{% else %}#}
+                {% include 'myRDB/compareProfileTableTemplate.html' %}
+                {#{% endif %}#}
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        {% include 'myRDB/compare_profile_head.html' %}
+        <div class="card">
+            <div class="card-body">
+                {#{% if viewMode2.two2 %}#}
+                {% include 'myRDB/compareCirclePackingTemplate.html' %}
+                {#{% else %}#}
+                {% include 'myRDB/compareTableTemplate.html' %}
+                {#{% endif %}#}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid top-buffer">
+    {# hier umschalt button auf tabellarische/visuelle ansicht #}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <label for="viewMode">Ansicht: </label>
+                </div>
+                <div class="col-3">
+                    <select id="viewMode" class="form-control" onchange="location.reload()">
+                        <option id="one" itemid="one" class="one">Visuelle Ansicht</option>
+                        <option id="two" itemid="two" class="two">Tabellarische Ansicht</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row top-buffer">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                {# Hier die Trash-Drop-Fläche realisieren #}
+                {% include 'myRDB/trashTemplate.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                {# Hier die Übertragenen-liste realisieren #}
+            </div>
+            <div class="card-footer">
+                <p class="card-text"> Übertragene Rechte werden hier angezeigt</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="row-fluid">
+            <div class="card">
+                <div class="card-body">
+                    {# Hier die legende realisieren #}
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid top-buffer">
+            <div class="card">
+                <div class="card-body">
+                    {# Hier die verschiedenen Buttons realisieren #}
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Rechte Beantragen</button>
+                        </div>
+                    </div>
+                    <div class="row top-buffer">
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Löschung beantragen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,24 +1,29 @@
 {
   "url": "http://127.0.0.1:8000/users/1/",
+  "pk": 1,
   "identity": "xv42983",
   "name": "Simchen",
   "first_name": "Yannick",
   "deleted": false,
   "orga": {
     "url": null,
+    "pk": null,
     "team": "",
     "theme_owner": ""
   },
   "department": {
     "url": null,
+    "pk": null,
     "department_name": ""
   },
   "group": {
     "url": null,
+    "pk": null,
     "group_name": ""
   },
   "zi_organisation": {
     "url": null,
+    "pk": null,
     "zi_organisation_name": ""
   },
   "roles": [],
