@@ -488,7 +488,7 @@ class Compare(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        self.extra_context['current_site'] = "compare"
         compareUserIdentity = self.request.GET['userSearch']
         print(compareUserIdentity)
 
@@ -508,7 +508,7 @@ class Compare(generic.ListView):
 
         prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
 
-        compare_paginator = Paginator(list(data), 10)
+        compare_paginator = Paginator(data, 10)
         page = self.request.GET.get('compare_page')
 
         try:
@@ -528,38 +528,41 @@ class Compare(generic.ListView):
         return context
 
     def get_queryset(self):
-        if not "user_identity" in self.request.GET.keys():
-            user = self.request.user
-        else:
-            # TODO: hier noch lösung mit Params über API finden!
-            user = User.objects.get(identity=self.request.GET['user_identity'])
-        logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/%d' % user.pk
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        res = requests.get(url, headers=headers)
-        user_json_data = res.json()
+        user_data = self.request.session.get('user_data')
+        table_data = self.request.session.get('table_data')
+        self.extra_context['user_identity'] = user_data['identity']
+        self.extra_context['user_first_name'] = user_data['first_name']
+        self.extra_context['user_name'] = user_data['name']
+        self.extra_context['user_department'] = user_data['department']
+        self.extra_context['role_count'] = self.request.session.get('role_count')
+        self.extra_context['af_count'] = self.request.session.get('af_count')
+        self.extra_context['gf_count'] = self.request.session.get('gf_count')
+        self.extra_context['tf_count'] = self.request.session.get('tf_count')
 
-        userid = user.id
-        roles = user_json_data['roles']
-        print(userid, user)
-        afs = user_json_data['user_afs']
+        roles = user_data['roles']
+        afs = user_data['user_afs']
 
-        data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
+        return table_data
 
-        prepareJSONdata(user.identity, user_json_data, False, headers)
 
-        self.extra_context['role_count'] = len(roles)
-        self.extra_context['af_count'] = len(afs)
-        self.extra_context['gf_count'] = gf_count
-        self.extra_context['tf_count'] = tf_count
-        self.extra_context['user_identity'] = user_json_data['identity']
-        self.extra_context['user_first_name'] = user_json_data['first_name']
-        self.extra_context['user_name'] = user_json_data['name']
-        self.extra_context['user_department'] = user_json_data['department']
-        return list(data)
+class ProfileRightsAnalysis(generic.ListView):
+    model = User
+    template_name = 'myRDB/profile_rights_analysis.html'
+    extra_context = {}
 
-    # Create your views here.
-
+    def get_queryset(self):
+        self.extra_context['current_site'] = "analysis"
+        user_data = self.request.session.get('user_data')
+        table_data = self.request.session.get('table_data')
+        self.extra_context['user_identity']=user_data['identity']
+        self.extra_context['user_first_name'] = user_data['first_name']
+        self.extra_context['user_name'] = user_data['name']
+        self.extra_context['user_department'] = user_data['department']
+        self.extra_context['role_count'] = self.request.session.get('role_count')
+        self.extra_context['af_count'] = self.request.session.get('af_count')
+        self.extra_context['gf_count'] = self.request.session.get('gf_count')
+        self.extra_context['tf_count'] = self.request.session.get('tf_count')
+        return None
 
 class Profile(generic.ListView):
     model = User
@@ -569,7 +572,7 @@ class Profile(generic.ListView):
     extra_context = {}
 
     def get_queryset(self):
-
+        self.extra_context['current_site']="profile"
         if not "identity" in self.request.GET.keys():
             user = self.request.user
         else:
@@ -589,7 +592,8 @@ class Profile(generic.ListView):
         afs = user_json_data['user_afs']
 
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
-
+        self.request.session['table_data'] = data
+        self.request.session['user_data'] = user_json_data.copy()
         prepareJSONdata(user.identity, user_json_data, False, headers)
 
         self.extra_context['role_count'] = len(roles)
@@ -600,9 +604,15 @@ class Profile(generic.ListView):
         self.extra_context['user_first_name'] = user_json_data['first_name']
         self.extra_context['user_name'] = user_json_data['name']
         self.extra_context['user_department'] = user_json_data['department']
+        self.request.session['role_count'] = len(roles)
+        self.request.session['af_count'] = len(afs)
+        self.request.session['gf_count'] = gf_count
+        self.request.session['tf_count'] = tf_count
+
+
         # manipuation für graphen nur auf kopie deswegen immernoch gleich ! <-TipTop
         # print(type(user_json_data), user_json_data)
-        return list(data)
+        return data
         # return tfList
 
     def autocompleteModel(request):
@@ -637,7 +647,7 @@ def prepareTableData(user, roles, afs, headers):
 
     data = zip(tfList, gfList, afList)
     tf_count = len(tfList)
-    return data, gf_count, tf_count
+    return list(data), gf_count, tf_count
 
 
 def get_af_by_key(pk, headers):

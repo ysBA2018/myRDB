@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-2">
+                    <img class="card-img-top card-image" src="/../../static/myRDB/images/default_profile.png"
+                         alt="Profile Picture">
+                </div>
+                <div class="col-9">
+                    <h5 class="card-title">{{ user_identity }}</h5>
+                    <p class="card-text">{{ user_name }}</p>
+                    <p class="card-text">{{ user_first_name }}</p>
+                    <p class="card-text">{{ user_departement_id }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <p class="card-text">User:...</p>
+                </div>
+                <div class="col-sm">
+                    <p class="card-text">Roles: {{ role_count }}</p>
+                </div>
+                <div class="col-sm">
+                    <p class="card-text">AF: {{ af_count }}</p>
+                </div>
+                <div class="col-sm">
+                    <p class="card-text">GF: {{ gf_count }}</p>
+                </div>
+                <div class="col-sm">
+                    <p class="card-text">TF: {{ tf_count }}</p>
+                </div>
+                {% if current_site == "profile" %}
+                    <div class="col-4 input-group mb-3">
+                        <form id=”search” method=”POST” action="{% url 'myRDB:compare' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_identity" value="{{ user_identity }}">
+                            <input type=”text” class=”form-control” id=”txtSearch” name='userSearch'
+                                   placeholder="compare to...">
+                            <button type="submit" class="btn btn-light btn-outline-secondary ">Compare</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

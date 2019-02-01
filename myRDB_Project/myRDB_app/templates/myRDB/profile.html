@@ -1,116 +1,57 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-2">
-                        <img class="card-img-top card-image" src="/../../static/myRDB/images/default_profile.png"
-                             alt="Profile Picture">
-                    </div>
-                    <div class="col-9">
-                        <h5 class="card-title">{{ user_identity }}</h5>
-                        <p class="card-text">{{ user_name }}</p>
-                        <p class="card-text">{{ user_first_name }}</p>
-                        <p class="card-text">{{ user_departement_id }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm">
-                        <p class="card-text">User:...</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">Roles: {{ role_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">AF: {{ af_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">GF: {{ gf_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">TF: {{ tf_count }}</p>
-                    </div>
-                    <div class="col-4 input-group mb-3">
-                        <form id=”search” method=”POST” action="{% url 'myRDB:compare' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="user_identity" value="{{ user_identity }}">
-                            <input type=”text” class=”form-control” id=”txtSearch” name='userSearch'
-                                   placeholder="compare to...">
-                            <button type="submit" class="btn btn-light btn-outline-secondary ">Compare</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row top-buffer">
-                {# hier umschalt button auf tabellarische/visuelle ansicht #}
-                <div class="col-1">
-                    <label for="viewMode">Ansicht: </label>
-                </div>
-                <div class="col-3">
-                    <form method="post">
-                        <select id="viewMode" class="form-control" onchange="location.reload()">
-                            <option value="one" id="one" itemid="one" class="one">Visuelle Ansicht</option>
-                            <option value="two" id="two" itemid="two" class="two">Tabellarische Ansicht</option>
-                        </select>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row top-buffer">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-body">
-                            {#{% if viewMode.one %}#}
-                            {% include 'myRDB/circlePackingTemplate.html' %}
-                            {#{% else %}#}
-                            {% include 'myRDB/profileTableTemplate.html' %}
+    {% include 'myRDB/profile_head.html' %}
+    <div class="container-fluid">
+        <div class="row top-buffer">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        {#{% if viewMode.one %}#}
+                        {% include 'myRDB/circlePackingTemplate.html' %}
+                        {#{% else %}#}
+                        {% include 'myRDB/profileTableTemplate.html' %}
 
-                            {#{% endif %}#}
-                        </div>
+                        {#{% endif %}#}
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col">
-                            {% include 'myRDB/scatterPlotTemplate.html' %}
-                        </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col">
+                        {% include 'myRDB/scatterPlotTemplate.html' %}
                     </div>
-                    <div class="row top-buffer">
-                        <div class="col">
-                            {% include 'myRDB/trashTemplate.html' %}
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    {# Hier die verschiedenen Buttons realisieren #}
-                                    <div class="row">
-                                        <div class="col">
-                                            <button type="button" class="btn btn-light">Logdatei anzeigen</button>
-                                        </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col">
+                        {% include 'myRDB/trashTemplate.html' %}
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                {# Hier die verschiedenen Buttons realisieren #}
+                                <div class="row">
+                                    <div class="col">
+                                        <form id=”log” method=”POST” action="{% url 'myRDB:compare' %}">
+                                            <button type="submit" class="btn btn-light">Logdatei anzeigen</button>
+                                        </form>
                                     </div>
-                                    <div class="row top-buffer">
-                                        <div class="col">
-                                            <button type="button" class="btn btn-light">Berechtigungsanalyse</button>
-                                        </div>
+                                </div>
+                                <div class="row top-buffer">
+                                    <div class="col">
+                                        <form id=”analysis” method=”POST” action="{% url 'myRDB:profile_rights_analysis' %}">
+                                            <button type="submit" class="btn btn-light">Berechtigungsanalyse</button>
+                                        </form>
                                     </div>
-                                    <div class="row top-buffer">
-                                        <div class="col">
-                                            <button type="button" class="btn btn-light">Rechte Beantragen</button>
-                                        </div>
+                                </div>
+                                <div class="row top-buffer">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-light">Rechte Beantragen</button>
                                     </div>
-                                    <div class="row top-buffer">
-                                        <div class="col">
-                                            <button type="button" class="btn btn-light">Löschung beantragen</button>
-                                        </div>
+                                </div>
+                                <div class="row top-buffer">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-light">Löschung beantragen</button>
                                     </div>
                                 </div>
                             </div>
@@ -119,9 +60,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
 
 <script>

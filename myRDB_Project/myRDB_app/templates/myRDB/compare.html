@@ -1,90 +1,24 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
 <div class="row top-buffer">
-    <div class="col-6">
+    <div class="col-6" id="user_card">
+        {% include 'myRDB/profile_head.html' %}
         <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-2">
-                        <img class="card-img-top" src="/../../static/myRDB/images/default_profile.png"
-                             alt="Profile Picture">
-                    </div>
-                    <div class="col-9">
-                        <h5 class="card-title">{{ user_identity }}</h5>
-                        <p class="card-text">{{ user_name }}</p>
-                        <p class="card-text">{{ user_first_name }}</p>
-                        <p class="card-text">{{ user_departement_id }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-sm">
-                        <p class="card-text">User:...</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">Rollen: {{ role_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">AF: {{ af_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">GF: {{ gf_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">TF: {{ tf_count }}</p>
-                    </div>
-                </div>
-            </div>
             <div class="card-body">
                 {#{% if viewMode.one %}#}
                 {% include 'myRDB/circlePackingTemplate.html' %}
                 {#{% else %}#}
-
                 {% include 'myRDB/compareProfileTableTemplate.html' %}
                 {#{% endif %}#}
             </div>
         </div>
     </div>
     <div class="col-6">
+        {% include 'myRDB/compare_profile_head.html' %}
         <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-2">
-                        <img class="card-img-top" src="/../../static/myRDB/images/default_profile.png"
-                             alt="Profile Picture">
-                    </div>
-                    <div class="col-9">
-                        <h5 class="card-title">{{ compareUser.identity }}</h5>
-                        <p class="card-text">{{ compareUser.name }}</p>
-                        <p class="card-text">{{ compareUser.first_name }}</p>
-                        <p class="card-text">{{ compareUser.departement_id }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col-sm">
-                        <p class="card-text">User:...</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">Rollen: {{ comp_role_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">AF: {{ comp_af_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">GF: {{ comp_gf_count }}</p>
-                    </div>
-                    <div class="col-sm">
-                        <p class="card-text">TF: {{ comp_tf_count }}</p>
-                    </div>
-                </div>
-            </div>
             <div class="card-body">
                 {#{% if viewMode2.two2 %}#}
                 {% include 'myRDB/compareCirclePackingTemplate.html' %}
-
                 {#{% else %}#}
                 {% include 'myRDB/compareTableTemplate.html' %}
                 {#{% endif %}#}
