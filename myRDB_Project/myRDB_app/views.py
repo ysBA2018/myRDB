@@ -21,7 +21,7 @@ from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, 
 from rest_framework import viewsets
 from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSerializer, TFSerializer, OrgaSerializer, \
     GroupSerializer, DepartmentSerializer, ZI_OrganisationSerializer, TF_ApplicationSerializer, UserListingSerializer, \
-    CompleteUserListingSerializer
+    CompleteUserListingSerializer, UserModelRightsSerializer
 from django.views import generic
 
 from django.contrib.auth import get_user_model
@@ -528,6 +528,7 @@ class Compare(generic.ListView):
         return context
 
     def get_queryset(self):
+        setViewMode(self.request,self.extra_context)
         user_data = self.request.session.get('user_data')
         table_data = self.request.session.get('table_data')
         self.extra_context['user_identity'] = user_data['identity']
@@ -552,8 +553,65 @@ class ProfileRightsAnalysis(generic.ListView):
 
     def get_queryset(self):
         self.extra_context['current_site'] = "analysis"
+
         user_data = self.request.session.get('user_data')
         table_data = self.request.session.get('table_data')
+
+        if self.request.GET.keys().__contains__("level"):
+            self.extra_context['level']=self.request.GET['level']
+        else:
+            self.extra_context['level']='AF'
+        logged_in_user_token = self.request.user.auth_token
+        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
+        if self.extra_context['level']=="AF":
+            afs = sorted(user_data['user_afs'],key=lambda k:k['name'])
+            self.extra_context['afs'] = afs
+            model_afs=iter(sorted(get_user_model_rights_by_key(user_data['pk'],headers)['direct_connect_afs'], key=lambda k:k['af_name']))
+            model_af_list = []
+            for af in afs:
+                #if af['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
+                while True:
+                    current_model = next(model_afs)
+                    if af['name'] == current_model['af_name']:
+                        self.prepareModelJSONdata(current_model, True, False, headers)
+                        model_af_list.append(current_model)
+                        break
+                    else:
+                        next(model_afs)
+                #else:
+                #    afs.remove(af)
+            print(model_af_list)
+            self.extra_context['user_model_afs'] = model_af_list
+        elif self.extra_context['level']=="GF":
+            afs = user_data['user_afs']
+            gfs =[]
+            for af in afs:
+                for gf in af['children']:
+                    gfs.append(gf)
+            gfs = sorted(gfs, key=lambda k: k['name'])
+            self.extra_context['gfs'] = gfs
+            model_afs = get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs']
+            model_gfs = []
+            for af in model_afs:
+                for gf in af['gfs']:
+                    model_gfs.append(gf)
+            model_gfs = iter(sorted(model_gfs, key=lambda k: k['gf_name']))
+            model_gf_list = []
+            for gf in gfs:
+                #if gf['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
+                while True:
+                    current_model = next(model_gfs)
+                    if gf['name'] == current_model['gf_name']:
+                        self.prepareModelJSONdata(current_model, False, True, headers)
+                        model_gf_list.append(current_model)
+                        break
+                    else:
+                        next(model_gfs)
+                #else:
+                #    gfs.remove(gf)
+            print(model_gf_list)
+            self.extra_context['user_model_gfs'] = model_gf_list
+
         self.extra_context['user_identity']=user_data['identity']
         self.extra_context['user_first_name'] = user_data['first_name']
         self.extra_context['user_name'] = user_data['name']
@@ -564,6 +622,35 @@ class ProfileRightsAnalysis(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
         return None
 
+    def compareRightToModel(self,userRight, compareModel, equalRights, unequalRights, equalModelRights, unequalModelRights):
+        if userRight==compareModel:
+            equalModelRights.append(compareModel)
+            equalRights.append(userRight)
+        else:
+            unequalModelRights.append(compareModel)
+            unequalRights.append(userRight)
+        return equalRights,unequalRights, equalModelRights, unequalModelRights
+
+
+
+    def prepareModelJSONdata(self, json_data, is_af, is_gf, headers):
+        print(type(json_data), json_data)
+        if is_af:
+            json_data["name"] = json_data.pop('af_name')
+            json_data["children"] = json_data.pop('gfs')
+            for gf in json_data['children']:
+                gf["name"] = gf.pop('gf_name')
+                gf["children"] = gf.pop('tfs')
+                for tf in gf['children']:
+                    tf["name"] = tf.pop('tf_name')
+                    tf["size"] = 2000
+        if is_gf:
+            json_data["name"] = json_data.pop('gf_name')
+            json_data["children"] = json_data.pop('tfs')
+            for tf in json_data['children']:
+                tf["name"] = tf.pop('tf_name')
+                tf["size"] = 2000
+
 class Profile(generic.ListView):
     model = User
     template_name = 'myRDB/profile.html'
@@ -573,8 +660,12 @@ class Profile(generic.ListView):
 
     def get_queryset(self):
         self.extra_context['current_site']="profile"
+
+        setViewMode(self.request,self.extra_context)
+
         if not "identity" in self.request.GET.keys():
             user = self.request.user
+            self.extra_context['identity_param'] = None
         else:
             # TODO: hier noch lösung mit Params über API finden!
             user = User.objects.get(identity=self.request.GET['identity'])
@@ -629,6 +720,12 @@ class Profile(generic.ListView):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
+def setViewMode(request, extra_context):
+    if request.GET.keys().__contains__("view_mode"):
+        extra_context['view_mode'] = request.GET['view_mode']
+    else:
+        extra_context['view_mode'] = 'Graphische Ansicht'
+
 
 def prepareTableData(user, roles, afs, headers):
     tfList = []
@@ -655,6 +752,23 @@ def get_af_by_key(pk, headers):
     res = requests.get(url, headers=headers)
     af_json = res.json()
     return af_json
+
+def get_gf_by_key(pk, headers):
+    url = 'http://127.0.0.1:8000/gfs/%d' % pk
+    res = requests.get(url, headers=headers)
+    gf_json = res.json()
+    return gf_json
+
+def get_user_model_rights_by_key(pk, headers):
+    url = 'http://127.0.0.1:8000/usermodelrights/%d' % pk
+    res = requests.get(url, headers=headers)
+    gf_json = res.json()
+    return gf_json
+
+def get_by_url( url, headers):
+    res = requests.get(url, headers=headers)
+    json = res.json()
+    return json
 
 
 def prepareJSONdata(identity, user_json_data, compareUser, headers):
@@ -695,6 +809,14 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
         path = 'myRDB_app/static/myRDB/data/scatterGraphData.json'
         with open(path, 'w') as outfile:
             json.dump(scatterData, outfile, indent=2)
+
+
+class UserModelRightsViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserModelRightsSerializer
+
+    def get_queryset(self):
+        return User.objects.all().order_by('name')
 
 
 class CompleteUserListingViewSet(viewsets.ModelViewSet):

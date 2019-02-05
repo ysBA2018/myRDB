@@ -21,6 +21,7 @@ from myRDB_app import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, 'user')
+router.register(r'usermodelrights', views.UserModelRightsViewSet, 'usermodelrights')
 router.register(r'userlistings', views.UserListingViewSet, 'userlisting')
 router.register(r'searchlistings', views.CompleteUserListingViewSet, 'searchlisting')
 router.register(r'roles', views.RoleViewSet, 'role')
