@@ -3,25 +3,25 @@
 <div class="row top-buffer">
     <div class="col-6" id="user_card">
         {% include 'myRDB/profile_head.html' %}
-        <div class="card">
+        <div class="card top-buffer">
             <div class="card-body">
-                {#{% if viewMode.one %}#}
-                {% include 'myRDB/circlePackingTemplate.html' %}
-                {#{% else %}#}
-                {% include 'myRDB/compareProfileTableTemplate.html' %}
-                {#{% endif %}#}
+                {% if view_mode == "Graphische Ansicht" %}
+                    {% include 'myRDB/circlePackingTemplate.html' %}
+                {% else %}
+                    {% include 'myRDB/profileTableTemplate.html' %}
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="col-6">
         {% include 'myRDB/compare_profile_head.html' %}
-        <div class="card">
+        <div class="card top-buffer">
             <div class="card-body">
-                {#{% if viewMode2.two2 %}#}
-                {% include 'myRDB/compareCirclePackingTemplate.html' %}
-                {#{% else %}#}
-                {% include 'myRDB/compareTableTemplate.html' %}
-                {#{% endif %}#}
+                {% if view_mode == "Graphische Ansicht" %}
+                    {% include 'myRDB/compareCirclePackingTemplate.html' %}
+                {% else %}
+                    {% include 'myRDB/compareTableTemplate.html' %}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -35,10 +35,20 @@
                     <label for="viewMode">Ansicht: </label>
                 </div>
                 <div class="col-3">
-                    <select id="viewMode" class="form-control" onchange="location.reload()">
-                        <option id="one" itemid="one" class="one">Visuelle Ansicht</option>
-                        <option id="two" itemid="two" class="two">Tabellarische Ansicht</option>
-                    </select>
+                    <form>
+                        {% csrf_token %}
+                        <input name="user_identity" type="hidden" value="{{ user_identity }}">
+                        <input name="userSearch" type="hidden" value="{{ compareUser.identity }}">
+                        <select id="viewMode" name="view_mode" class="form-control" onchange="form.submit()">
+                            {% if view_mode == "Graphische Ansicht"%}
+                                <option selected>Graphische Ansicht</option>
+                                <option>Tabellarische Ansicht</option>
+                            {% else %}
+                                <option>Graphische Ansicht</option>
+                                <option selected>Tabellarische Ansicht</option>
+                            {% endif %}
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>

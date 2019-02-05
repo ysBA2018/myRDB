@@ -2,6 +2,58 @@
 {% block content %}
 <div class="container-fluid">
     {% include 'myRDB/profile_head.html' %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <form action="{% url 'myRDB:profile' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light btn-outline-secondary "><--</button>
+                    </form>
+                </div>
+                <div class="col-8">
+                    <p class="text-right">Vergleichensebene:</p>
+                </div>
+                <div class="col-2">
+                    <form>
+                        {% csrf_token %}
+                        <select class="form-control" id="level-switch" name="level" onchange="form.submit()">
+                            {# <option>Rolle</option> #}
+                            {% if level == "AF" %}
+                                <option selected>AF</option>
+                                <option>GF</option>
+                            {% elif level == "GF" %}
+                                <option>AF</option>
+                                <option selected>GF</option>
+                            {% endif %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col">
+                    <h5 class="text-center">{{ user_first_name }}'s {% if level == "Rolle" %}Rollen{% elif level == "AF" %}AF{% elif level == "GF" %}GF{% elif level == "TF" %}TF{% endif %}</h5>
+                </div>
+                <div class="col-6">
+                    <p class="text-center">Verschiebe Berechtigung aus Modell zur Person um diese der Beantragungsliste hinzuzufügen</p>
+                </div>
+                <div class="col">
+                    <h5 class="text-center">Modell-{% if level == "Rolle" %}Rollen{% elif level == "AF" %}AF{% elif level == "GF" %}GF{% elif level == "TF" %}TF{% endif %}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if level == "AF" %}
+        {% for af in afs %}
+            {% include 'myRDB/profile_rights_analysis_compare_card.html' %}
+        {% endfor %}
+    {% elif level == "GF" %}
+        {% for gf in gfs %}
+            {% include 'myRDB/profile_rights_analysis_compare_card.html' %}
+        {% endfor %}
+    {% endif %}
 </div>
 
 {% endblock %}

@@ -90,6 +90,35 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     group = GroupSerializer()
     zi_organisation = ZI_OrganisationSerializer()
 
+class TFModelRightsSerializer(serializers.Serializer):
+    class Meta:
+        model = TF
+        fields = ('tf_name',)
+    tf_name = serializers.CharField(max_length=150)
+
+class  GFModelRightsSerializer(serializers.Serializer):
+    class Meta:
+        model = GF
+        fields = ('gf_name','tfs')
+    gf_name = serializers.CharField(max_length=150)
+    tfs = TFModelRightsSerializer(many= True, read_only=True)
+
+class AFModelRightsSerializer(serializers.Serializer):
+    class Meta:
+        model = AF
+        fields = ('af_name','gfs')
+    af_name = serializers.CharField(max_length=150)
+    gfs = GFModelRightsSerializer(many= True, read_only=True)
+
+class UserModelRightsSerializer(serializers.Serializer):
+    class Meta:
+        model = User
+        fields = ('url','pk','roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs',)
+    roles = UserSerializer(many=True, read_only=True)
+    direct_connect_afs = AFModelRightsSerializer(many=True, read_only=True)
+    direct_connect_gfs = GFSerializer(many=True, read_only=True)
+    direct_connect_tfs = TFSerializer(many=True, read_only=True)
+
 
 class UserListingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
