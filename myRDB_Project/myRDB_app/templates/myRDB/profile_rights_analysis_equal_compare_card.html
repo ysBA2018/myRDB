@@ -1,0 +1,30 @@
+{% load static %}
+{% load asjson %}
+<script>var iEqual = 0</script>
+<script>var iEqualModel = 0</script>
+
+<div class="card-body">
+    <div class="row">
+        <div class="col">
+            {# hier user_af, bzw _gf, _tf circle packing #}
+            <script>
+                var jsondata_equal{{ forloop.counter0 }} = {{ right | asjson }}
+            </script>
+            <svg id="analysisCirclePackingSVG_equal{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/analysisCirclePacking_equal.js' %}"></script>
+        </div>
+        <div class="col">
+            {# hier Informationen und Vergleichsdaten #}
+            <h5 class="text-center">{{ right.name }}</h5>
+        </div>
+        <div class="col">
+            {% load index %}
+            {# hier model_af, bzw _gf, _tf circle packing #}
+
+            <script>var jsonModeldata_equal{{ forloop.counter0 }} = {{ equal_model_rights|index:forloop.counter0 | asjson}}</script>
+
+            <svg id="analysisModelCirclePackingSVG_equal{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/analysisModelCirclePacking_equal.js' %}"></script>
+        </div>
+    </div>
+</div>

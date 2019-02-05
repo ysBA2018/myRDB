@@ -1,10 +1,10 @@
 (function(){
 $(document).ready(function(){
-    var svgIndex = window.iModel;
-    window.iModel=window.iModel+1
+    var svgIndex = window.iEqual;
+    window.iEqual=window.iEqual+1
 
 
-    var svg = d3.select("#analysisModelCirclePackingSVG"+svgIndex),
+    var svg = d3.select("#analysisCirclePackingSVG_equal"+svgIndex),
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -19,7 +19,7 @@ $(document).ready(function(){
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    var root = window['jsonModeldata'+svgIndex];
+    var root = window['jsondata_equal'+svgIndex];
 
       root = d3.hierarchy(root)
           .sum(function(d) { return d.size; })
