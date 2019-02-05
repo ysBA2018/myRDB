@@ -563,25 +563,27 @@ class ProfileRightsAnalysis(generic.ListView):
             self.extra_context['level']='AF'
         logged_in_user_token = self.request.user.auth_token
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
+        equalRights=[]
+        unequalRights=[]
+        equalModelRights=[]
+        unequalModelRights=[]
+
         if self.extra_context['level']=="AF":
             afs = sorted(user_data['user_afs'],key=lambda k:k['name'])
-            self.extra_context['afs'] = afs
             model_afs=iter(sorted(get_user_model_rights_by_key(user_data['pk'],headers)['direct_connect_afs'], key=lambda k:k['af_name']))
-            model_af_list = []
+
             for af in afs:
                 #if af['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
                 while True:
                     current_model = next(model_afs)
                     if af['name'] == current_model['af_name']:
                         self.prepareModelJSONdata(current_model, True, False, headers)
-                        model_af_list.append(current_model)
+                        equalRights, unequalRights, equalModelRights, unequalModelRights=self.compareRightToModel(af,current_model,equalRights,unequalRights,equalModelRights,unequalModelRights,True,False)
                         break
                     else:
                         next(model_afs)
                 #else:
                 #    afs.remove(af)
-            print(model_af_list)
-            self.extra_context['user_model_afs'] = model_af_list
         elif self.extra_context['level']=="GF":
             afs = user_data['user_afs']
             gfs =[]
@@ -589,28 +591,32 @@ class ProfileRightsAnalysis(generic.ListView):
                 for gf in af['children']:
                     gfs.append(gf)
             gfs = sorted(gfs, key=lambda k: k['name'])
-            self.extra_context['gfs'] = gfs
+
             model_afs = get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs']
             model_gfs = []
             for af in model_afs:
                 for gf in af['gfs']:
                     model_gfs.append(gf)
             model_gfs = iter(sorted(model_gfs, key=lambda k: k['gf_name']))
-            model_gf_list = []
+
             for gf in gfs:
                 #if gf['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
                 while True:
                     current_model = next(model_gfs)
                     if gf['name'] == current_model['gf_name']:
                         self.prepareModelJSONdata(current_model, False, True, headers)
-                        model_gf_list.append(current_model)
+                        equalRights, unequalRights, equalModelRights, unequalModelRights=self.compareRightToModel(gf,current_model,equalRights,unequalRights,equalModelRights,unequalModelRights,False,True)
+
                         break
                     else:
                         next(model_gfs)
                 #else:
                 #    gfs.remove(gf)
-            print(model_gf_list)
-            self.extra_context['user_model_gfs'] = model_gf_list
+
+        self.extra_context['equal_rights'] = sorted(equalRights, key=lambda k: k['name'])
+        self.extra_context['unequal_rights'] = sorted(unequalRights, key=lambda k: k['name'])
+        self.extra_context['equal_model_rights'] = sorted(equalModelRights, key=lambda k: k['name'])
+        self.extra_context['unequal_model_rights'] = sorted(unequalModelRights, key=lambda k: k['name'])
 
         self.extra_context['user_identity']=user_data['identity']
         self.extra_context['user_first_name'] = user_data['first_name']
@@ -622,8 +628,58 @@ class ProfileRightsAnalysis(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
         return None
 
-    def compareRightToModel(self,userRight, compareModel, equalRights, unequalRights, equalModelRights, unequalModelRights):
-        if userRight==compareModel:
+
+    def compareRightToModel(self,userRight, compareModel, equalRights, unequalRights, equalModelRights, unequalModelRights, isAF, isGF):
+        equal=False
+        equalGFSum=0
+        equalTFSum=0
+
+        tf_count = 0
+        model_tf_count = 0
+
+        stats = {}
+        if isAF:
+            modelGFIter = iter(sorted(compareModel['children'],key=lambda k: k['name']))
+
+            gf_count = len(userRight['children'])
+            model_gf_count = len(compareModel['children'])
+            gf_count_diff = model_gf_count-gf_count
+
+            stats['gf_count'] = gf_count
+            stats['model_gf_count'] = model_gf_count
+            stats['gf_count_diff'] = gf_count_diff
+
+            for gf in sorted(userRight['children'],key=lambda k: k['name']):
+                currentGFModel=next(modelGFIter)
+                if gf['name']==currentGFModel['name']:
+                    equalGFSum +=1
+                modelTFIter = iter(sorted(currentGFModel['children'],key=lambda k: k['name']))
+
+                model_tf_count+=len(currentGFModel['children'])
+                tf_count+=len(gf['children'])
+                tf_count_diff= model_tf_count-tf_count
+
+                for tf in sorted(gf['children'],key=lambda k: k['name']):
+                    currentTFModel = next(modelTFIter)
+                    if tf['name'] == currentTFModel['name']:
+                        equalTFSum += 1
+            if equalGFSum == gf_count and equalTFSum == tf_count and gf_count_diff == 0 and tf_count_diff == 0:
+                equal = True
+        if isGF:
+            modelTFIter = iter(sorted(compareModel['children'], key=lambda k: k['name']))
+
+            model_tf_count += len(compareModel['children'])
+            tf_count += len(userRight['children'])
+            tf_count_diff = model_tf_count - tf_count
+
+            for tf in sorted(userRight['children'], key=lambda k: k['name']):
+                currentTFModel = next(modelTFIter)
+                if tf['name'] == currentTFModel['name']:
+                    equalTFSum += 1
+            if equalTFSum == tf_count and tf_count_diff == 0:
+                equal = True
+
+        if equal:
             equalModelRights.append(compareModel)
             equalRights.append(userRight)
         else:

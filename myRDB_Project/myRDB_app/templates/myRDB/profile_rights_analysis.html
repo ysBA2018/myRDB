@@ -45,15 +45,78 @@
             </div>
         </div>
     </div>
-    {% if level == "AF" %}
-        {% for af in afs %}
-            {% include 'myRDB/profile_rights_analysis_compare_card.html' %}
-        {% endfor %}
-    {% elif level == "GF" %}
-        {% for gf in gfs %}
-            {% include 'myRDB/profile_rights_analysis_compare_card.html' %}
-        {% endfor %}
-    {% endif %}
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="unequalRightsHeading">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#unequalRights" aria-expanded="true" aria-controls="unequalRights">
+                        Abweichend
+                    </button>
+                </h5>
+            </div>
+            <div id="unequalRights" class="collapse show" aria-labelledby="unequalRightsHeading" data-parent="#accordion">
+                <div class="card-body">
+                    <div id="inner_accordion_unequal">
+                        {% for right in unequal_rights %}
+                            <div class="card">
+                                <div class="card-header" id="inner_unequalRightsHeading{{ forloop.counter0 }}">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#inner_unequalRights{{ forloop.counter0 }}" aria-expanded="true" aria-controls="inner_unequalRights{{ forloop.counter0 }}">
+                                            {{ right.name }}
+                                        </button>
+                                    </h5>
+                                </div>
+                                {% if forloop.counter0 == 0 %}
+                                    <div id="inner_unequalRights{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_unequalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_unequal">
+                                        {% include 'myRDB/profile_rights_analysis_unequal_compare_card.html' %}
+                                    </div>
+                                {% else %}
+                                    <div id="inner_unequalRights{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_unequalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_unequal">
+                                        {% include 'myRDB/profile_rights_analysis_unequal_compare_card.html' %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="equalRightsHeading">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#equalRights" aria-expanded="true" aria-controls="equalRights">
+                        Übereinstimmend
+                    </button>
+                </h5>
+            </div>
+            <div id="equalRights" class="collapse show" aria-labelledby="equalRightsHeading" data-parent="#accordion">
+                <div class="card-body">
+                    <div id="inner_accordion_equal">
+                        {% for right in equal_rights %}
+                            <div class="card">
+                                <div class="card-header" id="inner_equalRightsHeading{{ forloop.counter0 }}">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#inner_equalRights{{ forloop.counter0 }}" aria-expanded="true" aria-controls="inner_equalRights{{ forloop.counter0 }}">
+                                            {{ right.name }}
+                                        </button>
+                                    </h5>
+                                </div>
+                                {% if forloop.counter0 == 0 %}
+                                    <div id="inner_equalRights{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_equalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_equal">
+                                        {% include 'myRDB/profile_rights_analysis_equal_compare_card.html' %}
+                                    </div>
+                                {% else %}
+                                    <div id="inner_equalRights{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_equalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_equal">
+                                        {% include 'myRDB/profile_rights_analysis_equal_compare_card.html' %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
