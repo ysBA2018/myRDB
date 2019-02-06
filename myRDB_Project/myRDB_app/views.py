@@ -225,7 +225,7 @@ class Search_All(generic.ListView):
         logged_in_user_token = self.request.user.auth_token
         url = 'http://127.0.0.1:8000/searchlistings/'
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        lis = ['zi_organisations', 'orgas','tf_applications', 'departments', 'roles', 'groups']
+        lis = ['zi_organisations', 'orgas', 'tf_applications', 'departments', 'roles', 'groups']
         for e in lis:
             self.extra_context[e] = populate_choice_fields(headers, e)
         params, changed = build_url_params(self.request, self.extra_context)
@@ -278,14 +278,19 @@ class Search_All(generic.ListView):
                                 model_tf['tf_owner_orga']['team'],
                                 model_tf['tf_application']['application_name'], model_tf['tf_description'], '',
                                 user['deleted']]
-                        if self.extra_context.keys().__contains__('tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
-                            if model_tf['tf_owner_orga']['team'] == self.request.GET['tf_owner_orga'] and model_tf['tf_application']['application_name']==self.request.GET['tf_application']:
+                        if self.extra_context.keys().__contains__(
+                                'tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
+                            if model_tf['tf_owner_orga']['team'] == self.request.GET['tf_owner_orga'] and \
+                                    model_tf['tf_application']['application_name'] == self.request.GET[
+                                'tf_application']:
                                 lines.append(line)
-                        elif self.extra_context.keys().__contains__('tf_owner_orga') and not self.extra_context.keys().__contains__('tf_application'):
+                        elif self.extra_context.keys().__contains__(
+                                'tf_owner_orga') and not self.extra_context.keys().__contains__('tf_application'):
                             if model_tf['tf_owner_orga']['team'] == self.request.GET['tf_owner_orga']:
                                 lines.append(line)
-                        elif not self.extra_context.keys().__contains__('tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
-                            if model_tf['tf_application']['application_name']==self.request.GET['tf_application']:
+                        elif not self.extra_context.keys().__contains__(
+                                'tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
+                            if model_tf['tf_application']['application_name'] == self.request.GET['tf_application']:
                                 lines.append(line)
                         else:
                             lines.append(line)
@@ -443,7 +448,7 @@ def build_url_params(request, extra_context):
             changed = True
         extra_context["group"] = group
     if 'af_name' in request.GET:
-        af_name =''
+        af_name = ''
         if not request.GET['af_name'] == '':
             af_name = request.GET['af_name']
             params = params + "&af_name=" + af_name
@@ -528,7 +533,7 @@ class Compare(generic.ListView):
         return context
 
     def get_queryset(self):
-        setViewMode(self.request,self.extra_context)
+        setViewMode(self.request, self.extra_context)
         user_data = self.request.session.get('user_data')
         table_data = self.request.session.get('table_data')
         self.extra_context['user_identity'] = user_data['identity']
@@ -558,35 +563,51 @@ class ProfileRightsAnalysis(generic.ListView):
         table_data = self.request.session.get('table_data')
 
         if self.request.GET.keys().__contains__("level"):
-            self.extra_context['level']=self.request.GET['level']
+            self.extra_context['level'] = self.request.GET['level']
         else:
-            self.extra_context['level']='AF'
+            self.extra_context['level'] = 'AF'
         logged_in_user_token = self.request.user.auth_token
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        equalRights=[]
-        unequalRights=[]
-        equalModelRights=[]
-        unequalModelRights=[]
+        equalRights = []
+        unequalRights = []
+        equalModelRights = []
+        unequalModelRights = []
+        equalRightsStats = []
+        unequalRightsStats = []
 
-        if self.extra_context['level']=="AF":
-            afs = sorted(user_data['user_afs'],key=lambda k:k['name'])
-            model_afs=iter(sorted(get_user_model_rights_by_key(user_data['pk'],headers)['direct_connect_afs'], key=lambda k:k['af_name']))
+        if self.extra_context['level'] == "AF":
+            afs = sorted(user_data['user_afs'], key=lambda k: k['name'])
+            model_afs = iter(sorted(get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs'],
+                                    key=lambda k: k['af_name']))
 
             for af in afs:
-                #if af['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
+                # if af['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
                 while True:
                     current_model = next(model_afs)
                     if af['name'] == current_model['af_name']:
+                        stats = {}
+                        stats['right_name'] = current_model['af_name']
+                        stats['description'] = current_model['af_description']
                         self.prepareModelJSONdata(current_model, True, False, headers)
-                        equalRights, unequalRights, equalModelRights, unequalModelRights=self.compareRightToModel(af,current_model,equalRights,unequalRights,equalModelRights,unequalModelRights,True,False)
+                        equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats = self.compareRightToModel(af,
+                                                                                                                    current_model,
+                                                                                                                    equalRights,
+                                                                                                                    unequalRights,
+                                                                                                                    equalModelRights,
+                                                                                                                    unequalModelRights,
+                                                                                                                    True,
+                                                                                                                    False,
+                                                                                                                    stats,
+                                                                                                                    unequalRightsStats,
+                                                                                                                    equalRightsStats)
                         break
                     else:
                         next(model_afs)
-                #else:
+                # else:
                 #    afs.remove(af)
-        elif self.extra_context['level']=="GF":
+        elif self.extra_context['level'] == "GF":
             afs = user_data['user_afs']
-            gfs =[]
+            gfs = []
             for af in afs:
                 for gf in af['children']:
                     gfs.append(gf)
@@ -600,25 +621,40 @@ class ProfileRightsAnalysis(generic.ListView):
             model_gfs = iter(sorted(model_gfs, key=lambda k: k['gf_name']))
 
             for gf in gfs:
-                #if gf['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
+                # if gf['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
                 while True:
                     current_model = next(model_gfs)
                     if gf['name'] == current_model['gf_name']:
+                        stats = {}
+                        stats['right_name'] = current_model['gf_name']
+                        stats['description'] = current_model['gf_description']
                         self.prepareModelJSONdata(current_model, False, True, headers)
-                        equalRights, unequalRights, equalModelRights, unequalModelRights=self.compareRightToModel(gf,current_model,equalRights,unequalRights,equalModelRights,unequalModelRights,False,True)
+                        equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats = self.compareRightToModel(gf,
+                                                                                                                    current_model,
+                                                                                                                    equalRights,
+                                                                                                                    unequalRights,
+                                                                                                                    equalModelRights,
+                                                                                                                    unequalModelRights,
+                                                                                                                    False,
+                                                                                                                    True,
+                                                                                                                    stats,
+                                                                                                                    unequalRightsStats,
+                                                                                                                    equalRightsStats)
 
                         break
                     else:
                         next(model_gfs)
-                #else:
+                # else:
                 #    gfs.remove(gf)
 
         self.extra_context['equal_rights'] = sorted(equalRights, key=lambda k: k['name'])
         self.extra_context['unequal_rights'] = sorted(unequalRights, key=lambda k: k['name'])
         self.extra_context['equal_model_rights'] = sorted(equalModelRights, key=lambda k: k['name'])
         self.extra_context['unequal_model_rights'] = sorted(unequalModelRights, key=lambda k: k['name'])
+        self.extra_context['equal_rights_stats'] = sorted(equalRightsStats, key=lambda k: k['right_name'])
+        self.extra_context['unequal_rights_stats'] = sorted(unequalRightsStats, key=lambda k: k['right_name'])
 
-        self.extra_context['user_identity']=user_data['identity']
+        self.extra_context['user_identity'] = user_data['identity']
         self.extra_context['user_first_name'] = user_data['first_name']
         self.extra_context['user_name'] = user_data['name']
         self.extra_context['user_department'] = user_data['department']
@@ -628,38 +664,37 @@ class ProfileRightsAnalysis(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
         return None
 
-
-    def compareRightToModel(self,userRight, compareModel, equalRights, unequalRights, equalModelRights, unequalModelRights, isAF, isGF):
-        equal=False
-        equalGFSum=0
-        equalTFSum=0
+    def compareRightToModel(self, userRight, compareModel, equalRights, unequalRights, equalModelRights,
+                            unequalModelRights, isAF, isGF, stats, unequalRightsStats, equalRightsStats):
+        equal = False
+        equalGFSum = 0
+        equalTFSum = 0
 
         tf_count = 0
         model_tf_count = 0
 
-        stats = {}
         if isAF:
-            modelGFIter = iter(sorted(compareModel['children'],key=lambda k: k['name']))
+            modelGFIter = iter(sorted(compareModel['children'], key=lambda k: k['name']))
 
             gf_count = len(userRight['children'])
             model_gf_count = len(compareModel['children'])
-            gf_count_diff = model_gf_count-gf_count
+            gf_count_diff = model_gf_count - gf_count
 
             stats['gf_count'] = gf_count
             stats['model_gf_count'] = model_gf_count
             stats['gf_count_diff'] = gf_count_diff
 
-            for gf in sorted(userRight['children'],key=lambda k: k['name']):
-                currentGFModel=next(modelGFIter)
-                if gf['name']==currentGFModel['name']:
-                    equalGFSum +=1
-                modelTFIter = iter(sorted(currentGFModel['children'],key=lambda k: k['name']))
+            for gf in sorted(userRight['children'], key=lambda k: k['name']):
+                currentGFModel = next(modelGFIter)
+                if gf['name'] == currentGFModel['name']:
+                    equalGFSum += 1
+                modelTFIter = iter(sorted(currentGFModel['children'], key=lambda k: k['name']))
 
-                model_tf_count+=len(currentGFModel['children'])
-                tf_count+=len(gf['children'])
-                tf_count_diff= model_tf_count-tf_count
+                model_tf_count += len(currentGFModel['children'])
+                tf_count += len(gf['children'])
+                tf_count_diff = model_tf_count - tf_count
 
-                for tf in sorted(gf['children'],key=lambda k: k['name']):
+                for tf in sorted(gf['children'], key=lambda k: k['name']):
                     currentTFModel = next(modelTFIter)
                     if tf['name'] == currentTFModel['name']:
                         equalTFSum += 1
@@ -679,15 +714,19 @@ class ProfileRightsAnalysis(generic.ListView):
             if equalTFSum == tf_count and tf_count_diff == 0:
                 equal = True
 
+        stats['tf_count'] = tf_count
+        stats['model_tf_count'] = model_tf_count
+        stats['tf_count_diff'] = tf_count_diff
+
         if equal:
             equalModelRights.append(compareModel)
             equalRights.append(userRight)
+            equalRightsStats.append(stats)
         else:
             unequalModelRights.append(compareModel)
             unequalRights.append(userRight)
-        return equalRights,unequalRights, equalModelRights, unequalModelRights
-
-
+            unequalRightsStats.append(stats)
+        return equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats
 
     def prepareModelJSONdata(self, json_data, is_af, is_gf, headers):
         print(type(json_data), json_data)
@@ -707,6 +746,7 @@ class ProfileRightsAnalysis(generic.ListView):
                 tf["name"] = tf.pop('tf_name')
                 tf["size"] = 2000
 
+
 class Profile(generic.ListView):
     model = User
     template_name = 'myRDB/profile.html'
@@ -715,9 +755,9 @@ class Profile(generic.ListView):
     extra_context = {}
 
     def get_queryset(self):
-        self.extra_context['current_site']="profile"
+        self.extra_context['current_site'] = "profile"
 
-        setViewMode(self.request,self.extra_context)
+        setViewMode(self.request, self.extra_context)
 
         if not "identity" in self.request.GET.keys():
             user = self.request.user
@@ -756,7 +796,6 @@ class Profile(generic.ListView):
         self.request.session['gf_count'] = gf_count
         self.request.session['tf_count'] = tf_count
 
-
         # manipuation für graphen nur auf kopie deswegen immernoch gleich ! <-TipTop
         # print(type(user_json_data), user_json_data)
         return data
@@ -775,6 +814,7 @@ class Profile(generic.ListView):
             data = 'fail'
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
+
 
 def setViewMode(request, extra_context):
     if request.GET.keys().__contains__("view_mode"):
@@ -809,11 +849,13 @@ def get_af_by_key(pk, headers):
     af_json = res.json()
     return af_json
 
+
 def get_gf_by_key(pk, headers):
     url = 'http://127.0.0.1:8000/gfs/%d' % pk
     res = requests.get(url, headers=headers)
     gf_json = res.json()
     return gf_json
+
 
 def get_user_model_rights_by_key(pk, headers):
     url = 'http://127.0.0.1:8000/usermodelrights/%d' % pk
@@ -821,7 +863,8 @@ def get_user_model_rights_by_key(pk, headers):
     gf_json = res.json()
     return gf_json
 
-def get_by_url( url, headers):
+
+def get_by_url(url, headers):
     res = requests.get(url, headers=headers)
     json = res.json()
     return json

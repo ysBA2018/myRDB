@@ -93,21 +93,24 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class TFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = TF
-        fields = ('tf_name',)
+        fields = ('tf_name','tf_description')
     tf_name = serializers.CharField(max_length=150)
+    tf_description = serializers.CharField(max_length=250)
 
 class  GFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = GF
-        fields = ('gf_name','tfs')
+        fields = ('gf_name','gf_description','tfs')
     gf_name = serializers.CharField(max_length=150)
+    gf_description = serializers.CharField(max_length=250)
     tfs = TFModelRightsSerializer(many= True, read_only=True)
 
 class AFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = AF
-        fields = ('af_name','gfs')
+        fields = ('af_name','af_description','gfs')
     af_name = serializers.CharField(max_length=150)
+    af_description = serializers.CharField(max_length=250)
     gfs = GFModelRightsSerializer(many= True, read_only=True)
 
 class UserModelRightsSerializer(serializers.Serializer):

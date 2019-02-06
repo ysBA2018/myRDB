@@ -1,0 +1,44 @@
+{% load index %}
+{% load getdictitem %}
+<table style="margin: 0 auto">
+    <tr>
+        <th scope="col"></th>
+        {% if level == 'AF' %}
+            <th class="text-center" scope="col">GF's</th>
+        {% endif %}
+        <th class="text-center" scope="col">TF's</th>
+    </tr>
+    <tr>
+        <th scope="row">Anzahl in</br>Benutzerrecht</th>
+        {% if level == 'AF' %}
+            <td>
+                <p class="m-3 text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'gf_count' }}</p>
+            </td>
+        {% endif %}
+        <td>
+            <p class="m-3 text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'tf_count' }}</p>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Anzahl im</br>Original</th>
+        {% if level == 'AF' %}
+            <td>
+                <p class="m-3 text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'model_gf_count' }}</p>
+            </td>
+        {% endif %}
+        <td>
+            <p class="m-3 text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'model_tf_count' }}</p>
+        </td>
+    </tr>
+    <tr class="table-success">
+        <th scope="row">Differenz</th>
+        {% if level == 'AF' %}
+            <td>
+                <p class="m-3 text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'gf_count_diff' }}</p>
+            </td>
+        {% endif %}
+        <td>
+            <p class="m-3 text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'tf_count_diff' }}</p>
+        </td>
+    </tr>
+</table>
