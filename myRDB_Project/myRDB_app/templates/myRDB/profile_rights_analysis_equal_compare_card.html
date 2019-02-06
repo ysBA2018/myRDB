@@ -1,5 +1,7 @@
 {% load static %}
+{% load index %}
 {% load asjson %}
+{% load getdictitem %}
 <script>var iEqual = 0</script>
 <script>var iEqualModel = 0</script>
 
@@ -15,12 +17,12 @@
         </div>
         <div class="col">
             {# hier Informationen und Vergleichsdaten #}
-            <h5 class="text-center">{{ right.name }}</h5>
+            <h5 class="text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'right_name' }}</h5>
+            <p class="m-3 text-center font-italic">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'description' }}</p>
+            {% include 'myRDB/profile_rights_analysis_stats_table_equal.html' %}
         </div>
         <div class="col">
-            {% load index %}
             {# hier model_af, bzw _gf, _tf circle packing #}
-
             <script>var jsonModeldata_equal{{ forloop.counter0 }} = {{ equal_model_rights|index:forloop.counter0 | asjson}}</script>
 
             <svg id="analysisModelCirclePackingSVG_equal{{ forloop.counter0 }}" width="300" height="300"></svg>
