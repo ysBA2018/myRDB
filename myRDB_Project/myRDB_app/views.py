@@ -10,7 +10,7 @@ from django.shortcuts import render
 import datetime
 
 # from django_filters.rest_framework import DjangoFilterBackend
-from mongoengine import Q
+#from mongoengine import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -801,6 +801,7 @@ class Profile(generic.ListView):
         return data
         # return tfList
 
+
     def autocompleteModel(request):
         if request.is_ajax():
             q = request.GET.get('term', '').capitalize()
@@ -985,6 +986,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all().order_by('name')
+
+
 
 
 class RoleViewSet(viewsets.ModelViewSet):

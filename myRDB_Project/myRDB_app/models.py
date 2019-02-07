@@ -73,6 +73,7 @@ class TF(models.Model):
 class User_TF(models.Model):
     tf_name = models.CharField(max_length=100)
     model_tf_pk = models.IntegerField()
+    on_delete_list = models.BooleanField(default=False)
 
     objects = djongomodels.DjongoManager()
 
@@ -98,6 +99,7 @@ class User_GF(models.Model):
     gf_name = models.CharField(max_length=150)
     model_gf_pk = models.IntegerField()
     tfs = djongomodels.ArrayModelField(model_container=User_TF)
+    on_delete_list = models.BooleanField(default=False)
 
     objects = djongomodels.DjongoManager()
 
@@ -126,6 +128,7 @@ class User_AF(models.Model):
     af_name = models.CharField(max_length=150)
     model_af_pk = models.IntegerField()
     gfs = djongomodels.ArrayModelField(model_container=User_GF)
+    on_delete_list = models.BooleanField(default=False)
 
     objects = djongomodels.DjongoManager()
 
