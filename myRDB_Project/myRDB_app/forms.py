@@ -74,14 +74,14 @@ class CustomUserCreationForm(UserCreationForm):
                 print("User existiert nicht - wird neu angelegt")
                 user = super(CustomUserCreationForm, self).save(commit=False)
                 user.set_password(self.cleaned_data['password1'])
-                if not user.orga_id:
-                    user.orga_id = Orga()
-                if not user.group_id:
-                    user.group_id = Group()
-                if not user.department_id:
-                    user.department_id = Department()
-                if not user.zi_organisation_id:
-                    user.zi_organisation_id = ZI_Organisation()
+                if not user.orga:
+                    user.orga = Orga()
+                if not user.group:
+                    user.group = Group()
+                if not user.department:
+                    user.department = Department()
+                if not user.zi_organisation:
+                    user.zi_organisation = ZI_Organisation()
                 if not user.roles:
                     user.roles = [Role()]
                 if not user.direct_connect_afs:

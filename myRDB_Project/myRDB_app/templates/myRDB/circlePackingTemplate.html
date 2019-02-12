@@ -1,5 +1,12 @@
 {% load static %}
+{% load asjson %}
 {# Hier die Circle-Packing-Visualisierung #}
+{% csrf_token %}
+<script>
+    var user_pk = "{{ user.pk }}";
+    var CSRF_TOKEN = "{{ csrf_token }}";
+    var jsondata = {{ jsondata | asjson }};
+</script>
 <svg id="circlePackingSVG" width="480" height="480"></svg>
 <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/circlePacking.js' %}"></script>
 

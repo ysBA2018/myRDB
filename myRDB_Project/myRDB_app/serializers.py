@@ -90,6 +90,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     group = GroupSerializer()
     zi_organisation = ZI_OrganisationSerializer()
 
+    def update(self, instance, validated_data):
+        print("im in the serializer-update-method")
+        print(self._kwargs)
+        data=self._kwargs['data']
+        if data['right_type'] == 'af':
+            for af in instance.user_afs:
+                if af.af_name == data['right_name']:
+                    af.on_delete_list = True
+                    break
+
+        instance.save()
+
+        return instance
+
+
+
 class TFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = TF

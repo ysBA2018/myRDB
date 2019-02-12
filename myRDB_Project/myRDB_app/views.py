@@ -41,7 +41,7 @@ class CSVtoMongoDB(generic.FormView):
     def start_import_action(self):
         firstline = True
         # TODO: dateiimportfield und pfad müssen noch verbunden werden!
-        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817.csv") as csvfile:
+        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv") as csvfile:
             csvreader = csv.reader(csvfile, delimiter=';', quotechar='"')
             for line in csvreader:
                 if firstline == True:
@@ -787,6 +787,7 @@ class Profile(generic.ListView):
         self.extra_context['af_count'] = len(afs)
         self.extra_context['gf_count'] = gf_count
         self.extra_context['tf_count'] = tf_count
+        self.extra_context['jsondata'] =user_json_data
         self.extra_context['user_identity'] = user_json_data['identity']
         self.extra_context['user_first_name'] = user_json_data['first_name']
         self.extra_context['user_name'] = user_json_data['name']
@@ -986,8 +987,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all().order_by('name')
-
-
 
 
 class RoleViewSet(viewsets.ModelViewSet):
