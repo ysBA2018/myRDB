@@ -15,8 +15,8 @@ $(document).ready(function(){
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    d3.json("/../../static/myRDB/data/graphData.json", function(error, root) {
-      if (error) throw error;
+    var root = window.jsondata;
+    console.log(root);
 
       root = d3.hierarchy(root)
           .sum(function(d) { return d.size; })
@@ -39,9 +39,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){d3.event.preventDefault();
-                                            var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Löschliste hinzufügen?\n\n");
-                                            if (r === true){alert("Berechtigung zur\n\nLöschliste hinzugefügt\n")}})
+          .on("contextmenu",function(d,i){deletefunction(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -129,6 +127,170 @@ $(document).ready(function(){
       //        return d.r*k;
       //    });
       //}
-    });
+    function update(updated_data){
+          console.log(updated_data);
+          root = updated_data;
+
+          svg = d3.select("#circlePackingSVG"),
+        margin = 20,
+        diameter = +svg.attr("width"),
+        g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+        color = d3.scaleLinear()
+            .domain([-1, 5])
+            .range(["hsl(360,100%,100%)", "hsl(0,0%,0%)"])
+            .interpolate(d3.interpolateHcl);
+
+
+        pack = d3.pack()
+            .size([diameter - margin, diameter - margin])
+            .padding(2);
+      root = d3.hierarchy(root)
+          .sum(function(d) { return d.size; })
+          .sort(function(a, b) { return b.value - a.value; });
+
+      focus = root,
+          nodes = pack(root).descendants(),
+          view;
+
+      div = d3.select("body").append("div")
+          .attr("class","tooltip")
+          .style("opacity",0);
+
+    //TODO: bei erstellen von json color für leaves mitgeben!!!
+      circle = g.selectAll("circle")
+        .data(nodes)
+        .enter().append("circle")
+          .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .on("click", function(d) { if(d3.event.defaultPrevented) return;
+                console.log("clicked");
+              if (focus !== d) zoom(d), d3.event.stopPropagation(); })
+          .on("contextmenu", function(d,i){deletefunction(d,i)})
+          .on("mouseover",function (d) {
+              div.transition()
+                  .duration(200)
+                  .style("opacity",9)
+              div .html(d.data.name+"<br/>")
+                  .style("left",(d3.event.pageX)+"px")
+                  .style("top",(d3.event.pageY-28)+"px")
+          })
+          .on("mouseout",function (d) {
+              div.transition()
+                  .duration(500)
+                  .style("opacity",0)
+          });
+
+      leaves = d3.selectAll("circle").filter(function(d){
+        return d.children === null;
+      });
+
+      //var text = g.selectAll("text")
+      //  .data(nodes)
+      //  .enter().append("text")
+      //    .attr("class", "label")
+      //    .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+      //    .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
+      //    .text(function(d) { return d.data.name; });
+
+        node = g.selectAll("circle");
+      //var node = g.selectAll("circle,text");
+      //.call(d3.drag()
+        //                   .on("start",dragstarted)
+        //                   .on("drag",dragged)
+        //                   .on("end",dragended))
+
+      svg
+          .style("background", "white")
+          .on("click", function() { zoom(root); });
+
+      zoomTo([root.x, root.y, root.r * 2 + margin]);
+    }
+    function deletefunction(d,i){
+        d3.event.preventDefault();
+        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Löschliste hinzufügen?\n\n");
+        if (r === true){
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+                    }
+                }
+            });
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"right_type":"af","right_name":d.data.name};
+            var successful=false;
+            $.ajax({type:'POST',
+                    data:data,
+                    url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
+                    async:false,
+                    success: function(res){console.log(res);
+                        alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
+                        successful=true},
+                    error: function(res){console.log(res);}
+                    });
+            if(successful===true){
+                var rights = window.jsondata['children'];
+                actualize_rights(rights,d)
+                d3.select("g").data(window['jsondata']).exit().remove();
+                d3.select("body").select(".tooltip").remove();
+                //g.selectAll("circle").data(nodes).exit().remove();
+
+                update(window['jsondata']);
+            }
+        }
+      }
+      //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
+      function actualize_rights(rights,d){
+            for (right in rights){
+                if(rights[right]['name']===d.data.name){
+                    console.log(right+","+d.data.name);
+                    rights.splice(right,1);
+                    break;
+                }
+                else{
+                    if(rights[right].hasOwnProperty('children')){
+                        var rights_lev_2 = rights[right]['children']
+                        for (right_lev_2 in rights_lev_2){
+                            if(rights_lev_2[right_lev_2]['name']===d.data.name){
+                                console.log(right_lev_2+","+d.data.name);
+                                rights_lev_2.splice(right_lev_2,1);
+                                break;
+                            }
+                            else{
+                                if(rights_lev_2[right_lev_2].hasOwnProperty('children')){
+                                    var rights_lev_3 = rights_lev_2[right_lev_2]['children']
+                                    for (right_lev_3 in rights_lev_3){
+                                        if(rights_lev_3[right_lev_3]['name']===d.data.name){
+                                            console.log(right_lev_3+","+d.data.name);
+                                            rights_lev_3.splice(right_lev_3,1);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+      }
     });
 }());
