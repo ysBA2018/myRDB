@@ -878,6 +878,7 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
     scatterData = []
     i = 1
     for af in user_json_data['children']:
+        #TODO: hier auftrennung delete-graph-jeson-data und user-rights-json-data <-> if berechtigung['on_delete_list']==True
         af['name'] = af.pop('af_name')
         af['children'] = af.pop('gfs')
         model_af = get_af_by_key(pk=af['model_af_pk'], headers=headers)
