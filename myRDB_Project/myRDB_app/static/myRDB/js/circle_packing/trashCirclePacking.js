@@ -1,6 +1,6 @@
 (function(){
 $(document).ready(function(){
-    var svg = d3.select("#circlePackingSVG"),
+    var svg = d3.select("#trashSVG"),
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -15,7 +15,7 @@ $(document).ready(function(){
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    var root = window.jsondata;
+    var root = window.trashlistdata;
     console.log(root);
 
       root = d3.hierarchy(root)
@@ -39,7 +39,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){deletefunction(d,i)})
+          .on("contextmenu",function(d,i){restorefunction(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -73,9 +73,7 @@ $(document).ready(function(){
         //                   .on("drag",dragged)
         //                   .on("end",dragended))
 
-      svg
-          .style("background", "white")
-          .on("click", function() { zoom(root); });
+      svg.on("click", function() { zoom(root); });
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
 
@@ -121,11 +119,11 @@ $(document).ready(function(){
       //        return d.r*k;
       //    });
       //}
-    function update(updated_data){
+    function updateTrash(updated_data){
           console.log(updated_data);
           root = updated_data;
 
-          svg = d3.select("#circlePackingSVG"),
+          svg = d3.select("#trashSVG"),
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -160,7 +158,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){deletefunction(d,i)})
+          .on("contextmenu", function(d,i){restorefunction(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -194,18 +192,16 @@ $(document).ready(function(){
         //                   .on("drag",dragged)
         //                   .on("end",dragended))
 
-      svg
-          .style("background", "white")
-          .on("click", function() { zoom(root); });
+      svg.on("click", function() { zoom(root); });
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
     }
-    window.updateCP=function (data) {
-        update(data)
+    window.updateTrash=function (data) {
+        updateTrash(data);
     };
-    function deletefunction(d,i){
+    function restorefunction(d,i){
         d3.event.preventDefault();
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Löschliste hinzufügen?\n\n");
+        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Löschliste entfernen\n\nund wiederherstellen?\n\n");
         if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
@@ -233,65 +229,55 @@ $(document).ready(function(){
                     }
                 }
             });
-            var right_type=""
-            if(d.depth===1) right_type="af";
-            else if(d.depth===2) right_type="gf";
-            else if(d.depth===3) right_type="tf";
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"right_type":right_type,"right_name":d.data.name};
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action-type":"restore","right_type":"af","right_name":d.data.name};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
                     url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
                     async:false,
                     success: function(res){console.log(res);
-                        alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
+                        alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
                         successful=true},
                     error: function(res){console.log(res);}
                     });
             if(successful===true){
-                var rights = window.jsondata['children'];
                 var trash = window.trashlistdata['children'];
-                actualize_rights(rights, trash, d);
-                d3.select("g").data(window['jsondata']).exit().remove();
+                var rights = window.jsondata['children'];
+                actualize_rights(trash,rights,d);
+                d3.select("g").data(window['trashlistdata']).exit().remove();
                 d3.select("body").select(".tooltip").remove();
-                //d3.select("#trashSVG").select("g").enter().append(this)
+                //d3.select(".trash").enter().append(this)
                 //g.selectAll("circle").data(nodes).exit().remove();
 
-                update(window['jsondata']);
-                d3.select('#trashSVG').select('g').data(window.trashlistdata).exit().remove();
-
-                window.updateTrash(window.trashlistdata)
-
+                updateTrash(window['trashlistdata']);
+                window.updateCP(data);
             }
         }
       }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(rights, trash, d){
-            for (right in rights){
-                if(rights[right]['name']===d.data.name){
-                    console.log(right+","+d.data.name);
-                    trash.push(rights[right]);
-                    rights.splice(right,1);
+      function actualize_rights(trash,rights,d){
+            for (trash_item in trash){
+                if(trash[trash_item]['name']===d.data.name){
+                    console.log(trash_item+","+d.data.name);
+                    trash.splice(trash_item,1);
                     break;
                 }
                 else{
-                    if(rights[right].hasOwnProperty('children')){
-                        var rights_lev_2 = rights[right]['children']
-                        for (right_lev_2 in rights_lev_2){
-                            if(rights_lev_2[right_lev_2]['name']===d.data.name){
-                                console.log(right_lev_2+","+d.data.name);
-                                trash.push(rights[right_lev_2]);
-                                rights_lev_2.splice(right_lev_2,1);
+                    if(trash[trash_item].hasOwnProperty('children')){
+                        var trash_lev_2 = trash[trash_item]['children']
+                        for (trash_item_lev_2 in trash_lev_2){
+                            if(trash_lev_2[trash_item_lev_2]['name']===d.data.name){
+                                console.log(trash_item_lev_2+","+d.data.name);
+                                trash_lev_2.splice(trash_item_lev_2,1);
                                 break;
                             }
                             else{
-                                if(rights_lev_2[right_lev_2].hasOwnProperty('children')){
-                                    var rights_lev_3 = rights_lev_2[right_lev_2]['children']
-                                    for (right_lev_3 in rights_lev_3){
-                                        if(rights_lev_3[right_lev_3]['name']===d.data.name){
-                                            console.log(right_lev_3+","+d.data.name);
-                                            trash.push(rights[right_lev_3]);
-                                            rights_lev_3.splice(right_lev_3,1);
+                                if(trash_lev_2[trash_item_lev_2].hasOwnProperty('children')){
+                                    var trash_lev_3 = trash_lev_2[trash_item_lev_2]['children']
+                                    for (trash_item_lev_3 in trash_lev_3){
+                                        if(trash_lev_3[trash_item_lev_3]['name']===d.data.name){
+                                            console.log(trash_item_lev_3+","+d.data.name);
+                                            trash_lev_3.splice(trash_item_lev_3,1);
                                             break;
                                         }
                                     }
