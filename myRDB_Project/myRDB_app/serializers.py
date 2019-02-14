@@ -60,15 +60,18 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
 class UserTFSerializer(serializers.Serializer):
     tf_name = serializers.CharField(max_length=150)
     model_tf_pk = serializers.IntegerField()
+    on_delete_list = serializers.BooleanField(default=False)
 
 class UserGFSerializer(serializers.Serializer):
     gf_name = serializers.CharField(max_length=150)
     model_gf_pk = serializers.IntegerField()
+    on_delete_list = serializers.BooleanField(default=False)
     tfs = UserTFSerializer(many=True, read_only=True)
 
 class UserAFSerializer(serializers.Serializer):
     af_name = serializers.CharField(max_length=150)
     model_af_pk = serializers.IntegerField()
+    on_delete_list = serializers.BooleanField(default=False)
     gfs = UserGFSerializer(many=True, read_only=True)
 
 
@@ -99,6 +102,28 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                 if af.af_name == data['right_name']:
                     af.on_delete_list = True
                     break
+        if data['right_type'] == 'gf':
+            for af in instance.user_afs:
+                for gf in af.gfs:
+                    if gf.gf_name == data['right_name']:
+                        gf.on_delete_list = True
+                        break
+                else:
+                    continue
+                break
+        if data['right_type'] == 'tf':
+            for af in instance.user_afs:
+                for gf in af.gfs:
+                    for tf in gf.tfs:
+                        if tf.tf_name == data['right_name']:
+                            tf.on_delete_list = True
+                            break
+                    else:
+                        continue
+                    break
+                else:
+                    continue
+                break
 
         instance.save()
 

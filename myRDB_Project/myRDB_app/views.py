@@ -10,7 +10,7 @@ from django.shortcuts import render
 import datetime
 
 # from django_filters.rest_framework import DjangoFilterBackend
-#from mongoengine import Q
+# from mongoengine import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -511,7 +511,7 @@ class Compare(generic.ListView):
 
         data, comp_gf_count, comp_tf_count = prepareTableData(compareUser, compUserRoles, compUserAfs, headers)
 
-        prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
+        user_json_data = prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
 
         compare_paginator = Paginator(data, 10)
         page = self.request.GET.get('compare_page')
@@ -536,6 +536,8 @@ class Compare(generic.ListView):
         setViewMode(self.request, self.extra_context)
         user_data = self.request.session.get('user_data')
         table_data = self.request.session.get('table_data')
+
+        self.extra_context['jsondata'] = user_data
         self.extra_context['user_identity'] = user_data['identity']
         self.extra_context['user_first_name'] = user_data['first_name']
         self.extra_context['user_name'] = user_data['name']
@@ -546,7 +548,7 @@ class Compare(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
 
         roles = user_data['roles']
-        afs = user_data['user_afs']
+        afs = user_data['children']
 
         return table_data
 
@@ -576,7 +578,7 @@ class ProfileRightsAnalysis(generic.ListView):
         unequalRightsStats = []
 
         if self.extra_context['level'] == "AF":
-            afs = sorted(user_data['user_afs'], key=lambda k: k['name'])
+            afs = sorted(user_data['children'], key=lambda k: k['name'])
             model_afs = iter(sorted(get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs'],
                                     key=lambda k: k['af_name']))
 
@@ -589,24 +591,25 @@ class ProfileRightsAnalysis(generic.ListView):
                         stats['right_name'] = current_model['af_name']
                         stats['description'] = current_model['af_description']
                         self.prepareModelJSONdata(current_model, True, False, headers)
-                        equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats = self.compareRightToModel(af,
-                                                                                                                    current_model,
-                                                                                                                    equalRights,
-                                                                                                                    unequalRights,
-                                                                                                                    equalModelRights,
-                                                                                                                    unequalModelRights,
-                                                                                                                    True,
-                                                                                                                    False,
-                                                                                                                    stats,
-                                                                                                                    unequalRightsStats,
-                                                                                                                    equalRightsStats)
+                        equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats = self.compareRightToModel(
+                            af,
+                            current_model,
+                            equalRights,
+                            unequalRights,
+                            equalModelRights,
+                            unequalModelRights,
+                            True,
+                            False,
+                            stats,
+                            unequalRightsStats,
+                            equalRightsStats)
                         break
                     else:
                         next(model_afs)
                 # else:
                 #    afs.remove(af)
         elif self.extra_context['level'] == "GF":
-            afs = user_data['user_afs']
+            afs = user_data['children']
             gfs = []
             for af in afs:
                 for gf in af['children']:
@@ -629,17 +632,18 @@ class ProfileRightsAnalysis(generic.ListView):
                         stats['right_name'] = current_model['gf_name']
                         stats['description'] = current_model['gf_description']
                         self.prepareModelJSONdata(current_model, False, True, headers)
-                        equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats = self.compareRightToModel(gf,
-                                                                                                                    current_model,
-                                                                                                                    equalRights,
-                                                                                                                    unequalRights,
-                                                                                                                    equalModelRights,
-                                                                                                                    unequalModelRights,
-                                                                                                                    False,
-                                                                                                                    True,
-                                                                                                                    stats,
-                                                                                                                    unequalRightsStats,
-                                                                                                                    equalRightsStats)
+                        equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats = self.compareRightToModel(
+                            gf,
+                            current_model,
+                            equalRights,
+                            unequalRights,
+                            equalModelRights,
+                            unequalModelRights,
+                            False,
+                            True,
+                            stats,
+                            unequalRightsStats,
+                            equalRightsStats)
 
                         break
                     else:
@@ -780,14 +784,20 @@ class Profile(generic.ListView):
 
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
         self.request.session['table_data'] = data
-        self.request.session['user_data'] = user_json_data.copy()
-        prepareJSONdata(user.identity, user_json_data, False, headers)
+
+        user_json_data = prepareJSONdata(user.identity, user_json_data, False, headers)
+        delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
+        user_json_data = actualize_user_data(user_json_data, delete_list_with_category)
+        self.request.session['user_data'] = user_json_data
 
         self.extra_context['role_count'] = len(roles)
         self.extra_context['af_count'] = len(afs)
         self.extra_context['gf_count'] = gf_count
         self.extra_context['tf_count'] = tf_count
-        self.extra_context['jsondata'] =user_json_data
+
+        self.extra_context['jsondata'] = user_json_data
+        self.extra_context['delete_list'] = {"children": delete_list}
+
         self.extra_context['user_identity'] = user_json_data['identity']
         self.extra_context['user_first_name'] = user_json_data['first_name']
         self.extra_context['user_name'] = user_json_data['name']
@@ -802,8 +812,7 @@ class Profile(generic.ListView):
         return data
         # return tfList
 
-
-    def autocompleteModel(request):
+    def autocompleteModel(self, request):
         if request.is_ajax():
             q = request.GET.get('term', '').capitalize()
             search_qs = User.objects.filter(name__startswith=q)
@@ -876,9 +885,10 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
     print(type(user_json_data), user_json_data)
     user_json_data['children'] = user_json_data.pop('user_afs')
     scatterData = []
+
     i = 1
     for af in user_json_data['children']:
-        #TODO: hier auftrennung delete-graph-jeson-data und user-rights-json-data <-> if berechtigung['on_delete_list']==True
+        # TODO: hier auftrennung delete-graph-jeson-data und user-rights-json-data <-> if berechtigung['on_delete_list']==True
         af['name'] = af.pop('af_name')
         af['children'] = af.pop('gfs')
         model_af = get_af_by_key(pk=af['model_af_pk'], headers=headers)
@@ -892,6 +902,7 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
             for tf in gf['children']:
                 tf['name'] = tf.pop('tf_name')
                 tf['size'] = 3000
+                # TODO: scatter-graph für zugewiesen, auf delete-list gesetzt, gelöscht
                 scatterData.append({"name": tf['name'], "index": i, "af_applied": af_applied})
 
                 i += 1
@@ -911,6 +922,66 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
         path = 'myRDB_app/static/myRDB/data/scatterGraphData.json'
         with open(path, 'w') as outfile:
             json.dump(scatterData, outfile, indent=2)
+
+    return user_json_data
+
+
+def build_up_delete_list(user_json_data):
+    delete_list = []
+    delete_list_with_category =[]
+    rights = user_json_data['children']
+    for right in rights:
+        if right['on_delete_list']:
+            delete_list_with_category.append({"right":right,"type":"af"})
+            delete_list.append(right)
+        else:
+            rights_lev_2 = right['children']
+            for right_lev_2 in rights_lev_2:
+                if right_lev_2['on_delete_list']:
+                    delete_list_with_category.append({"right":right_lev_2,"type":"gf"})
+                    delete_list.append(right_lev_2)
+                else:
+                    rights_lev_3 = right_lev_2['children']
+                    for right_lev_3 in rights_lev_3:
+                        if right_lev_3['on_delete_list']:
+                            delete_list_with_category.append({"right":right_lev_3,"type":"tf"})
+                            delete_list.append(right_lev_3)
+
+    return delete_list, delete_list_with_category
+
+
+def actualize_user_data(user_json_data, delete_list):
+    for elem in delete_list:
+        if elem["type"]=="af":
+            for right in user_json_data['children']:
+                if right["name"] == elem["right"]["name"]:
+                    user_json_data['children'].remove(right)
+                    break
+        if elem["type"]=="gf":
+            for right in user_json_data['children']:
+                for right_lev_2 in right['children']:
+                    if right_lev_2["name"] == elem["right"]["name"]:
+                        right['children'].remove(right_lev_2)
+                        break
+            else:
+                continue
+            break
+        if elem["type"]=="tf":
+            for right in user_json_data['children']:
+                for right_lev_2 in right['children']:
+                    for right_lev_3 in right_lev_2['children']:
+                        if right_lev_3["name"] == elem["right"]["name"]:
+                            right_lev_2['children'].remove(right_lev_3)
+                            break
+                else:
+                    continue
+                break
+            else:
+                continue
+            break
+    return user_json_data
+
+
 
 
 class UserModelRightsViewSet(viewsets.ModelViewSet):
