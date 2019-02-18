@@ -97,36 +97,46 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         print("im in the serializer-update-method")
         print(self._kwargs)
         data=self._kwargs['data']
+        if data['action_type'] == 'trash':
+            instance = self.set_on_delete_list(instance,data,True)
+        elif data['action_type']=="restore":
+            instance = self.set_on_delete_list(instance,data,False)
+
+        instance.save()
+
+        return instance
+
+    def set_on_delete_list(self,instance,data,bool):
         if data['right_type'] == 'af':
             for af in instance.user_afs:
                 if af.af_name == data['right_name']:
-                    af.on_delete_list = True
+                    af.on_delete_list = bool
                     break
         if data['right_type'] == 'gf':
             for af in instance.user_afs:
-                for gf in af.gfs:
-                    if gf.gf_name == data['right_name']:
-                        gf.on_delete_list = True
-                        break
-                else:
-                    continue
-                break
-        if data['right_type'] == 'tf':
-            for af in instance.user_afs:
-                for gf in af.gfs:
-                    for tf in gf.tfs:
-                        if tf.tf_name == data['right_name']:
-                            tf.on_delete_list = True
+                if af.af_name==data['parent']:
+                    for gf in af.gfs:
+                        if gf.gf_name == data['right_name']:
+                            gf.on_delete_list = bool
                             break
                     else:
                         continue
                     break
-                else:
-                    continue
-                break
-
-        instance.save()
-
+        if data['right_type'] == 'tf':
+            for af in instance.user_afs:
+                if af.af_name==data['grandparent']:
+                    for gf in af.gfs:
+                        if gf.gf_name==data['parent']:
+                            for tf in gf.tfs:
+                                if tf.tf_name == data['right_name']:
+                                    tf.on_delete_list = bool
+                                    break
+                            else:
+                                continue
+                            break
+                    else:
+                        continue
+                    break
         return instance
 
 

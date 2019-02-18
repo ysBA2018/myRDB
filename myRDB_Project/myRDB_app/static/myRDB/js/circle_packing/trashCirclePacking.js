@@ -28,6 +28,7 @@ $(document).ready(function(){
 
       var div = d3.select("body").append("div")
           .attr("class","tooltip")
+          .attr("id","trashTooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -78,7 +79,7 @@ $(document).ready(function(){
       zoomTo([root.x, root.y, root.r * 2 + margin]);
 
       function zoom(d) {
-          if (d.depth===3) return;
+          if (!d.hasOwnProperty('children')) return;
         var focus0 = focus; focus = d;
 
         var transition = d3.transition()
@@ -145,8 +146,9 @@ $(document).ready(function(){
           nodes = pack(root).descendants(),
           view;
 
-      div = d3.select("body").append("div")
+      var div = d3.select("body").append("div")
           .attr("class","tooltip")
+          .attr("id","trashTooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -196,8 +198,8 @@ $(document).ready(function(){
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
     }
-    window.updateTrash=function (data) {
-        updateTrash(data);
+    window.updateTrash=function () {
+        updateTrash(window.trashlistdata);
     };
     function restorefunction(d,i){
         d3.event.preventDefault();
@@ -229,55 +231,137 @@ $(document).ready(function(){
                     }
                 }
             });
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action-type":"restore","right_type":"af","right_name":d.data.name};
+            var right_type="",right_parent = "",right_grandparent = "";
+            if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
+                right_type="af";
+            }
+            else if((d.depth===2 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))||(d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
+                right_type="gf";
+                right_parent = d.data.parent;
+            }
+            else if(d.depth===3||(d.depth===2 && !d.hasOwnProperty('children'))||(d.depth===1 && !d.hasOwnProperty('children'))){
+                right_type="tf";
+                right_grandparent = d.data.grandparent;
+                right_parent = d.data.parent;
+            }
+
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
                     url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
                     async:false,
                     success: function(res){console.log(res);
-                        alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
                         successful=true},
                     error: function(res){console.log(res);}
                     });
             if(successful===true){
                 var trash = window.trashlistdata['children'];
                 var rights = window.jsondata['children'];
-                actualize_rights(trash,rights,d);
-                d3.select("g").data(window['trashlistdata']).exit().remove();
-                d3.select("body").select(".tooltip").remove();
-                //d3.select(".trash").enter().append(this)
-                //g.selectAll("circle").data(nodes).exit().remove();
+                var models = window.jsondata_including_delete_list['children'];
+                actualize_rights(trash,rights,models,data['right_type'],d);
 
+                d3.select("body").selectAll("#trashTooltip").remove();
+
+                d3.select('#trashSVG').select("g").data(window.trashlistdata).exit().remove();
                 updateTrash(window['trashlistdata']);
-                window.updateCP(data);
+
+
+                d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
+                window.updateCP();
+
+
+            }
+        }
+      }
+
+
+      function rechain_right_to_rights(right,rights,level){
+        var found = false;
+        if (level === "af"){
+            rights.push(right);
+        }
+        else if(level === "gf"){
+            for (i in rights){
+                if (rights[i]['name']===right['parent']) {
+                    rights[i]['children'].push(right);
+                    found = true;
+                    break;
+                }
+                if (found === true) break;
+            }
+        }
+        else if(level === "tf"){
+            for (i in rights){
+                var grandparent = rights[i];
+                if (grandparent['name']===right['grandparent']){
+                    for (j in grandparent['children']){
+                        var parent = grandparent["children"][j];
+                        if(parent['name']===right['parent']){
+                            parent['children'].push(right);
+                            found=true;
+                            break;
+                        }
+                        if (found === true) break;
+                    }
+                }
+                if (found === true) break;
             }
         }
       }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(trash,rights,d){
-            for (trash_item in trash){
+      function actualize_rights(trash,rights,models,level,d){
+        if (d.depth===1){
+            for (trash_item in trash) {
+                if (trash[trash_item]['name'] === d.data.name) {
+                    console.log(trash_item + "," + d.data.name);
+                    rechain_right_to_rights(trash[trash_item], rights, level);
+                    trash.splice(trash_item, 1);
+                    alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
+                    break;
+                }
+            }
+        }
+        else{
+            alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+        }
+            /*for (trash_item in trash){
                 if(trash[trash_item]['name']===d.data.name){
                     console.log(trash_item+","+d.data.name);
+                    rechain_right_to_rights(trash[trash_item],rights,level);
                     trash.splice(trash_item,1);
+                    alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
                     break;
                 }
                 else{
                     if(trash[trash_item].hasOwnProperty('children')){
-                        var trash_lev_2 = trash[trash_item]['children']
+                        var trash_lev_2 = trash[trash_item]['children'];
                         for (trash_item_lev_2 in trash_lev_2){
                             if(trash_lev_2[trash_item_lev_2]['name']===d.data.name){
                                 console.log(trash_item_lev_2+","+d.data.name);
-                                trash_lev_2.splice(trash_item_lev_2,1);
+                                if (d.depth===1) {
+                                    rechain_right_to_rights(trash_lev_2[trash_item_lev_2], rights, level);
+                                    trash_lev_2.splice(trash_item_lev_2, 1);
+                                    alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
+                                }else {
+                                    alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+                                }
                                 break;
                             }
                             else{
                                 if(trash_lev_2[trash_item_lev_2].hasOwnProperty('children')){
-                                    var trash_lev_3 = trash_lev_2[trash_item_lev_2]['children']
+                                    var trash_lev_3 = trash_lev_2[trash_item_lev_2]['children'];
                                     for (trash_item_lev_3 in trash_lev_3){
                                         if(trash_lev_3[trash_item_lev_3]['name']===d.data.name){
                                             console.log(trash_item_lev_3+","+d.data.name);
-                                            trash_lev_3.splice(trash_item_lev_3,1);
+                                            if(d.depth===1) {
+                                                rechain_right_to_rights(trash_lev_3[trash_item_lev_3], rights, level);
+                                                trash_lev_3.splice(trash_item_lev_3, 1);
+                                                alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
+                                            }
+                                            else{
+                                                alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+                                            }
                                             break;
                                         }
                                     }
@@ -286,7 +370,7 @@ $(document).ready(function(){
                         }
                     }
                 }
-            }
+            }*/
       }
     });
 }());

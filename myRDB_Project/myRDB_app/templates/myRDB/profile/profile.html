@@ -1,18 +1,26 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
 <div class="container-fluid">
-    {% include 'myRDB/profile_head.html' %}
+    {% include 'myRDB/profile/profile_head.html' %}
 
         <div class="row top-buffer">
             <div class="col-6">
                 <div class="card">
-                    <div class="card-body">
+
                         {% if view_mode == "Graphische Ansicht" %}
-                            {% include 'myRDB/circlePackingTemplate.html' %}
+                            <div class="card-header">
+                                <h5>Berechtigungsgraph</h5>
+                            </div>
+                            <div class="card-body">
+                                {% include 'myRDB/circlePackingTemplate.html' %}
+                            </div>
+                            <div class="card-footer">
+                                <p>Berechtigungen mit Rechtsklick & Bestätigung<br>auf Löschliste setzen!</p>
+                            </div>
                         {% else %}
-                            {% include 'myRDB/profileTableTemplate.html' %}
+                            {% include 'myRDB/profile/profileTableTemplate.html' %}
                         {% endif %}
-                    </div>
+
                 </div>
             </div>
             <div class="col-6">
@@ -23,7 +31,11 @@
                 </div>
                 <div class="row top-buffer">
                     <div class="col">
-                        {% include 'myRDB/trashTemplate.html' %}
+                        {% if view_mode == "Graphische Ansicht" %}
+                            {% include 'myRDB/trashTemplate.html' %}
+                        {% else %}
+                            {% include 'myRDB/trashTableTemplate.html' %}
+                        {% endif %}
                     </div>
                     <div class="col">
                         <div class="card">

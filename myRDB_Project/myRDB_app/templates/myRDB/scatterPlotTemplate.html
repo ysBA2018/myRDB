@@ -1,0 +1,29 @@
+{# Hier die Erteilungs/Entzugs-Visualisierung #}
+{% load static %}
+<div class="card">
+    <div class="card-header">
+        <h5>Berechtigungszeitstrahl</h5>
+    </div>
+    <div class="card-body">
+        <div id="scatterPlotSVG" width="240" height="480"></div>
+
+        {#<script type="text/javascript" src="{% static 'myRDB/js/scatter_plot/scatterPlot.js' %}"></script>#}
+        <script type="text/javascript" src="{% static 'myRDB/js/scatter_plot/scatterPlot_fromJSON.js' %}"></script>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-6">
+                <p>Anzahl & Verlauf der </p>
+            </div>
+            <div class="col">
+                <select>
+                    <option name="erteilt"> erteilten</option>
+                    <option name="entzogen"> entzogenen</option>
+                </select>
+            </div>
+            <div class="col">
+                <p> Rechte</p>
+            </div>
+        </div>
+    </div>
+</div>

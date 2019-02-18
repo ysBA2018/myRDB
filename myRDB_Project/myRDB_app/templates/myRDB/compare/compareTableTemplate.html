@@ -1,0 +1,43 @@
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <tr>
+            <th scope="col">TF</th>
+            <th scope="col">GF</th>
+            <th scope="col">AF</th>
+            <th scope="col">Rolle</th>
+        </tr>
+        {% for row in compareUser_table_data %}
+        <tr>
+            <td>{{ row.0 }}</td>
+            <td>{{ row.1 }}</td>
+            <td>{{ row.2 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% if is_paginated %}
+<ul class="pagination">
+    {% if compareUser_table_data.has_previous %}
+    <li>
+        <a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ compareUser_table_data.previous_page_number }}&view_mode=Tabellarische Ansicht">&laquo;</a>
+    </li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in compareUser_table_data.paginator.page_range %}
+    {% if compareUser_table_data.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+    <li><a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ i }}&view_mode=Tabellarische Ansicht">{{ i }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+    {% if compareUser_table_data.has_next %}
+    <li>
+        <a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ compareUser_table_data.next_page_number }}&view_mode=Tabellarische Ansicht">&raquo;</a>
+    </li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+{% endif %}
