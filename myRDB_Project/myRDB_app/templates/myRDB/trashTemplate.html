@@ -5,12 +5,13 @@
         {# Hier die Trash-Drop-Fläche realisieren #}
         <script>
             var trashlistdata = {{ delete_list | asjson }};
+            var jsondata_including_delete_list = {{ jsondata_including_delete_list | asjson }};
             var updateTrash;
         </script>
         <svg class="trash" id="trashSVG" width="180" height="180"></svg>
         <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/trashCirclePacking.js' %}"></script>
     </div>
     <div class="card-footer">
-        <p>Nicht mehr benötigte Rechte hierhin ziehen!</p>
+        <p>Mit Rechtsklick & Bestätigung<br>Berechtigung von Löschliste nehmen!</p>
     </div>
 </div>

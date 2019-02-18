@@ -56,7 +56,7 @@
       "children": [
         {
           "model_gf_pk": 33,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00032_sp_i_ma_id_zi",
           "children": [
             {
@@ -97,7 +97,7 @@
     },
     {
       "model_af_pk": 13,
-      "on_delete_list": true,
+      "on_delete_list": false,
       "name": "rvo_00458_org_basis",
       "children": [
         {
@@ -143,7 +143,7 @@
             },
             {
               "model_tf_pk": 58,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "#QFSE001",
               "size": 3000
             },
@@ -430,7 +430,7 @@
     },
     {
       "model_af_pk": 10,
-      "on_delete_list": false,
+      "on_delete_list": true,
       "name": "rvo_00439_org_basis",
       "children": [
         {
@@ -640,7 +640,7 @@
     },
     {
       "model_af_pk": 233,
-      "on_delete_list": true,
+      "on_delete_list": false,
       "name": "rvm_00889_142_id_ma",
       "children": [
         {
@@ -829,7 +829,7 @@
       "children": [
         {
           "model_gf_pk": 1039,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00023_se_sg9200e",
           "children": [
             {
@@ -908,7 +908,7 @@
         },
         {
           "model_gf_pk": 1040,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00788_#txt925",
           "children": [
             {
@@ -929,7 +929,7 @@
     },
     {
       "model_af_pk": 72,
-      "on_delete_list": true,
+      "on_delete_list": false,
       "name": "rva_00458_personen",
       "children": [
         {
@@ -1145,7 +1145,7 @@
         },
         {
           "model_gf_pk": 125,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00458_45ewblu",
           "children": [
             {
@@ -1210,7 +1210,7 @@
             },
             {
               "model_tf_pk": 402,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "#QTSE45R",
               "size": 3000
             },
@@ -1243,7 +1243,7 @@
         },
         {
           "model_gf_pk": 127,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00458_46ewllei-rbm",
           "children": [
             {
@@ -1397,7 +1397,7 @@
         },
         {
           "model_gf_pk": 131,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00458_80ewpension",
           "children": [
             {
@@ -1452,7 +1452,7 @@
             },
             {
               "model_tf_pk": 1411,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "#OPCT60",
               "size": 3000
             }
@@ -1462,12 +1462,12 @@
     },
     {
       "model_af_pk": 76,
-      "on_delete_list": true,
+      "on_delete_list": false,
       "name": "rva_00458_amueberghost",
       "children": [
         {
           "model_gf_pk": 138,
-          "on_delete_list": false,
+          "on_delete_list": true,
           "name": "rvg_00458_amueberghost",
           "children": [
             {
@@ -1551,7 +1551,7 @@
         },
         {
           "model_gf_pk": 137,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00458_ewueberghost",
           "children": [
             {
@@ -1746,7 +1746,7 @@
     },
     {
       "model_af_pk": 74,
-      "on_delete_list": true,
+      "on_delete_list": false,
       "name": "rva_00458_amuebergrfd",
       "children": [
         {
@@ -1762,7 +1762,7 @@
             },
             {
               "model_tf_pk": 432,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "CN=D_KFALL_DOKU_SB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
@@ -1819,7 +1819,7 @@
       "children": [
         {
           "model_gf_pk": 132,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00458_ewuebergrfd",
           "children": [
             {
@@ -1854,7 +1854,7 @@
             },
             {
               "model_tf_pk": 46,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
@@ -1878,7 +1878,7 @@
             },
             {
               "model_tf_pk": 6,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "rvgroup",
               "size": 3000
             }
@@ -1928,7 +1928,7 @@
             },
             {
               "model_tf_pk": 78,
-              "on_delete_list": true,
+              "on_delete_list": false,
               "name": "CN=V_BETRIEB_INNENDIENST_WI (SAP),OU=Exchange Gruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },

@@ -28,6 +28,7 @@ $(document).ready(function(){
 
       var div = d3.select("body").append("div")
           .attr("class","tooltip")
+          .attr("id","CPtooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -147,8 +148,9 @@ $(document).ready(function(){
           nodes = pack(root).descendants(),
           view;
 
-      div = d3.select("body").append("div")
+      var div = d3.select("body").append("div")
           .attr("class","tooltip")
+          .attr("id","CPtooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -200,8 +202,8 @@ $(document).ready(function(){
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
     }
-    window.updateCP=function (data) {
-        update(data)
+    window.updateCP=function () {
+        update(window.jsondata)
     };
     function deletefunction(d,i){
         d3.event.preventDefault();
@@ -233,11 +235,18 @@ $(document).ready(function(){
                     }
                 }
             });
-            var right_type=""
+            var right_type="",right_parent = "",right_grandparent = "";
             if(d.depth===1) right_type="af";
-            else if(d.depth===2) right_type="gf";
-            else if(d.depth===3) right_type="tf";
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"right_type":right_type,"right_name":d.data.name};
+            else if(d.depth===2) {
+                right_type="gf";
+                right_parent = d.parent.data.name;
+            }
+            else if(d.depth===3){
+                right_type="tf";
+                right_grandparent = d.parent.parent.data.name;
+                right_parent = d.parent.data.name;
+            }
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"trash","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
@@ -252,27 +261,77 @@ $(document).ready(function(){
                 var rights = window.jsondata['children'];
                 var trash = window.trashlistdata['children'];
                 actualize_rights(rights, trash, d);
-                d3.select("g").data(window['jsondata']).exit().remove();
-                d3.select("body").select(".tooltip").remove();
-                //d3.select("#trashSVG").select("g").enter().append(this)
-                //g.selectAll("circle").data(nodes).exit().remove();
 
+                d3.select("body").selectAll("#CPtooltip").remove();
+
+                d3.select('#circlePackingSVG').select("g").data(window.jsondata).exit().remove();
                 update(window['jsondata']);
-                d3.select('#trashSVG').select('g').data(window.trashlistdata).exit().remove();
 
-                window.updateTrash(window.trashlistdata)
+                d3.select('#trashSVG').select('g').data(window.trashlistdata).exit().remove();
+                window.updateTrash();
+
 
             }
         }
       }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
       function actualize_rights(rights, trash, d){
-            for (right in rights){
+        if (d.depth ===1){
+            for (i in rights) {
+                if (rights[i]['name'] === d.data.name) {
+                    console.log(i + "," + d.data.name);
+                    trash.push(rights[i]);
+                    rights.splice(i, 1);
+                    return;
+                }
+            }
+        }
+        else if(d.depth===2){
+            for (i in rights) {
+                var right = rights[i];
+                if (right['name'] === d.parent.data.name) {
+                    for (j in right['children']) {
+                        var right_lev_2 = right['children'][j];
+                        if (right_lev_2['name'] === d.data.name) {
+                            console.log(j + "," + d.data.name);
+                            right_lev_2["parent"]=d.parent.data.name;
+                            trash.push(right_lev_2);
+                            right['children'].splice(j, 1);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        else if(d.depth===3){
+            for (i in rights) {
+                var right = rights[i];
+                if (right['name'] === d.parent.parent.data.name) {
+                    for (j in right['children']) {
+                        var right_lev_2 = right['children'][j];
+                        if (right_lev_2['name'] === d.parent.data.name) {
+                            for (k in right_lev_2['children']) {
+                                var right_lev_3 = right_lev_2['children'][k];
+                                if (right_lev_3['name'] === d.data.name) {
+                                    console.log(k + "," + d.data.name);
+                                    right_lev_3["grandparent"]= d.parent.parent.data.name;
+                                    right_lev_3["parent"]=d.parent.data.name;
+                                    trash.push(right_lev_3);
+                                    right_lev_2['children'].splice(k, 1);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+            /*for (right in rights){
                 if(rights[right]['name']===d.data.name){
                     console.log(right+","+d.data.name);
                     trash.push(rights[right]);
                     rights.splice(right,1);
-                    break;
+                    return;
                 }
                 else{
                     if(rights[right].hasOwnProperty('children')){
@@ -280,9 +339,9 @@ $(document).ready(function(){
                         for (right_lev_2 in rights_lev_2){
                             if(rights_lev_2[right_lev_2]['name']===d.data.name){
                                 console.log(right_lev_2+","+d.data.name);
-                                trash.push(rights[right_lev_2]);
+                                trash.push(rights_lev_2[right_lev_2]);
                                 rights_lev_2.splice(right_lev_2,1);
-                                break;
+                                return;
                             }
                             else{
                                 if(rights_lev_2[right_lev_2].hasOwnProperty('children')){
@@ -290,9 +349,9 @@ $(document).ready(function(){
                                     for (right_lev_3 in rights_lev_3){
                                         if(rights_lev_3[right_lev_3]['name']===d.data.name){
                                             console.log(right_lev_3+","+d.data.name);
-                                            trash.push(rights[right_lev_3]);
+                                            trash.push(rights_lev_3[right_lev_3]);
                                             rights_lev_3.splice(right_lev_3,1);
-                                            break;
+                                            return;
                                         }
                                     }
                                 }
@@ -300,7 +359,7 @@ $(document).ready(function(){
                         }
                     }
                 }
-            }
+            }*/
       }
     });
 }());

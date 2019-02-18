@@ -2,6 +2,7 @@
 {% load asjson %}
 {# Hier die Circle-Packing-Visualisierung #}
 {% csrf_token %}
+
 <script>
     var user_pk = "{{ user.pk }}";
     var CSRF_TOKEN = "{{ csrf_token }}";

@@ -486,7 +486,7 @@ def build_url_params(request, extra_context):
 
 class Compare(generic.ListView):
     model = User
-    template_name = 'myRDB/compare.html'
+    template_name = 'myRDB/compare/compare.html'
     paginate_by = 10
     context_object_name = "table_data"
     extra_context = {}
@@ -506,12 +506,12 @@ class Compare(generic.ListView):
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
 
+        user_json_data = prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
+
         compUserRoles = user_json_data['roles']
-        compUserAfs = user_json_data['user_afs']
+        compUserAfs = user_json_data['children']
 
         data, comp_gf_count, comp_tf_count = prepareTableData(compareUser, compUserRoles, compUserAfs, headers)
-
-        user_json_data = prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
 
         compare_paginator = Paginator(data, 10)
         page = self.request.GET.get('compare_page')
@@ -555,7 +555,7 @@ class Compare(generic.ListView):
 
 class ProfileRightsAnalysis(generic.ListView):
     model = User
-    template_name = 'myRDB/profile_rights_analysis.html'
+    template_name = 'myRDB/profile/profile_rights_analysis.html'
     extra_context = {}
 
     def get_queryset(self):
@@ -604,8 +604,7 @@ class ProfileRightsAnalysis(generic.ListView):
                             unequalRightsStats,
                             equalRightsStats)
                         break
-                    else:
-                        next(model_afs)
+
                 # else:
                 #    afs.remove(af)
         elif self.extra_context['level'] == "GF":
@@ -646,8 +645,7 @@ class ProfileRightsAnalysis(generic.ListView):
                             equalRightsStats)
 
                         break
-                    else:
-                        next(model_gfs)
+
                 # else:
                 #    gfs.remove(gf)
 
@@ -676,6 +674,7 @@ class ProfileRightsAnalysis(generic.ListView):
 
         tf_count = 0
         model_tf_count = 0
+        tf_count_diff = 0
 
         if isAF:
             modelGFIter = iter(sorted(compareModel['children'], key=lambda k: k['name']))
@@ -753,8 +752,8 @@ class ProfileRightsAnalysis(generic.ListView):
 
 class Profile(generic.ListView):
     model = User
-    template_name = 'myRDB/profile.html'
-    paginate_by = 10
+    template_name = 'myRDB/profile/profile.html'
+    #paginate_by = 10
     context_object_name = "table_data"
     extra_context = {}
 
@@ -780,14 +779,22 @@ class Profile(generic.ListView):
         userid = user.id
         roles = user_json_data['roles']
         print(userid, user)
-        afs = user_json_data['user_afs']
-
-        data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
-        self.request.session['table_data'] = data
 
         user_json_data = prepareJSONdata(user.identity, user_json_data, False, headers)
+
         delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
+        delete_list_table_data, delete_list_count= prepareTrashTableData(delete_list)
+        #self.extra_context['delete_list_table_data'] = get_extra_paginator("delete_list",delete_list_table_data,self.request)
+        self.extra_context['delete_list_table_data'] = delete_list_table_data
+        self.extra_context['delete_list_count'] = delete_list_count
+        self.extra_context['delete_list'] = {"children": delete_list}
+
         user_json_data = actualize_user_data(user_json_data, delete_list_with_category)
+
+        afs = user_json_data['children']
+        data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
+
+        self.request.session['table_data'] = data
         self.request.session['user_data'] = user_json_data
 
         self.extra_context['role_count'] = len(roles)
@@ -796,8 +803,6 @@ class Profile(generic.ListView):
         self.extra_context['tf_count'] = tf_count
 
         self.extra_context['jsondata'] = user_json_data
-        self.extra_context['delete_list'] = {"children": delete_list}
-
         self.extra_context['user_identity'] = user_json_data['identity']
         self.extra_context['user_first_name'] = user_json_data['first_name']
         self.extra_context['user_name'] = user_json_data['name']
@@ -811,6 +816,7 @@ class Profile(generic.ListView):
         # print(type(user_json_data), user_json_data)
         return data
         # return tfList
+
 
     def autocompleteModel(self, request):
         if request.is_ajax():
@@ -827,12 +833,57 @@ class Profile(generic.ListView):
         return HttpResponse(data, mimetype)
 
 
+def get_extra_paginator(identifyer, list, request):
+    extra_paginator = Paginator(list, 3)
+    page = request.GET.get(identifyer+'_page')
+
+    try:
+        list_data = extra_paginator.page(page)
+    except PageNotAnInteger:
+        list_data = extra_paginator.page(1)
+    except EmptyPage:
+        list_data = extra_paginator.page(extra_paginator.num_pages)
+
+    return list_data
+
+
+
 def setViewMode(request, extra_context):
     if request.GET.keys().__contains__("view_mode"):
         extra_context['view_mode'] = request.GET['view_mode']
     else:
         extra_context['view_mode'] = 'Graphische Ansicht'
 
+def prepareTrashTableData(afs):
+    tfList = []
+    gfList = []
+    afList = []
+
+    for af in afs:
+        if af.keys().__contains__('parent') and af.keys().__contains__('grandparent'):
+            # wegen löschliste-tabelle: af hat keine kinder aber parent & grandparent-key -> af ist einzelne tf
+            tfList.append(af['name'])
+            gfList.append(af['parent'])
+            afList.append(af['grandparent'])
+        elif af.keys().__contains__('parent') and not af.keys().__contains__('grandparent'):
+            # wegen löschliste-tabelle: af hat nur parent aber kein grandparent -> af ist gf
+            gfs = af['children']
+            for gf in gfs:
+                tfList.append(gf['name'])
+                gfList.append(af['name'])
+                afList.append(af['parent'])
+        else:
+            gfs = af['children']
+            for gf in gfs:
+                tfs = gf['children']
+                for tf in tfs:
+                    tfList.append(tf['name'])
+                    gfList.append(gf['name'])
+                    afList.append(af['name'])
+
+    data = zip(tfList, gfList, afList)
+    lis_data = list(data)
+    return lis_data, len(lis_data)
 
 def prepareTableData(user, roles, afs, headers):
     tfList = []
@@ -840,14 +891,14 @@ def prepareTableData(user, roles, afs, headers):
     afList = []
     gf_count = 0
     for af in afs:
-        gfs = af['gfs']
+        gfs = af['children']
         gf_count += len(gfs)
         for gf in gfs:
-            tfs = gf['tfs']
+            tfs = gf['children']
             for tf in tfs:
-                tfList.append(tf['tf_name'])
-                gfList.append(gf['gf_name'])
-                afList.append(af['af_name'])
+                tfList.append(tf['name'])
+                gfList.append(gf['name'])
+                afList.append(af['name'])
 
     data = zip(tfList, gfList, afList)
     tf_count = len(tfList)
@@ -938,12 +989,15 @@ def build_up_delete_list(user_json_data):
             rights_lev_2 = right['children']
             for right_lev_2 in rights_lev_2:
                 if right_lev_2['on_delete_list']:
+                    right_lev_2['parent'] = right['name']
                     delete_list_with_category.append({"right":right_lev_2,"type":"gf"})
                     delete_list.append(right_lev_2)
                 else:
                     rights_lev_3 = right_lev_2['children']
                     for right_lev_3 in rights_lev_3:
                         if right_lev_3['on_delete_list']:
+                            right_lev_3['grandparent'] = right['name']
+                            right_lev_3['parent'] = right_lev_2['name']
                             delete_list_with_category.append({"right":right_lev_3,"type":"tf"})
                             delete_list.append(right_lev_3)
 
@@ -959,23 +1013,26 @@ def actualize_user_data(user_json_data, delete_list):
                     break
         if elem["type"]=="gf":
             for right in user_json_data['children']:
-                for right_lev_2 in right['children']:
-                    if right_lev_2["name"] == elem["right"]["name"]:
-                        right['children'].remove(right_lev_2)
-                        break
+                if right["name"] == elem["right"]["parent"]:
+                    for right_lev_2 in right['children']:
+                        if right_lev_2["name"] == elem["right"]["name"]:
+                            right['children'].remove(right_lev_2)
+                            break
             else:
                 continue
             break
         if elem["type"]=="tf":
             for right in user_json_data['children']:
-                for right_lev_2 in right['children']:
-                    for right_lev_3 in right_lev_2['children']:
-                        if right_lev_3["name"] == elem["right"]["name"]:
-                            right_lev_2['children'].remove(right_lev_3)
-                            break
-                else:
-                    continue
-                break
+                if right["name"] == elem["right"]["grandparent"]:
+                    for right_lev_2 in right['children']:
+                        if right_lev_2["name"] == elem["right"]["parent"]:
+                            for right_lev_3 in right_lev_2['children']:
+                                if right_lev_3["name"] == elem["right"]["name"]:
+                                    right_lev_2['children'].remove(right_lev_3)
+                                    break
+                    else:
+                        continue
+                    break
             else:
                 continue
             break

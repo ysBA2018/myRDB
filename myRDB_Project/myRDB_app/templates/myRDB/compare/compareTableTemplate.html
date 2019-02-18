@@ -19,7 +19,7 @@
 <ul class="pagination">
     {% if compareUser_table_data.has_previous %}
     <li>
-        <a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ compareUser_table_data.previous_page_number }}">&laquo;</a>
+        <a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ compareUser_table_data.previous_page_number }}&view_mode=Tabellarische Ansicht">&laquo;</a>
     </li>
     {% else %}
     <li class="disabled"><span>&laquo;</span></li>
@@ -28,13 +28,13 @@
     {% if compareUser_table_data.number == i %}
     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
     {% else %}
-    <li><a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ i }}">{{ i }}</a>
+    <li><a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ i }}&view_mode=Tabellarische Ansicht">{{ i }}</a>
     </li>
     {% endif %}
     {% endfor %}
     {% if compareUser_table_data.has_next %}
     <li>
-        <a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ compareUser_table_data.next_page_number }}">&raquo;</a>
+        <a href="?userSearch={{ compareUser.identity }}&page={{ page_obj.number }}&compare_page={{ compareUser_table_data.next_page_number }}&view_mode=Tabellarische Ansicht">&raquo;</a>
     </li>
     {% else %}
     <li class="disabled"><span>&raquo;</span></li>
