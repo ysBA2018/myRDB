@@ -1,7 +1,7 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
 <div class="container-fluid">
-    {% include 'myRDB/profile_head.html' %}
+    {% include 'myRDB/profile/profile_head.html' %}
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -68,11 +68,11 @@
                                 </div>
                                 {% if forloop.counter0 == 0 %}
                                     <div id="inner_unequalRights{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_unequalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_unequal">
-                                        {% include 'myRDB/profile_rights_analysis_unequal_compare_card.html' %}
+                                        {% include 'myRDB/profile/profile_rights_analysis_unequal_compare_card.html' %}
                                     </div>
                                 {% else %}
                                     <div id="inner_unequalRights{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_unequalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_unequal">
-                                        {% include 'myRDB/profile_rights_analysis_unequal_compare_card.html' %}
+                                        {% include 'myRDB/profile/profile_rights_analysis_unequal_compare_card.html' %}
                                     </div>
                                 {% endif %}
                             </div>
@@ -103,11 +103,11 @@
                                 </div>
                                 {% if forloop.counter0 == 0 %}
                                     <div id="inner_equalRights{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_equalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_equal">
-                                        {% include 'myRDB/profile_rights_analysis_equal_compare_card.html' %}
+                                        {% include 'myRDB/profile/profile_rights_analysis_equal_compare_card.html' %}
                                     </div>
                                 {% else %}
                                     <div id="inner_equalRights{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_equalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_equal">
-                                        {% include 'myRDB/profile_rights_analysis_equal_compare_card.html' %}
+                                        {% include 'myRDB/profile/profile_rights_analysis_equal_compare_card.html' %}
                                     </div>
                                 {% endif %}
                             </div>
@@ -117,7 +117,7 @@
             </div>
         </div>
     </div>
-    {% include 'myRDB/compare_footer_row.html' %}
+    {% include 'myRDB/compare/compare_footer_row.html' %}
 </div>
 
 {% endblock %}

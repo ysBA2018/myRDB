@@ -430,7 +430,7 @@
     },
     {
       "model_af_pk": 10,
-      "on_delete_list": true,
+      "on_delete_list": false,
       "name": "rvo_00439_org_basis",
       "children": [
         {
@@ -1467,7 +1467,7 @@
       "children": [
         {
           "model_gf_pk": 138,
-          "on_delete_list": true,
+          "on_delete_list": false,
           "name": "rvg_00458_amueberghost",
           "children": [
             {
@@ -1814,71 +1814,71 @@
     },
     {
       "model_af_pk": 73,
-      "on_delete_list": false,
+      "on_delete_list": true,
       "name": "rva_00458_ewuebergrfd",
       "children": [
         {
           "model_gf_pk": 132,
-          "on_delete_list": false,
+          "on_delete_list": true,
           "name": "rvg_00458_ewuebergrfd",
           "children": [
             {
               "model_tf_pk": 32,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "CN=D_KFALL_DOKU_SB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
             {
               "model_tf_pk": 72,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
             {
               "model_tf_pk": 29,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "CN=D_ZISCM_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
             {
               "model_tf_pk": 27,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "CN=D_01218_PVB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
             {
               "model_tf_pk": 28,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "CN=D_01225_UM_LWL_TRASSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
             {
               "model_tf_pk": 46,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
               "size": 3000
             },
             {
               "model_tf_pk": 38,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "#BIT",
               "size": 3000
             },
             {
               "model_tf_pk": 431,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "#OPCTINF",
               "size": 3000
             },
             {
               "model_tf_pk": 68,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "#TXTAA5",
               "size": 3000
             },
             {
               "model_tf_pk": 6,
-              "on_delete_list": false,
+              "on_delete_list": true,
               "name": "rvgroup",
               "size": 3000
             }
