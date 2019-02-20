@@ -19,7 +19,7 @@
             {# hier Informationen und Vergleichsdaten #}
             <h5 class="text-center">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'right_name' }}</h5>
             <p class="m-3 text-center font-italic">{{ equal_rights_stats|index:forloop.counter0|getdictitem:'description' }}</p>
-            {% include 'myRDB/profile_rights_analysis_stats_table_equal.html' %}
+            {% include 'myRDB/profile/profile_rights_analysis_stats_table_equal.html' %}
         </div>
         <div class="col">
             {# hier model_af, bzw _gf, _tf circle packing #}

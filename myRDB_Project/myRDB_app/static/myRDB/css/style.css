@@ -16,5 +16,7 @@
     height: 100%;
 
 }
-
+td.highlight{
+    background-color: whitesmoke !important;
+}
 

@@ -111,6 +111,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             for af in instance.user_afs:
                 if af.af_name == data['right_name']:
                     af.on_delete_list = bool
+                    for gf in af.gfs:
+                        gf.on_delete_list = bool
+                        for tf in gf.tfs:
+                            tf.on_delete_list = bool
                     break
         if data['right_type'] == 'gf':
             for af in instance.user_afs:
@@ -118,6 +122,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                     for gf in af.gfs:
                         if gf.gf_name == data['right_name']:
                             gf.on_delete_list = bool
+                            for tf in gf.tfs:
+                                tf.on_delete_list = bool
                             break
                     else:
                         continue

@@ -21,7 +21,7 @@
             <h5 class="text-center">{{ unequal_rights_stats|index:forloop.counter0|getdictitem:'right_name' }}</h5>
             <p class="m-3 text-center font-italic">{{ unequal_rights_stats|index:forloop.counter0|getdictitem:'description' }}</p>
             <div class="row">
-                {% include "myRDB/profile_rights_analysis_stats_table_unequal.html" %}
+                {% include "myRDB/profile/profile_rights_analysis_stats_table_unequal.html" %}
             </div>
         </div>
         <div class="col">

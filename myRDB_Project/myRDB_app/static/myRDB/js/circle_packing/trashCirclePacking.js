@@ -235,14 +235,18 @@ $(document).ready(function(){
             if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
                 right_type="af";
             }
-            else if((d.depth===2 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))||(d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
+            else if((d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
                 right_type="gf";
                 right_parent = d.data.parent;
             }
-            else if(d.depth===3||(d.depth===2 && !d.hasOwnProperty('children'))||(d.depth===1 && !d.hasOwnProperty('children'))){
+            else if(d.depth===1 && !d.hasOwnProperty('children')){
                 right_type="tf";
                 right_grandparent = d.data.grandparent;
                 right_parent = d.data.parent;
+            }
+            else{
+                alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+                return;
             }
 
             var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
