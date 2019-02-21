@@ -1,11 +1,11 @@
 {% load static %}
 <div class="card">
     <div class="card-header">
-        <h5>Löschliste <span id="trash_badge" class="badge badge-danger">{{ delete_list_count }}</span></h5>
+        <h5>Transferliste <span id="transfer_badge" class="badge badge-success">{{ transfer_list_count }}</span></h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table id="trash_table" class="table table-hover table-bordered">
+            <table id="transfer_table" class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">TF</th>
@@ -15,7 +15,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in delete_list_table_data %}
+                    {% for row in transfer_list_table_data %}
                     <tr>
                         <td>{{ row.0 }}</td>
                         <td>{{ row.1 }}</td>
@@ -27,20 +27,20 @@
         <script type="text/javascript">
             var user_pk = {{ user.pk }};
             var CSRF_TOKEN = "{{ csrf_token }}";
-            var trash_table;
+            var transfer_table;
 
             $(document).ready(function() {
-                trash_table = $('#trash_table').DataTable({
+                transfer_table = $('#transfer_table').DataTable({
                     "pageLength":3,
                     "aLengthMenu":[[3,10,25,50,100,-1],[3,10,25,50,100,"All"]],
                 });
 
-                $('#trash_table tbody').on('contextmenu', 'td', function (e) {
+                $('#transfer_table tbody').on('contextmenu', 'td', function (e) {
                     e.preventDefault();
-                    var cell_data = window.trash_table.cell( this ).data();
-                    var colIndex = window.trash_table.cell(this).index().column;
-                    var rowIndex = window.trash_table.cell( this ).index().row;
-                    var row_data=window.trash_table.row(rowIndex).data();
+                    var cell_data = window.transfer_table.cell( this ).data();
+                    var colIndex = window.transfer_table.cell(this).index().column;
+                    var rowIndex = window.transfer_table.cell( this ).index().row;
+                    var row_data=window.transfer_table.row(rowIndex).data();
                     var right_type="",right_parent = "",right_grandparent = "";
 
                     var parentAndGrandparentExists = false;
@@ -69,7 +69,7 @@
                         alert("Berechtigung:\n\n"+cell_data+"\n\nkann nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
                         return;
                     }
-                    var r = confirm("Berechtigung:\n\n"+cell_data+"\n\nwirklich von Löschliste entfernen\nund wiederherstellen?\n\n");
+                    var r = confirm("Berechtigung:\n\n"+cell_data+"\n\nwirklich von Transferliste entfernen\nund wiederherstellen?\n\n");
                     if (r === true){
                         function getCookie(name) {
                             var cookieValue = null;
@@ -105,66 +105,66 @@
                                 async:false,
                                 success: function(res){console.log("Success!: "+res);
                                     update_table_data(cell_data,right_type,row_data);
-                                    alert("Berechtigung von\n\nLöschliste entfernt\nund wieder hergestellt!\n");
+                                    alert("Berechtigung von\n\nTransferliste entfernt\nund wieder hergestellt!\n");
                                     },
                                 error: function(res){console.log(res);}
                                 });
                     }
                 } ).on('mouseenter', 'td', function (e) {
                     e.preventDefault();
-                    var colIndex = window.trash_table.cell(this).index().column;
-                    $(window.trash_table.cells().nodes()).removeClass('highlight');
-                    $(window.trash_table.column(colIndex).nodes()).addClass('highlight');
+                    var colIndex = window.transfer_table.cell(this).index().column;
+                    $(window.transfer_table.cells().nodes()).removeClass('highlight');
+                    $(window.transfer_table.column(colIndex).nodes()).addClass('highlight');
                 });
                 function update_table_data(cell_data,right_type,row_data) {
                     var rows_to_restore = [];
                     var old_gfs=[],old_afs =[], found_gfs = [],found_afs=[];
                     if (right_type==="af"){
-                        window.trash_table.rows().every(function(rowIdx,tableLoop,rowLoop){
+                        window.transfer_table.rows().every(function(rowIdx,tableLoop,rowLoop){
                            var data = this.data();
                            if(data[2]===cell_data){
                                rows_to_restore.push(this.node());
                                window.data_table.row.add(data).draw();
-                               window.trash_table_count-=1;
-                               document.getElementById('trash_badge').innerHTML = window.trash_table_count;
+                               window.transfer_table_count-=1;
+                               document.getElementById('transfer_badge').innerHTML = window.transfer_table_count;
                            }
                         });
                         rows_to_restore.forEach(function(node){
-                           window.trash_table.row(node).remove().draw();
+                           window.transfer_table.row(node).remove().draw();
                         });
-                        window.trash_table.draw()
+                        window.transfer_table.draw()
                     }
                     if (right_type==="gf"){
-                        window.trash_table.rows().every(function(rowIdx,tableLoop,rowLoop){
+                        window.transfer_table.rows().every(function(rowIdx,tableLoop,rowLoop){
                            var data = this.data();
                            if(data[1]===cell_data&&data[2]===row_data[2]){
                                rows_to_restore.push(this.node());
                                window.data_table.row.add(data).draw();
-                               window.trash_table_count-=1;
-                               document.getElementById('trash_badge').innerHTML = window.trash_table_count;
+                               window.transfer_table_count-=1;
+                               document.getElementById('transfer_badge').innerHTML = window.transfer_table_count;
                            }
                         });
 
                         rows_to_restore.forEach(function(node){
-                           window.trash_table.row(node).remove().draw();
+                           window.transfer_table.row(node).remove().draw();
                         });
-                        window.trash_table.draw()
+                        window.transfer_table.draw()
                     }
-                    //TODO: noch so ändern, dass row nicht ers gesucht werden muss sondern direkt gelöscht wird!
+                    //TODO: noch so ändern, dass row nicht ers gesucht werden muss sondern direkt geTransfert wird!
                     if (right_type==="tf"){
-                        window.trash_table.rows().every(function(rowIdx,tableLoop,rowLoop){
+                        window.transfer_table.rows().every(function(rowIdx,tableLoop,rowLoop){
                            var data = this.data();
                            if(data[0]===cell_data&&data[1]===row_data[1]&&data[2]===row_data[2]){
                                rows_to_restore.push(this.node());
                                window.data_table.row.add(data).draw();
-                               window.trash_table_count-=1;
-                               document.getElementById('trash_badge').innerHTML = window.trash_table_count;
+                               window.transfer_table_count-=1;
+                               document.getElementById('transfer_badge').innerHTML = window.transfer_table_count;
                            }
                         });
                         rows_to_restore.forEach(function(node){
-                           window.trash_table.row(node).remove().draw();
+                           window.transfer_table.row(node).remove().draw();
                         });
-                        window.trash_table.draw()
+                        window.transfer_table.draw()
                     }
                 }
             } );
@@ -172,6 +172,8 @@
         </div>
     </div>
     <div class="card-footer">
+        <p class="card-text"> Übertragene Rechte werden hier angezeigt</p>
+    </div>
     <!--
         {% if is_paginated %}
         <ul class="pagination">
@@ -221,6 +223,6 @@
             </ul>
         {% endif %}
         -->
-    </div>
+
 
 </div>

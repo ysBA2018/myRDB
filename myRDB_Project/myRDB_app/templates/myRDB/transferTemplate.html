@@ -1,0 +1,19 @@
+{% load static %}
+{% load asjson %}
+<div class="card">
+    <div class="card-header">
+        <h5>Transfergraph <span id="graph_transfer_badge" class="badge badge-success">{{ transfer_list_count }}</span></h5>
+    </div>
+    <div class="card-body">
+        {# Hier die Transfer-Drop-Fläche realisieren #}
+        <script>
+            var transfer_table_data = {{ transfer_list_table_data | safe }};
+            var updateTransfer;
+        </script>
+        <svg class="transfer" id="transferSVG" width="180" height="180"></svg>
+        <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/transferCirclePacking.js' %}"></script>
+    </div>
+    <div class="card-footer">
+        <p>Mit Rechtsklick & Bestätigung<br>Berechtigung von Transferliste nehmen!</p>
+    </div>
+</div>

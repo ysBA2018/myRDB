@@ -487,7 +487,7 @@ def build_url_params(request, extra_context):
 class Compare(generic.ListView):
     model = User
     template_name = 'myRDB/compare/compare.html'
-    paginate_by = 10
+    #paginate_by = 10
     context_object_name = "table_data"
     extra_context = {}
 
@@ -513,44 +513,63 @@ class Compare(generic.ListView):
 
         data, comp_gf_count, comp_tf_count = prepareTableData(compareUser, compUserRoles, compUserAfs, headers)
 
-        compare_paginator = Paginator(data, 10)
-        page = self.request.GET.get('compare_page')
-
-        try:
-            compare_data = compare_paginator.page(page)
-        except PageNotAnInteger:
-            compare_data = compare_paginator.page(1)
-        except EmptyPage:
-            compare_data = compare_paginator.page(compare_paginator.num_pages)
-
         context['comp_role_count'] = len(compUserRoles)
         context['comp_af_count'] = len(compUserAfs)
         context['comp_gf_count'] = comp_gf_count
         context['comp_tf_count'] = comp_tf_count
         context["compareUser"] = compareUser
-        context["compareUser_table_data"] = compare_data
+        context["compareUser_table_data"] = data
+        context["compareUser_graph_data"] = user_json_data
 
         return context
 
     def get_queryset(self):
         setViewMode(self.request, self.extra_context)
-        user_data = self.request.session.get('user_data')
-        table_data = self.request.session.get('table_data')
+        if not "identity" in self.request.GET.keys():
+            user = self.request.user
+            self.extra_context['identity_param'] = None
+        else:
+            # TODO: hier noch lösung mit Params über API finden!
+            user = User.objects.get(identity=self.request.GET['identity'])
+            self.extra_context['identity_param'] = self.request.GET['identity']
 
-        self.extra_context['jsondata'] = user_data
-        self.extra_context['user_identity'] = user_data['identity']
-        self.extra_context['user_first_name'] = user_data['first_name']
-        self.extra_context['user_name'] = user_data['name']
-        self.extra_context['user_department'] = user_data['department']
+        logged_in_user_token = self.request.user.auth_token
+        url = 'http://127.0.0.1:8000/users/%d' % user.pk
+        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
+        res = requests.get(url, headers=headers)
+        user_json_data = res.json()
+
+        userid = user.id
+        roles = user_json_data['roles']
+        print(userid, user)
+
+        user_json_data = prepareJSONdata(user.identity, user_json_data, False, headers)
+
+        delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
+        delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
+        self.extra_context['delete_list_table_data'] = delete_list_table_data
+        self.extra_context['delete_list_count'] = delete_list_count
+        self.extra_context['delete_list'] = {"children": delete_list}
+
+
+        #self.extra_context['transfer_list'] = {"children":user_json_data['transfer_list']}
+
+        user_json_data = update_user_data(user_json_data, delete_list_with_category)
+        self.extra_context['jsondata'] = user_json_data
+        afs = user_json_data['children']
+
+        data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
+
+        self.extra_context['user_identity'] = user_json_data['identity']
+        self.extra_context['user_first_name'] = user_json_data['first_name']
+        self.extra_context['user_name'] = user_json_data['name']
+        self.extra_context['user_department'] = user_json_data['department']
         self.extra_context['role_count'] = self.request.session.get('role_count')
         self.extra_context['af_count'] = self.request.session.get('af_count')
         self.extra_context['gf_count'] = self.request.session.get('gf_count')
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
 
-        roles = user_data['roles']
-        afs = user_data['children']
-
-        return table_data
+        return data
 
 
 class ProfileRightsAnalysis(generic.ListView):
@@ -783,24 +802,28 @@ class Profile(generic.ListView):
         user_json_data = prepareJSONdata(user.identity, user_json_data, False, headers)
 
         delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
+        del_af_count, del_gf_count, del_tf_count = get_delete_list_counts(delete_list_with_category)
         delete_list_table_data, delete_list_count= prepareTrashTableData(delete_list)
         #self.extra_context['delete_list_table_data'] = get_extra_paginator("delete_list",delete_list_table_data,self.request)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['delete_list'] = {"children": delete_list}
 
-        user_json_data = actualize_user_data(user_json_data, delete_list_with_category)
+        user_json_data = update_user_data(user_json_data, delete_list_with_category)
 
         afs = user_json_data['children']
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
-
+        '''
         self.request.session['table_data'] = data
         self.request.session['user_data'] = user_json_data
-
+        self.request.session['delete_list_graph_data'] = {"children":delete_list}
+        self.request.session['delete_list_table_data'] = delete_list_table_data
+        self.request.session['delete_list_count'] = delete_list_count
+        '''
         self.extra_context['role_count'] = len(roles)
-        self.extra_context['af_count'] = len(afs)
-        self.extra_context['gf_count'] = gf_count
-        self.extra_context['tf_count'] = tf_count
+        self.extra_context['af_count'] = len(afs)+del_af_count
+        self.extra_context['gf_count'] = gf_count+del_gf_count
+        self.extra_context['tf_count'] = tf_count+del_tf_count
 
         self.extra_context['jsondata'] = user_json_data
         self.extra_context['user_identity'] = user_json_data['identity']
@@ -808,16 +831,37 @@ class Profile(generic.ListView):
         self.extra_context['user_name'] = user_json_data['name']
         self.extra_context['user_department'] = user_json_data['department']
         self.request.session['role_count'] = len(roles)
-        self.request.session['af_count'] = len(afs)
-        self.request.session['gf_count'] = gf_count
-        self.request.session['tf_count'] = tf_count
+        self.request.session['af_count'] = len(afs)+del_af_count
+        self.request.session['gf_count'] = gf_count+del_gf_count
+        self.request.session['tf_count'] = tf_count+del_tf_count
 
-        # manipuation für graphen nur auf kopie deswegen immernoch gleich ! <-TipTop
-        # print(type(user_json_data), user_json_data)
         return data
-        # return tfList
 
 
+def get_delete_list_counts(list):
+    del_af_count = 0
+    del_gf_count = 0
+    del_tf_count = 0
+    for right in list:
+        if right['type']=='af':
+            af = right['right']
+            del_af_count+=1
+            gfs = af['children']
+            del_gf_count +=len(gfs)
+            for gf in gfs:
+                tfs = gf['children']
+                del_tf_count+=len(tfs)
+        elif right['type']=="gf":
+            gf = right['right']
+            del_gf_count+=1
+            tfs = gf['children']
+            del_tf_count += len(tfs)
+        elif right['type']=="tf":
+            del_tf_count+=1
+
+    return del_af_count,del_gf_count,del_tf_count
+
+'''
     def autocompleteModel(self, request):
         if request.is_ajax():
             q = request.GET.get('term', '').capitalize()
@@ -831,7 +875,7 @@ class Profile(generic.ListView):
             data = 'fail'
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
-
+'''
 
 def get_extra_paginator(identifyer, list, request):
     extra_paginator = Paginator(list, 3)
@@ -1004,7 +1048,7 @@ def build_up_delete_list(user_json_data):
     return delete_list, delete_list_with_category
 
 
-def actualize_user_data(user_json_data, delete_list):
+def update_user_data(user_json_data, delete_list):
     for elem in delete_list:
         if elem["type"]=="af":
             for right in user_json_data['children']:

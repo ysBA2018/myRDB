@@ -2,13 +2,13 @@
 {% load asjson %}
 <div class="card">
     <div class="card-header">
-        <h5>Deletegraph</h5>
+        <h5>Deletegraph <span id="graph_trash_badge" class="badge badge-danger">{{ delete_list_count }}</span></h5>
     </div>
     <div class="card-body">
         {# Hier die Trash-Drop-Fläche realisieren #}
         <script>
             var trashlistdata = {{ delete_list | asjson }};
-            var jsondata_including_delete_list = {{ jsondata_including_delete_list | asjson }};
+            var trash_table_data = {{ delete_list_table_data | safe }};
             var updateTrash;
         </script>
         <svg class="trash" id="trashSVG" width="180" height="180"></svg>
