@@ -1,6 +1,6 @@
 (function(){
 $(document).ready(function(){
-    var svg = d3.select("#compareCirclePackingSVG"),
+    var svg = d3.select("#transferSVG"),
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -15,7 +15,7 @@ $(document).ready(function(){
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    var root = window.compare_jsondata;
+    var root = window.transferlistdata;
     console.log(root);
 
       root = d3.hierarchy(root)
@@ -28,7 +28,7 @@ $(document).ready(function(){
 
       var div = d3.select("body").append("div")
           .attr("class","tooltip")
-          .attr("id","CPtooltip")
+          .attr("id","transferTooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -40,7 +40,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){transferfunction(d,i)})
+          .on("contextmenu",function(d,i){restorefunction(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -74,14 +74,12 @@ $(document).ready(function(){
         //                   .on("drag",dragged)
         //                   .on("end",dragended))
 
-      svg
-          .style("background", "white")
-          .on("click", function() { zoom(root); });
+      svg.on("click", function() { zoom(root); });
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
 
       function zoom(d) {
-          if (d.depth===3) return;
+          if (!d.hasOwnProperty('children')) return;
         var focus0 = focus; focus = d;
 
         var transition = d3.transition()
@@ -122,11 +120,11 @@ $(document).ready(function(){
       //        return d.r*k;
       //    });
       //}
-    function update(updated_data){
+    function updateTransfer(updated_data){
           console.log(updated_data);
           root = updated_data;
 
-          svg = d3.select("#compareCirclePackingSVG"),
+          svg = d3.select("#transferSVG"),
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -150,7 +148,7 @@ $(document).ready(function(){
 
       var div = d3.select("body").append("div")
           .attr("class","tooltip")
-          .attr("id","CPtooltip")
+          .attr("id","transferTooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -162,7 +160,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){transferfunction(d,i)})
+          .on("contextmenu", function(d,i){restorefunction(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -196,18 +194,16 @@ $(document).ready(function(){
         //                   .on("drag",dragged)
         //                   .on("end",dragended))
 
-      svg
-          .style("background", "white")
-          .on("click", function() { zoom(root); });
+      svg.on("click", function() { zoom(root); });
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
     }
-    window.updateCompareCP=function () {
-        update(window.compare_jsondata)
+    window.updateTransfer=function () {
+        updateTransfer(window.transferlistdata);
     };
-    function transferfunction(d,i){
+    function restorefunction(d,i){
         d3.event.preventDefault();
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n");
+        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Transferliste entfernen?\n\n");
         if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
@@ -236,17 +232,24 @@ $(document).ready(function(){
                 }
             });
             var right_type="",right_parent = "",right_grandparent = "";
-            if(d.depth===1) right_type="af";
-            else if(d.depth===2) {
+            if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
+                right_type="af";
+            }
+            else if((d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
                 right_type="gf";
-                right_parent = d.parent.data.name;
+                right_parent = d.data.parent;
             }
-            else if(d.depth===3){
+            else if(d.depth===1 && !d.hasOwnProperty('children')){
                 right_type="tf";
-                right_grandparent = d.parent.parent.data.name;
-                right_parent = d.parent.data.name;
+                right_grandparent = d.data.grandparent;
+                right_parent = d.data.parent;
             }
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
+            else{
+                alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+                return;
+            }
+
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore_transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
@@ -257,90 +260,89 @@ $(document).ready(function(){
                     error: function(res){console.log(res);}
                     });
             if(successful===true){
-                var rights = window.compare_jsondata['children'];
                 var transfer = window.transferlistdata['children'];
-                actualize_rights(rights, transfer, d);
+                var rights = window.jsondata['children'];
+                update_rights(transfer,rights,data['right_type'],d);
 
-                d3.select("body").selectAll("#CPtooltip").remove();
+                d3.select("body").selectAll("#transferTooltip").remove();
 
-                //d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
-                //update(window['compare_jsondata']);
+                d3.select('#transferSVG').select("g").data(window.transferlistdata).exit().remove();
+                updateTransfer(window['transferlistdata']);
 
-                d3.select('#transferSVG').select('g').data(window.transferlistdata).exit().remove();
-                window.updateTransfer();
-                alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
-                //update_session();
+
+                d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
+                window.updateCP();
+
+
             }
         }
       }
-      function actualize_right_counters(right,type){
+      function update_right_counters(right,type){
         if (type === "af"){
             for (j in right['children']){
-                window.transfer_table_count+=right['children'][j]['children'].length;
+                window.transfer_table_count-=right['children'][j]['children'].length;
             }
             document.getElementById('graph_transfer_badge').innerHTML = window.transfer_table_count;
         }
         else if (type === "gf"){
-            window.transfer_table_count+=right['children'].length;
+            window.transfer_table_count-=right['children'].length;
             document.getElementById('graph_transfer_badge').innerHTML = window.transfer_table_count;
         }
         else if (type === "tf"){
-            window.transfer_table_count+=1;
+            window.transfer_table_count-=1;
             document.getElementById('graph_transfer_badge').innerHTML = window.transfer_table_count;
         }
       }
 
+      function rechain_right_to_rights(right,rights,level){
+        var found = false;
+        if (level === "af"){
+            rights.push(right);
+        }
+        else if(level === "gf"){
+            for (i in rights){
+                if (rights[i]['name']===right['parent']) {
+                    rights[i]['children'].push(right);
+                    found = true;
+                    break;
+                }
+                if (found === true) break;
+            }
+        }
+        else if(level === "tf"){
+            for (i in rights){
+                var grandparent = rights[i];
+                if (grandparent['name']===right['grandparent']){
+                    for (j in grandparent['children']){
+                        var parent = grandparent["children"][j];
+                        if(parent['name']===right['parent']){
+                            parent['children'].push(right);
+                            found=true;
+                            break;
+                        }
+                        if (found === true) break;
+                    }
+                }
+                if (found === true) break;
+            }
+        }
+      }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(rights, transfer, d){
-        if (d.depth ===1){
-            for (i in rights) {
-                if (rights[i]['name'] === d.data.name) {
-                    console.log(i + "," + d.data.name);
-                    actualize_right_counters(rights[i],"af");
-                    transfer.push(rights[i]);
-                    return;
+      function update_rights(transfer,rights,level,d){
+        if (d.depth===1){
+            for (transfer_item in transfer) {
+                if (transfer[transfer_item]['name'] === d.data.name) {
+                    console.log(transfer_item + "," + d.data.name);
+                    rechain_right_to_rights(transfer[transfer_item], rights, level);
+                    update_right_counters(transfer[transfer_item],level);
+                    transfer.splice(transfer_item, 1);
+                    alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
+                    break;
                 }
             }
         }
-        else if(d.depth===2){
-            for (i in rights) {
-                var right = rights[i];
-                if (right['name'] === d.parent.data.name) {
-                    for (j in right['children']) {
-                        var right_lev_2 = right['children'][j];
-                        if (right_lev_2['name'] === d.data.name) {
-                            console.log(j + "," + d.data.name);
-                            right_lev_2["parent"]=d.parent.data.name;
-                            actualize_right_counters(right_lev_2,"gf");
-                            transfer.push(right_lev_2);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-        else if(d.depth===3){
-            for (i in rights) {
-                var right = rights[i];
-                if (right['name'] === d.parent.parent.data.name) {
-                    for (j in right['children']) {
-                        var right_lev_2 = right['children'][j];
-                        if (right_lev_2['name'] === d.parent.data.name) {
-                            for (k in right_lev_2['children']) {
-                                var right_lev_3 = right_lev_2['children'][k];
-                                if (right_lev_3['name'] === d.data.name) {
-                                    console.log(k + "," + d.data.name);
-                                    right_lev_3["grandparent"]= d.parent.parent.data.name;
-                                    right_lev_3["parent"]=d.parent.data.name;
-                                    actualize_right_counters(right_lev_3,"tf");
-                                    transfer.push(right_lev_3);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        else{
+            alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
         }
       }
     });

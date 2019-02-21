@@ -1,20 +1,20 @@
 <div class="row top-buffer">
     <div class="col">
-        <div class="card">
-            <div class="card-body">
-                {# Hier die Trash-Drop-Fläche realisieren #}
-                {% include 'myRDB/trashTemplate.html' %}
-            </div>
-        </div>
+        {# Hier die Trash-Drop-Fläche realisieren #}
+        {% if view_mode == "Graphische Ansicht" %}
+            {% include 'myRDB/trashTemplate.html' %}
+        {% else %}
+            {% include 'myRDB/trashTableTemplate.html' %}
+        {% endif %}
     </div>
     <div class="col-6">
         <div class="card">
-            <div class="card-body">
-                {# Hier die Übertragenen-liste realisieren #}
-            </div>
-            <div class="card-footer">
-                <p class="card-text"> Übertragene Rechte werden hier angezeigt</p>
-            </div>
+            {# Hier die Übertragenen-liste realisieren #}
+            {% if view_mode == "Graphische Ansicht" %}
+                {% include 'myRDB/transferTemplate.html' %}
+            {% else %}
+                {% include 'myRDB/transferTableTemplate.html' %}
+            {% endif %}
         </div>
     </div>
     <div class="col">

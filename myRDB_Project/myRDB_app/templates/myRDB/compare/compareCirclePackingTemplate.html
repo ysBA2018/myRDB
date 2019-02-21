@@ -1,5 +1,20 @@
 {% load static %}
+{% load asjson %}
 {# Hier die Circle-Packing-Visualisierung #}
-<svg id="compareCirclePackingSVG" width="480" height="480"></svg>
-<script src="{% static 'myRDB/js/circle_packing/compareCirclePacking.js' %}"></script>
+<div class="card-header">
+    <h5>Vergleichsgraph</h5>
+</div>
+<div class="card-body">
+    <script>
+        var user_pk = "{{ user.pk }}";
+        var CSRF_TOKEN = "{{ csrf_token }}";
+        var compare_user_table_data = {{ compareUser_table_data | safe}};
+        var updateCompareCP;
+    </script>
+    <svg id="compareCirclePackingSVG" width="480" height="480"></svg>
+    <script src="{% static 'myRDB/js/circle_packing/compareCirclePacking.js' %}"></script>
+</div>
+<div class="card-footer">
+    <p>Berechtigungen mit Rechtsklick & Bestätigung<br>zu Nutzerberechtigungen kopieren!</p>
+</div>
 

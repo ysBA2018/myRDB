@@ -262,8 +262,7 @@ $(document).ready(function(){
             if(successful===true){
                 var trash = window.trashlistdata['children'];
                 var rights = window.jsondata['children'];
-                var models = window.jsondata_including_delete_list['children'];
-                actualize_rights(trash,rights,models,data['right_type'],d);
+                update_rights(trash,rights,data['right_type'],d);
 
                 d3.select("body").selectAll("#trashTooltip").remove();
 
@@ -278,7 +277,22 @@ $(document).ready(function(){
             }
         }
       }
-
+      function update_right_counters(right,type){
+        if (type === "af"){
+            for (j in right['children']){
+                window.trash_table_count-=right['children'][j]['children'].length;
+            }
+            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+        }
+        else if (type === "gf"){
+            window.trash_table_count-=right['children'].length;
+            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+        }
+        else if (type === "tf"){
+            window.trash_table_count-=1;
+            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+        }
+      }
 
       function rechain_right_to_rights(right,rights,level){
         var found = false;
@@ -314,12 +328,13 @@ $(document).ready(function(){
         }
       }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(trash,rights,models,level,d){
+      function update_rights(trash,rights,level,d){
         if (d.depth===1){
             for (trash_item in trash) {
                 if (trash[trash_item]['name'] === d.data.name) {
                     console.log(trash_item + "," + d.data.name);
                     rechain_right_to_rights(trash[trash_item], rights, level);
+                    update_right_counters(trash[trash_item],level);
                     trash.splice(trash_item, 1);
                     alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
                     break;

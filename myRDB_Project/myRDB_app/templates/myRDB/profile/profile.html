@@ -2,25 +2,19 @@
 {% block content %}
 <div class="container-fluid">
     {% include 'myRDB/profile/profile_head.html' %}
+    <script>
+        var trash_table_count = {{ delete_list_count }};
+
+    </script>
 
         <div class="row top-buffer">
             <div class="col-6">
                 <div class="card">
-
-                        {% if view_mode == "Graphische Ansicht" %}
-                            <div class="card-header">
-                                <h5>Berechtigungsgraph</h5>
-                            </div>
-                            <div class="card-body">
-                                {% include 'myRDB/circlePackingTemplate.html' %}
-                            </div>
-                            <div class="card-footer">
-                                <p>Berechtigungen mit Rechtsklick & Bestätigung<br>auf Löschliste setzen!</p>
-                            </div>
-                        {% else %}
-                            {% include 'myRDB/profile/profileTableTemplate.html' %}
-                        {% endif %}
-
+                    {% if view_mode == "Graphische Ansicht" %}
+                        {% include 'myRDB/circlePackingTemplate.html' %}
+                    {% else %}
+                        {% include 'myRDB/profile/profileTableTemplate.html' %}
+                    {% endif %}
                 </div>
             </div>
             <div class="col-6">
@@ -104,7 +98,7 @@
         </div>
 
 </div>
-
+<!--
 <script>
         $(document).ready(function(){
             $("#txtSearch").autocomplete({
@@ -122,5 +116,5 @@
 
 
 </script>
-
+-->
 {% endblock %}

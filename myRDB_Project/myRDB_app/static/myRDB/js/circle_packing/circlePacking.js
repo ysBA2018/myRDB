@@ -253,7 +253,6 @@ $(document).ready(function(){
                     url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
                     async:false,
                     success: function(res){console.log(res);
-                        alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
                         successful=true},
                     error: function(res){console.log(res);}
                     });
@@ -269,17 +268,68 @@ $(document).ready(function(){
 
                 d3.select('#trashSVG').select('g').data(window.trashlistdata).exit().remove();
                 window.updateTrash();
-
-
+                alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
+                //update_session();
             }
         }
       }
+      /**
+      function update_session() {
+        var trash_table_update_data = {"action_type":"update_session","trash_table_data":{"data":window.trash_table_data}};
+        $.ajax({type:'POST',
+            data:trash_table_update_data,
+            success: function(res){console.log(res);
+                alert("session-update-success");},
+            error: function(res){console.log(res);}
+            });
+        var trash_graph_update_data = {"action_type":"update_session","trash_graph_data":window.trashlistdata};
+        $.ajax({type:'POST',
+            data:trash_graph_update_data,
+            success: function(res){console.log(res);
+                alert("session-update-success");},
+            error: function(res){console.log(res);}
+            });
+        var user_graph_update_data = {"action_type":"update_session","user_graph_data":window.jsondata};
+        $.ajax({type:'POST',
+            data:user_graph_update_data,
+            success: function(res){console.log(res);
+                alert("session-update-success");},
+            error: function(res){console.log(res);}
+            });
+        var user_table_update_data = {"action_type":"update_session","user_table_data":{"data":window.user_table_data}};
+        $.ajax({type:'POST',
+            data:user_table_update_data,
+            success: function(res){console.log(res);
+                alert("session-update-success");},
+            error: function(res){console.log(res);}
+            });
+
+      }
+       **/
+      function actualize_right_counters(right,type){
+        if (type === "af"){
+            for (j in right['children']){
+                window.trash_table_count+=right['children'][j]['children'].length;
+            }
+            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+        }
+        else if (type === "gf"){
+            window.trash_table_count+=right['children'].length;
+            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+        }
+        else if (type === "tf"){
+            window.trash_table_count+=1;
+            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+        }
+      }
+
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
       function actualize_rights(rights, trash, d){
         if (d.depth ===1){
             for (i in rights) {
                 if (rights[i]['name'] === d.data.name) {
                     console.log(i + "," + d.data.name);
+                    actualize_right_counters(rights[i],"af");
                     trash.push(rights[i]);
                     rights.splice(i, 1);
                     return;
@@ -295,6 +345,7 @@ $(document).ready(function(){
                         if (right_lev_2['name'] === d.data.name) {
                             console.log(j + "," + d.data.name);
                             right_lev_2["parent"]=d.parent.data.name;
+                            actualize_right_counters(right_lev_2,"gf");
                             trash.push(right_lev_2);
                             right['children'].splice(j, 1);
                             return;
@@ -316,6 +367,7 @@ $(document).ready(function(){
                                     console.log(k + "," + d.data.name);
                                     right_lev_3["grandparent"]= d.parent.parent.data.name;
                                     right_lev_3["parent"]=d.parent.data.name;
+                                    actualize_right_counters(right_lev_3,"tf");
                                     trash.push(right_lev_3);
                                     right_lev_2['children'].splice(k, 1);
                                     return;

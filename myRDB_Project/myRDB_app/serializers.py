@@ -101,9 +101,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             instance = self.set_on_delete_list(instance,data,True)
         elif data['action_type']=="restore":
             instance = self.set_on_delete_list(instance,data,False)
-
+        elif data['action_type']=="transfer":
+            instance = self.add_to_transfer_list(instance, data)
+        elif data['action_type']=="restore_transfer":
+            instance = self.remove_from_transfer_list(instance, data)
         instance.save()
 
+        return instance
+
+    def add_to_transfer_list(self,instance, data):
+        print("in add_to_transfer_lst")
+        return instance
+
+    def remove_from_transfer_list(self,instance,data):
+        print("in remove from transfer_list")
         return instance
 
     def set_on_delete_list(self,instance,data,bool):

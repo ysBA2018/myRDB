@@ -19,19 +19,34 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm">
-                    <p class="card-text">User:...</p>
+                    <div class="row">
+                        <label for="user_count">User:   </label>
+                        <p id="user_count" class="card-text">   ...</p>
+                    </div>
                 </div>
                 <div class="col-sm">
-                    <p class="card-text">Roles: {{ role_count }}</p>
+                    <div class="row">
+                        <label for="role_count">Roles:   </label>
+                        <p id="role_count" class="card-text">   {{ role_count }}</p>
+                    </div>
                 </div>
                 <div class="col-sm">
-                    <p class="card-text">AF: {{ af_count }}</p>
+                    <div class="row">
+                        <label for="af_count">AF:   </label>
+                        <p id="af_count" class="card-text">   {{ af_count }}</p>
+                    </div>
                 </div>
                 <div class="col-sm">
-                    <p class="card-text">GF: {{ gf_count }}</p>
+                    <div class="row">
+                        <label for="gf_count">GF:   </label>
+                        <p id="gf_count" class="card-text">   {{ gf_count }}</p>
+                    </div>
                 </div>
                 <div class="col-sm">
-                    <p class="card-text">TF: {{ tf_count }}</p>
+                    <div class="row">
+                        <label for="tf_count">TF:   </label>
+                        <p id="tf_count" class="card-text">   {{ tf_count }}</p>
+                    </div>
                 </div>
                 {% if current_site == "profile" %}
                     <div class="col-4 input-group mb-3">

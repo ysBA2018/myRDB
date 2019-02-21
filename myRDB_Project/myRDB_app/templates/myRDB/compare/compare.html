@@ -1,28 +1,30 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
+    {% load asjson %}
+    <script>
+        var trash_table_count = {{ delete_list_count }};
+        var transferlistdata = {{ transfer_list | asjson }};
+        var compare_jsondata = {{ compareUser_graph_data | asjson }};
+    </script>
 <div class="row top-buffer">
     <div class="col-6" id="user_card">
         {% include 'myRDB/profile/profile_head.html' %}
         <div class="card top-buffer">
-            <div class="card-body">
-                {% if view_mode == "Graphische Ansicht" %}
-                    {% include 'myRDB/circlePackingTemplate.html' %}
-                {% else %}
-                    {% include 'myRDB/compare/compareProfileTableTemplate.html' %}
-                {% endif %}
-            </div>
+            {% if view_mode == "Graphische Ansicht" %}
+                {% include 'myRDB/circlePackingTemplate.html' %}
+            {% else %}
+                {% include 'myRDB/profile/profileTableTemplate.html' %}
+            {% endif %}
         </div>
     </div>
     <div class="col-6">
         {% include 'myRDB/compare/compare_profile_head.html' %}
         <div class="card top-buffer">
-            <div class="card-body">
-                {% if view_mode == "Graphische Ansicht" %}
-                    {% include 'myRDB/compare/compareCirclePackingTemplate.html' %}
-                {% else %}
-                    {% include 'myRDB/compare/compareTableTemplate.html' %}
-                {% endif %}
-            </div>
+            {% if view_mode == "Graphische Ansicht" %}
+                {% include 'myRDB/compare/compareCirclePackingTemplate.html' %}
+            {% else %}
+                {% include 'myRDB/compare/compareTableTemplate.html' %}
+            {% endif %}
         </div>
     </div>
 </div>
