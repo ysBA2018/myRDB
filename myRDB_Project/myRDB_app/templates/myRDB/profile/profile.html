@@ -1,10 +1,12 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
+    {% load asjson %}
 <div class="container-fluid">
     {% include 'myRDB/profile/profile_head.html' %}
     <script>
         var trash_table_count = {{ delete_list_count }};
         var current_site = "{{ current_site }}";
+        var scatterData = {{ scatterData | asjson }};
     </script>
 
         <div class="row top-buffer">
