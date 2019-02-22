@@ -4,11 +4,12 @@ $(document).ready(function(){
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-
+/*
     var color = d3.scaleLinear()
         .domain([-1, 5])
         .range(["hsl(360,100%,100%)", "hsl(0,0%,0%)"])
         .interpolate(d3.interpolateHcl);
+*/
 
 
     var pack = d3.pack()
@@ -28,28 +29,81 @@ $(document).ready(function(){
 
       var div = d3.select("body").append("div")
           .attr("class","tooltip")
-          .attr("id","CPtooltip")
+          .attr("id","compareCPtooltip")
           .style("opacity",0);
+
+            function compare_graphs(d){
+          var compare_data = window.jsondata['children'];
+          if(d.depth===1){
+              for(i in compare_data){
+                  if(compare_data[i].name===d.data.name) return true;
+              }
+          }
+          else if (d.depth === 2){
+              for(i in compare_data){
+                  if(compare_data[i].name===d.parent.data.name){
+                      var level_2 = compare_data[i]['children'];
+                      for(j in level_2){
+                          if(level_2[j].name===d.data.name) return true;
+                      }
+                  }
+              }
+          }
+          else if (d.depth === 3){
+              for(i in compare_data){
+                  if(compare_data[i].name===d.parent.parent.data.name){
+                      var level_2 = compare_data[i]['children'];
+                      for(j in level_2){
+                          if(level_2[j].name===d.parent.data.name){
+                              var level_3 = level_2[j]['children'];
+                              for(k in level_3){
+                                  if(level_3[k].name===d.data.name) return true;
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+          return false;
+      }
+      function get_color(d) {
+          if(d.depth===0){
+              return "white";
+          }
+          else{
+              if(compare_graphs(d)){
+                  if(d.depth===1)return "darkgrey";
+                  if(d.depth===2)return "grey";
+                  if(d.depth===3)return "lightgrey";
+              }else{
+                  if(d.depth===3){return d.data.color}
+                  else{return "white"}
+              }
+          }
+      }
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
       var circle = g.selectAll("circle")
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .style("stroke","grey")
+          .style("fill", function(d) {return get_color(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
           .on("contextmenu",function(d,i){transferfunction(d,i)})
           .on("mouseover",function (d) {
+              d3.select(this).style("stroke","black");
               div.transition()
                   .duration(200)
-                  .style("opacity",9)
+                  .style("opacity",9);
               div .html(d.data.name+"<br/>")
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
           })
           .on("mouseout",function (d) {
+              d3.select(this).style("stroke","grey");
               div.transition()
                   .duration(500)
                   .style("opacity",0)
@@ -130,12 +184,12 @@ $(document).ready(function(){
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-
+/*
         color = d3.scaleLinear()
             .domain([-1, 5])
             .range(["hsl(360,100%,100%)", "hsl(0,0%,0%)"])
             .interpolate(d3.interpolateHcl);
-
+*/
 
         pack = d3.pack()
             .size([diameter - margin, diameter - margin])
@@ -150,7 +204,7 @@ $(document).ready(function(){
 
       var div = d3.select("body").append("div")
           .attr("class","tooltip")
-          .attr("id","CPtooltip")
+          .attr("id","compareCPtooltip")
           .style("opacity",0);
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -158,20 +212,23 @@ $(document).ready(function(){
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .style("stroke","grey")
+          .style("fill", function(d) {return get_color(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
           .on("contextmenu", function(d,i){transferfunction(d,i)})
           .on("mouseover",function (d) {
+              d3.select(this).style("stroke","black");
               div.transition()
                   .duration(200)
-                  .style("opacity",9)
+                  .style("opacity",9);
               div .html(d.data.name+"<br/>")
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
           })
           .on("mouseout",function (d) {
+              d3.select(this).style("stroke","grey");
               div.transition()
                   .duration(500)
                   .style("opacity",0)
@@ -257,17 +314,20 @@ $(document).ready(function(){
                     error: function(res){console.log(res);}
                     });
             if(successful===true){
-                var rights = window.compare_jsondata['children'];
+                var compare_rights = window.compare_jsondata['children'];
+                var user_rights = window.jsondata['children'];
                 var transfer = window.transferlistdata['children'];
-                actualize_rights(rights, transfer, d);
+                actualize_rights(user_rights,compare_rights, transfer, d);
 
-                d3.select("body").selectAll("#CPtooltip").remove();
+                d3.select("body").selectAll("#compareCPtooltip").remove();
 
                 //d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
                 //update(window['compare_jsondata']);
 
                 d3.select('#transferSVG').select('g').data(window.transferlistdata).exit().remove();
                 window.updateTransfer();
+                d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
+                window.updateCP();
                 alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
                 //update_session();
             }
@@ -291,13 +351,14 @@ $(document).ready(function(){
       }
 
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(rights, transfer, d){
+      function actualize_rights(user_rights,compare_rights, transfer, d){
         if (d.depth ===1){
-            for (i in rights) {
-                if (rights[i]['name'] === d.data.name) {
+            for (i in compare_rights) {
+                if (compare_rights[i]['name'] === d.data.name) {
                     console.log(i + "," + d.data.name);
-                    actualize_right_counters(rights[i],"af");
-                    transfer.push(rights[i]);
+                    actualize_right_counters(compare_rights[i],"af");
+                    transfer.push(compare_rights[i]);
+                    user_rights.push(compare_rights[i]);
                     return;
                 }
             }

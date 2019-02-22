@@ -92,6 +92,8 @@ class CustomUserCreationForm(UserCreationForm):
                     user.direct_connect_tfs = [TF()]
                 if not user.user_afs:
                     user.user_afs = []
+                if not user.transfer_list:
+                    user.transfer_list = []
                 if commit:
                     user.save()
         return user

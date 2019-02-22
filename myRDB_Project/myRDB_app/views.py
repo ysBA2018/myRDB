@@ -41,8 +41,9 @@ class CSVtoMongoDB(generic.FormView):
     def start_import_action(self):
         firstline = True
         # TODO: dateiimportfield und pfad müssen noch verbunden werden!
-        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv") as csvfile:
+        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817.csv") as csvfile:
             csvreader = csv.reader(csvfile, delimiter=';', quotechar='"')
+            cur_val = 0
             for line in csvreader:
                 if firstline == True:
                     firstline = False
@@ -56,12 +57,17 @@ class CSVtoMongoDB(generic.FormView):
                         orga = Orga(team=line[8])
                     orga.save()
 
-                    #
+
+
                     tf_application = None
                     try:
                         tf_application = TF_Application.objects.get(application_name=line[9])
                     except(KeyError, TF_Application.DoesNotExist):
-                        tf_application = TF_Application(application_name=line[9])
+                        right_color = "hsl(%d, 50%%, 50%%)" % cur_val
+                        tf_application = TF_Application(application_name=line[9],color=right_color)
+                        cur_val = (cur_val+20)%355
+
+
                     tf_application.save()
 
                     tf = None
@@ -140,8 +146,10 @@ class CSVtoMongoDB(generic.FormView):
                             user.direct_connect_tfs = [TF()]
                         if not user.user_afs:
                             user.user_afs = []
+                        if not user.transfer_list:
+                            user.transfer_list = []
                     if user.user_afs.__len__() == 0:
-                        user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)
+                        user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk, color=tf_application.color)
                         user_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[])
                         user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[])
                         user_gf.tfs.append(user_tf)
@@ -165,14 +173,14 @@ class CSVtoMongoDB(generic.FormView):
                                             else:
                                                 break
                                         if tfcount == ugf.tfs.__len__():
-                                            ugf.tfs.append(User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk))
+                                            ugf.tfs.append(User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,color=tf_application.color))
                                 if gfcount == uaf.gfs.__len__():
                                     uaf.gfs.append(User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
-                                                           tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)]))
+                                                           tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,color=tf_application.color)]))
                         if afcount == user.user_afs.__len__():
                             user.user_afs.append(User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[
                                 User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
-                                        tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk)])]))
+                                        tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,color=tf_application.color)])]))
 
                     user.direct_connect_afs.add(af)
                     user.save()
@@ -493,8 +501,7 @@ class Compare(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        self.extra_context['current_site'] = "compare"
-        compareUserIdentity = self.request.GET['userSearch']
+        compareUserIdentity = self.request.GET['user_search']
         print(compareUserIdentity)
 
         # TODO: hier noch lösung mit Params über API finden!
@@ -524,14 +531,15 @@ class Compare(generic.ListView):
         return context
 
     def get_queryset(self):
+        self.extra_context['current_site'] = "compare"
         setViewMode(self.request, self.extra_context)
-        if not "identity" in self.request.GET.keys():
+        if not "user_identity" in self.request.GET.keys():
             user = self.request.user
             self.extra_context['identity_param'] = None
         else:
             # TODO: hier noch lösung mit Params über API finden!
-            user = User.objects.get(identity=self.request.GET['identity'])
-            self.extra_context['identity_param'] = self.request.GET['identity']
+            user = User.objects.get(identity=self.request.GET['user_identity'])
+            self.extra_context['identity_param'] = self.request.GET['user_identity']
 
         logged_in_user_token = self.request.user.auth_token
         url = 'http://127.0.0.1:8000/users/%d' % user.pk
@@ -551,8 +559,11 @@ class Compare(generic.ListView):
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['delete_list'] = {"children": delete_list}
 
+        transfer_list = user_json_data['transfer_list']
+        #self.extra_context['transfer_list_table_data'] = transfer_list_table_data
+        # self.extra_context['transfer_list_count'] = transfer_list_count
+        self.extra_context['transfer_list'] = {"children":transfer_list}
 
-        #self.extra_context['transfer_list'] = {"children":user_json_data['transfer_list']}
 
         user_json_data = update_user_data(user_json_data, delete_list_with_category)
         self.extra_context['jsondata'] = user_json_data
@@ -962,6 +973,11 @@ def get_gf_by_key(pk, headers):
     gf_json = res.json()
     return gf_json
 
+def get_tf_by_key(pk, headers):
+    url = 'http://127.0.0.1:8000/tfs/%d' % pk
+    res = requests.get(url, headers=headers)
+    tf_json = res.json()
+    return tf_json
 
 def get_user_model_rights_by_key(pk, headers):
     url = 'http://127.0.0.1:8000/usermodelrights/%d' % pk
@@ -982,6 +998,7 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
     scatterData = []
 
     i = 1
+    used_colors ={}
     for af in user_json_data['children']:
         # TODO: hier auftrennung delete-graph-jeson-data und user-rights-json-data <-> if berechtigung['on_delete_list']==True
         af['name'] = af.pop('af_name')
@@ -997,19 +1014,10 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
             for tf in gf['children']:
                 tf['name'] = tf.pop('tf_name')
                 tf['size'] = 3000
+
                 # TODO: scatter-graph für zugewiesen, auf delete-list gesetzt, gelöscht
                 scatterData.append({"name": tf['name'], "index": i, "af_applied": af_applied})
-
                 i += 1
-    if compareUser:
-        # path = 'myRestfulRDB/static/myRDB/data/compareGraphData_%s.json' % identity
-        path = 'myRDB_app/static/myRDB/data/compareGraphData.json'
-
-    else:
-        # path = 'myRestfulRDB/static/myRDB/data/graphData_%s.json' % identity
-        path = 'myRDB_app/static/myRDB/data/graphData.json'
-    with open(path, 'w') as outfile:
-        json.dump(user_json_data, outfile, indent=2)
 
     if not compareUser:
         scatterData.sort(key=lambda r: r["af_applied"])
