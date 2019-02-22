@@ -29,7 +29,7 @@ class ZI_OrganisationSerializer(serializers.HyperlinkedModelSerializer):
 class TF_ApplicationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TF_Application
-        fields = ('url','pk', 'application_name')
+        fields = ('url','pk', 'application_name','color')
 
 
 class TFSerializer(serializers.HyperlinkedModelSerializer):
@@ -61,6 +61,7 @@ class UserTFSerializer(serializers.Serializer):
     tf_name = serializers.CharField(max_length=150)
     model_tf_pk = serializers.IntegerField()
     on_delete_list = serializers.BooleanField(default=False)
+    color = serializers.CharField(default="hsl(0, 100, 100)", max_length=25)
 
 class UserGFSerializer(serializers.Serializer):
     gf_name = serializers.CharField(max_length=150)
@@ -80,13 +81,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = (
         'url','pk', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
-        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password','user_afs')
+        'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password','user_afs','transfer_list')
 
     roles = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='role-detail')
     direct_connect_afs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='af-detail')
     direct_connect_gfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='gf-detail')
     direct_connect_tfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='tf-detail')
     user_afs = UserAFSerializer(many=True, read_only=True)
+    transfer_list = UserAFSerializer(many=True, read_only=True)
 
     orga = OrgaSerializer()
     department = DepartmentSerializer()

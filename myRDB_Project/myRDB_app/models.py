@@ -48,6 +48,7 @@ class ZI_Organisation(models.Model):
 
 class TF_Application(models.Model):
     application_name = models.CharField(max_length=100)
+    color = models.CharField(default="hsl(0, 100, 100)",max_length=25)
 
     def __str__(self):
         return self.application_name
@@ -74,6 +75,7 @@ class User_TF(models.Model):
     tf_name = models.CharField(max_length=100)
     model_tf_pk = models.IntegerField()
     on_delete_list = models.BooleanField(default=False)
+    color = models.CharField(default="hsl(0, 100, 100)", max_length=25)
 
     objects = djongomodels.DjongoManager()
 
@@ -175,6 +177,8 @@ class CustomAccountManager(BaseUserManager):
             user.direct_connect_tfs = [TF()]
         if not user.user_afs:
             user.user_afs = []
+        if not user.transfer_list:
+            user.transfer_list = []
 
         user.save(using=self.db)
         return user
@@ -214,6 +218,7 @@ class User(AbstractUser):
     direct_connect_gfs = djongomodels.ArrayReferenceField(to=GF, on_delete=models.CASCADE)
     direct_connect_tfs = djongomodels.ArrayReferenceField(to=TF, on_delete=models.CASCADE)
     user_afs = djongomodels.ArrayModelField(model_container=User_AF)
+    transfer_list = djongomodels.ArrayModelField(model_container=User_AF)
     is_staff = models.BooleanField(default=False)
     password = models.CharField(max_length=32)
 

@@ -45,17 +45,17 @@
     "af_applied": "2016-01-25T00:00:00+01:00"
   },
   {
-    "name": "CN=CTSA_LOGON_2                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=CTSA_LOGON_2,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 63,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=CTSA_HOMEDIR_2                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=CTSA_HOMEDIR_2,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 64,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_00606_PRN_QUEUE1                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_00606_PRN_QUEUE1,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 65,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
@@ -80,57 +80,57 @@
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_AD_VDVVV_TM                                                                                                                                                                                                                                                   ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_AD_VDVVV_TM,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 70,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_MA_INFO                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_MA_INFO,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 71,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_PORTAL                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 72,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_MA_ID                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_MA_ID,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 73,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_ID_PORTAL                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_ID_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 74,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_IPC_P_PB                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_IPC_P_PB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 75,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_IPC_P_IB                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_IPC_P_IB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 76,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_IPC_P_CB                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_IPC_P_CB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 77,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_ARIS_CON_VIEWER                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_ARIS_CON_VIEWER,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 78,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_INTERNET                                                                                                                                                                                                                                                              ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_INTERNET,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 79,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
   {
-    "name": "CN=A_00808_PP_MA                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_00808_PP_MA,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 80,
     "af_applied": "2017-03-31T00:00:00+02:00"
   },
@@ -140,17 +140,17 @@
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_UNF_PROJEKTE                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_UNF_PROJEKTE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 97,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_PLANUNG_UNF                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_PLANUNG_UNF,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 98,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_DOKU_HOST                                                                                                                                                                                                                                                             ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_DOKU_HOST,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 99,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
@@ -180,12 +180,12 @@
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_PROJEKTE_RKV_2008                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_PROJEKTE_RKV_2008,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 105,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_PROJEKTE_RKV_2009                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_PROJEKTE_RKV_2009,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 106,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
@@ -260,42 +260,42 @@
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_ZBRW_IASFC                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_ZBRW_IASFC,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 121,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00455_BPM_USER03                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00455_BPM_USER03,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 122,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_PROJEKTARBEIT                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_PROJEKTARBEIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 123,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=W_NBF_PV                                                                                                                                                                                                                                                                ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=W_NBF_PV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 124,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=W_00447_DOKU                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=W_00447_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 125,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=A_CC_T_KB                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_CC_T_KB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 126,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_ADMIRAL                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_ADMIRAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 127,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00028_PPL                                                                                                                                                                                                                                                             ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00028_PPL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 128,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
@@ -395,7 +395,7 @@
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
   {
-    "name": "CN=D_00028_ZMV                                                                                                                                                                                                                                                             ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00028_ZMV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 148,
     "af_applied": "2018-03-02T00:00:00+01:00"
   },
@@ -825,17 +825,17 @@
     "af_applied": "2018-03-08T00:00:00+01:00"
   },
   {
-    "name": "CN=A_00788_CONFLUENCE                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_00788_CONFLUENCE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 81,
     "af_applied": "2018-05-18T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_ID_PORTAL                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_ID_PORTAL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 1,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_I_MA_ID_ZI                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_I_MA_ID_ZI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 2,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
@@ -945,47 +945,47 @@
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 24,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00452_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 25,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00458_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00458_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 26,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_LW_O                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_LW_O,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 27,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 28,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_VORLAGEN                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_VORLAGEN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 29,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00452_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00452_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 30,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00458_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00458_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 31,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00458_INTERN                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00458_INTERN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 32,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
@@ -1000,12 +1000,12 @@
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=A_SP_O_MA00001090                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_SP_O_MA00001090,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 35,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=W_00407_DA_ZIAI                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=W_00407_DA_ZIAI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 36,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
@@ -1020,57 +1020,57 @@
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_01218_PVB_L                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_01218_PVB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 39,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_01225_UM_LWL_TRASSE                                                                                                                                                                                                                                                   ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_01225_UM_LWL_TRASSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 40,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_ZISCM_L                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_ZISCM_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 41,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_AUSTAU_FH_ZI                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_AUSTAU_FH_ZI,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 42,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_KFALL                                                                                                                                                                                                                                                                 ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_KFALL,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 43,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_KFALL_DOKU_SB_L                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_KFALL_DOKU_SB_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 44,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00606_P_ANALYSE                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00606_P_ANALYSE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 45,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 46,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00606_DOKU_BTRKZPT_L                                                                                                                                                                                                                                                  ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00606_DOKU_BTRKZPT_L,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 47,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=W_IMSDC                                                                                                                                                                                                                                                                 ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=W_IMSDC,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 48,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_BCM_NOTFALL_DOKU                                                                                                                                                                                                                                                      ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_BCM_NOTFALL_DOKU,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 49,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
@@ -1085,42 +1085,42 @@
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_GESAMT                                                                                                                                                                                                                                                          ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_GESAMT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 52,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_VORLAGEN                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_VORLAGEN,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 53,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_00439_LW_O                                                                                                                                                                                                                                                            ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_00439_LW_O,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 54,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=A_F4S_SPEEDIT                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_F4S_SPEEDIT,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 55,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=W_2018_KH                                                                                                                                                                                                                                                               ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=W_2018_KH,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 56,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_FIREWALL_KONFIG                                                                                                                                                                                                                                                       ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_FIREWALL_KONFIG,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 57,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=A_UCP_VP_NATION                                                                                                                                                                                                                                                         ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_UCP_VP_NATION,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 58,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=D_TWS_NETZPLAENE                                                                                                                                                                                                                                                        ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=D_TWS_NETZPLAENE,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 59,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
@@ -1130,12 +1130,12 @@
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=A_IPC_P_DOITB                                                                                                                                                                                                                                                           ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_IPC_P_DOITB,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 61,
     "af_applied": "2018-07-02T00:00:00+02:00"
   },
   {
-    "name": "CN=A_REMOTE_SUPPORT_XV                                                                                                                                                                                                                                                     ,OU=Sicherheitsgruppen                                                                                                                                                                                                        ,OU=Gruppen,DC=RUV                                                                                                                                                                                                                                    ,DC=DE",
+    "name": "CN=A_REMOTE_SUPPORT_XV,OU=Sicherheitsgruppen,OU=Gruppen,DC=RUV,DC=DE",
     "index": 62,
     "af_applied": "2018-07-02T00:00:00+02:00"
   }

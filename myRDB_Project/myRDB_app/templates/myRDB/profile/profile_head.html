@@ -53,7 +53,7 @@
                         <form id=”search” method=”POST” action="{% url 'myRDB:compare' %}">
                             {% csrf_token %}
                             <input type="hidden" name="user_identity" value="{{ user_identity }}">
-                            <input type=”text” class=”form-control” id=”txtSearch” name='userSearch'
+                            <input type=”text” class=”form-control” id=”txtSearch” name='user_search'
                                    placeholder="compare to...">
                             <button type="submit" class="btn btn-light btn-outline-secondary ">Compare</button>
                         </form>

@@ -52,6 +52,7 @@
   "direct_connect_tfs": [],
   "is_staff": false,
   "password": "",
+  "transfer_list": [],
   "children": [
     {
       "model_af_pk": 233,
