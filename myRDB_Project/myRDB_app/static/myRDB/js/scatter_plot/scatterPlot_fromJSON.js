@@ -12,7 +12,12 @@
             .append('g')
                 .attr('transform','translate('+scatterMargin.left+', '+scatterMargin.top+')');
 
-        d3.json('/../../static/myRDB/data/scatterGraphData.json',function(err, data){
+        var data = window.scatterData;
+
+        var div = d3.select("body").append("div")
+          .attr("class","tooltip")
+          .attr("id","scattertooltip")
+          .style("opacity",0);
 
             var scatterYscale=d3.scaleLinear()
                 .domain(d3.extent(data, d => d.index))
@@ -52,16 +57,30 @@
                 .attr('cy',0)
                 .attr('r',d => 10)
                 .style('fill-opacity',0.5)
-                .style('fill', 'steelblue');
-
+                .style('fill',d => d.color)
+                .on("mouseover",function (d) {
+                      d3.select(this).style("stroke","black");
+                      div.transition()
+                          .duration(200)
+                          .style("opacity",9);
+                      div .html(d.name+"<br/>"+"Aktiv seit: "+d.af_applied+"<br/>")
+                          .style("right","px")
+                          .style("top",(d3.event.pageY-28)+"px")
+                  })
+                  .on("mouseout",function (d) {
+                      d3.select(this).style("stroke","grey");
+                      div.transition()
+                          .duration(500)
+                          .style("opacity",0)
+                  });
+/*
             scatterCircles
                 .append('text')
                 .style('text-anchor','middle')
                 .style('fill','black')
                 .attr('y',4)
                 .text(d => d.name);
-
-        });
+*/
 
         function responsivefy(scatterSVG){
             var scatterContainer = d3.select(scatterSVG.node().parentNode),
