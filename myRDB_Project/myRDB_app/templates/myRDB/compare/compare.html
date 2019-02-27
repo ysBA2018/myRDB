@@ -3,9 +3,14 @@
     {% load asjson %}
     <script>
         var trash_table_count = {{ delete_list_count }};
+        var transfer_table_count = {{ transfer_list_count }};
         var transferlistdata = {{ transfer_list | asjson }};
         var compare_jsondata = {{ compareUser_graph_data | asjson }};
         var current_site = "{{ current_site }}";
+        var compare_user = "{{ compareUser.identity }}";
+        var user_table_data = "{{ table_data }}";
+        var compare_user_table_data = "{{ compareUser_table_data }}";
+        var transfer_list_table_data = "{{ transfer_list_table_data }}";
     </script>
 <div class="row top-buffer">
     <div class="col-6" id="user_card">
@@ -41,7 +46,7 @@
                     <form>
                         {% csrf_token %}
                         <input name="user_identity" type="hidden" value="{{ user_identity }}">
-                        <input name="userSearch" type="hidden" value="{{ compareUser.identity }}">
+                        <input name="user_search" type="hidden" value="{{ compareUser.identity }}">
                         <select id="viewMode" name="view_mode" class="form-control" onchange="form.submit()">
                             {% if view_mode == "Graphische Ansicht"%}
                                 <option selected>Graphische Ansicht</option>

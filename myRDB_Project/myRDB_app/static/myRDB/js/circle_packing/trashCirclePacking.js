@@ -203,6 +203,23 @@ $(document).ready(function(){
     };
     function restorefunction(d,i){
         d3.event.preventDefault();
+        var right_type="",right_parent = "",right_grandparent = "";
+        if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
+            right_type="af";
+        }
+        else if((d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
+            right_type="gf";
+            right_parent = d.data.parent;
+        }
+        else if(d.depth===1 && !d.hasOwnProperty('children')){
+            right_type="tf";
+            right_grandparent = d.data.grandparent;
+            right_parent = d.data.parent;
+        }
+        else{
+            alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+            return;
+        }
         var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Löschliste entfernen\n\nund wiederherstellen?\n\n");
         if (r === true){
             function getCookie(name) {
@@ -231,24 +248,6 @@ $(document).ready(function(){
                     }
                 }
             });
-            var right_type="",right_parent = "",right_grandparent = "";
-            if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
-                right_type="af";
-            }
-            else if((d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
-                right_type="gf";
-                right_parent = d.data.parent;
-            }
-            else if(d.depth===1 && !d.hasOwnProperty('children')){
-                right_type="tf";
-                right_grandparent = d.data.grandparent;
-                right_parent = d.data.parent;
-            }
-            else{
-                alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
-                return;
-            }
-
             var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
@@ -272,6 +271,11 @@ $(document).ready(function(){
 
                 d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
                 window.updateCP();
+
+                if(window.current_site==="compare"){
+                    d3.select('#compareCirclePackingSVG').select('g').data(window.compare_jsondata).exit().remove();
+                    window.updateCompareCP();
+                }
 
 
             }

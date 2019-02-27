@@ -322,7 +322,7 @@ $(document).ready(function(){
             if(successful===true){
                 var rights = window.jsondata['children'];
                 var trash = window.trashlistdata['children'];
-                actualize_rights(rights, trash, d);
+                update_rights(rights, trash, d);
 
                 d3.select("body").selectAll("#CPtooltip").remove();
 
@@ -331,6 +331,11 @@ $(document).ready(function(){
 
                 d3.select('#trashSVG').select('g').data(window.trashlistdata).exit().remove();
                 window.updateTrash();
+
+                if(window.current_site==="compare"){
+                    d3.select('#compareCirclePackingSVG').select('g').data(window.compare_jsondata).exit().remove();
+                    window.updateCompareCP();
+                }
                 alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
                 //update_session();
             }
@@ -369,7 +374,8 @@ $(document).ready(function(){
 
       }
        **/
-      function actualize_right_counters(right,type){
+
+      function update_right_counters(right,type){
         if (type === "af"){
             for (j in right['children']){
                 window.trash_table_count+=right['children'][j]['children'].length;
@@ -387,12 +393,12 @@ $(document).ready(function(){
       }
 
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(rights, trash, d){
+      function update_rights(rights, trash, d){
         if (d.depth ===1){
             for (i in rights) {
                 if (rights[i]['name'] === d.data.name) {
                     console.log(i + "," + d.data.name);
-                    actualize_right_counters(rights[i],"af");
+                    update_right_counters(rights[i],"af");
                     trash.push(rights[i]);
                     rights.splice(i, 1);
                     return;
@@ -408,7 +414,7 @@ $(document).ready(function(){
                         if (right_lev_2['name'] === d.data.name) {
                             console.log(j + "," + d.data.name);
                             right_lev_2["parent"]=d.parent.data.name;
-                            actualize_right_counters(right_lev_2,"gf");
+                            update_right_counters(right_lev_2,"gf");
                             trash.push(right_lev_2);
                             right['children'].splice(j, 1);
                             return;
@@ -430,7 +436,7 @@ $(document).ready(function(){
                                     console.log(k + "," + d.data.name);
                                     right_lev_3["grandparent"]= d.parent.parent.data.name;
                                     right_lev_3["parent"]=d.parent.data.name;
-                                    actualize_right_counters(right_lev_3,"tf");
+                                    update_right_counters(right_lev_3,"tf");
                                     trash.push(right_lev_3);
                                     right_lev_2['children'].splice(k, 1);
                                     return;

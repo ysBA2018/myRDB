@@ -68,7 +68,7 @@
                           .style("top",(d3.event.pageY-28)+"px")
                   })
                   .on("mouseout",function (d) {
-                      d3.select(this).style("stroke","grey");
+                      d3.select(this).style("stroke",null);
                       div.transition()
                           .duration(500)
                           .style("opacity",0)
