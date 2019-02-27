@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Orga, Department, Group, ZI_Organisation, TF_Application, TF, GF, AF, Role, User
+import copy
+from .models import Orga, Department, Group, ZI_Organisation, TF_Application, TF, GF, AF, Role, User, User_GF, User_AF, \
+    User_TF
 
 
 class OrgaSerializer(serializers.HyperlinkedModelSerializer):
@@ -67,13 +69,13 @@ class UserGFSerializer(serializers.Serializer):
     gf_name = serializers.CharField(max_length=150)
     model_gf_pk = serializers.IntegerField()
     on_delete_list = serializers.BooleanField(default=False)
-    tfs = UserTFSerializer(many=True, read_only=True)
+    tfs = UserTFSerializer(many=True, read_only=False)
 
 class UserAFSerializer(serializers.Serializer):
     af_name = serializers.CharField(max_length=150)
     model_af_pk = serializers.IntegerField()
     on_delete_list = serializers.BooleanField(default=False)
-    gfs = UserGFSerializer(many=True, read_only=True)
+    gfs = UserGFSerializer(many=True, read_only=False)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -88,7 +90,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     direct_connect_gfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='gf-detail')
     direct_connect_tfs = serializers.HyperlinkedRelatedField(many=True, read_only=True,view_name='tf-detail')
     user_afs = UserAFSerializer(many=True, read_only=True)
-    transfer_list = UserAFSerializer(many=True, read_only=True)
+    transfer_list = UserAFSerializer(many=True, read_only=False)
 
     orga = OrgaSerializer()
     department = DepartmentSerializer()
@@ -111,12 +113,140 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
         return instance
 
+    def copy_user_right(self, right, type):
+        if type == "af":
+            u_af = User_AF(af_name=right.af_name, model_af_pk=int(float(right.model_af_pk)), gfs=[])
+            #u_af.Meta.abstract = True
+            for gf in right.gfs:
+                u_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=int(float(gf.model_gf_pk)), tfs=[])
+                #u_gf.Meta.abstract = True
+                for tf in gf.tfs:
+                    u_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=int(float(tf.model_tf_pk)), color=tf.color)
+                    #u_tf.Meta.abstract = True
+                    u_gf.tfs.append(u_tf)
+                u_af.gfs.append(u_gf)
+            return u_af
+        elif type == "gf":
+            u_gf = User_GF(gf_name=right.gf_name, model_gf_pk=int(float(right.model_gf_pk)), tfs=[])
+            for tf in right.tfs:
+                u_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=int(float(tf.model_tf_pk)), color=tf.color)
+                u_gf.tfs.append(u_tf)
+            return u_gf
+        elif type == "tf":
+            u_tf = User_TF(tf_name=right.tf_name, model_tf_pk=int(float(right.model_tf_pk)), color=right.color)
+            return u_tf
+
+
     def add_to_transfer_list(self,instance, data):
+
         print("in add_to_transfer_lst")
+        compareUser = User.objects.get(identity=data['compare_user'])
+        if data['right_type']=="af":
+            for af in compareUser.user_afs:
+                if af.af_name == data['right_name']:
+                    cpy_af = self.copy_user_right(af,data['right_type'])
+                    instance.transfer_list.append(cpy_af)
+                    break
+        # TODO: ab hier noch nicht durchgetestet
+        elif data['right_type']=="gf":
+            for af in compareUser.user_afs:
+                if af.af_name == data['parent']:
+                    for gf in af.gfs:
+                        if gf.gf_name == data['right_name']:
+                            added = False
+                            cpy_gf = self.copy_user_right(gf,data['right_type'])
+                            for ele in instance.transfer_list:
+                                if ele.af_name == data['parent']:
+                                    ele.gfs.append(cpy_gf)
+                                    added = True
+                                    break
+                            else:
+                                continue
+                            if not added:
+                                cpy_af = User_AF(af_name=af.af_name,model_af_pk=af.model_af_pk,gfs=[])
+                                cpy_af.gfs.append(cpy_gf)
+                                instance.transfer_list.append(cpy_af)
+                            break
+                    else:
+                        continue
+                    break
+        elif data['right_type']=="tf":
+            for af in compareUser.user_afs:
+                if af.af_name == data['grandparent']:
+                    for gf in af.gfs:
+                        if gf.gf_name == data['parent']:
+                            for tf in gf.tfs:
+                                if tf.tf_name == data['right_name']:
+                                    cpy_tf = self.copy_user_right(tf, data['right_type'])
+                                    added = False
+                                    for ele in instance.transfer_list:
+                                        if ele.af_name == data['grandparent']:
+                                            for user_gf in ele.gfs:
+                                                if user_gf.gf_name == data['parent']:
+                                                    user_gf.tfs.append(cpy_tf)
+                                                    added = True
+                                                    break
+                                            else:
+                                                continue
+                                            break
+                                    else:
+                                        continue
+                                    if not added:
+                                        cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk, gfs=[])
+                                        cpy_gf = User_GF(gf_name=gf.gf_name,model_gf_pk=gf.mode_gf_pk,tfs=[])
+                                        cpy_gf.tfs.append(cpy_tf)
+                                        cpy_af.gfs.append(cpy_gf)
+                                        instance.transfer_list.append(cpy_af)
+                                    break
+                            else:
+                                continue
+                            break
+                    else:
+                        continue
+                    break
         return instance
 
-    def remove_from_transfer_list(self,instance,data):
+    def remove_from_transfer_list(self, instance, data):
         print("in remove from transfer_list")
+        if data['right_type'] == "af":
+            index = 0
+            for right in instance.transfer_list:
+                if right.af_name == data['right_name']:
+                    instance.transfer_list.pop(index)
+                    break
+                index += 1
+        elif data['right_type'] == "gf":
+            for right in instance.transfer_list:
+                if right.af_name == data['parent']:
+                    index = 0
+                    for gf in right.gfs:
+                        if gf.gf_name == data['right_name']:
+                            right.gfs.pop(index)
+                            break
+                        index += 1
+                    else:
+                        continue
+                    break
+        elif data['right_type'] == "tf":
+            for right in instance.transfer_list:
+                if right.af_name == data['grandparent']:
+                    for gf in right.gfs:
+                        if gf.gf_name == data['parent']:
+                            index = 0
+                            for tf in gf.tfs:
+                                if tf.tf_name == data['right_name']:
+                                    # TODO: immer fehler beim versuch einzelne TF zu löschen -> meta.pk Nonetype dosent hav attr attaname
+                                    gf.tfs.pop(index)
+                                    break
+                                index += 1
+                            else:
+                                continue
+                            break
+                    else:
+                        continue
+                    break
+
+
         return instance
 
     def set_on_delete_list(self,instance,data,bool):

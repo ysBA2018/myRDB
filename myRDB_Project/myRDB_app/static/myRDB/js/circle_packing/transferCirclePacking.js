@@ -232,21 +232,17 @@ $(document).ready(function(){
                 }
             });
             var right_type="",right_parent = "",right_grandparent = "";
-            if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
+            if(d.depth===1){
                 right_type="af";
             }
-            else if((d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
+            else if(d.depth===2){
                 right_type="gf";
-                right_parent = d.data.parent;
+                right_parent = d.parent.data.name;
             }
-            else if(d.depth===1 && !d.hasOwnProperty('children')){
+            else if(d.depth === 3){
                 right_type="tf";
-                right_grandparent = d.data.grandparent;
-                right_parent = d.data.parent;
-            }
-            else{
-                alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
-                return;
+                right_grandparent = d.parent.parent.data.name;
+                right_parent = d.parent.data.name;
             }
 
             var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore_transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
@@ -267,13 +263,10 @@ $(document).ready(function(){
                 d3.select("body").selectAll("#transferTooltip").remove();
 
                 d3.select('#transferSVG').select("g").data(window.transferlistdata).exit().remove();
-                updateTransfer(window['transferlistdata']);
+                updateTransfer(window.transferlistdata);
 
-
-                d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
-                window.updateCP();
-
-
+                d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
+                window.updateCompareCP();
             }
         }
       }
@@ -294,55 +287,55 @@ $(document).ready(function(){
         }
       }
 
-      function rechain_right_to_rights(right,rights,level){
-        var found = false;
-        if (level === "af"){
-            rights.push(right);
-        }
-        else if(level === "gf"){
-            for (i in rights){
-                if (rights[i]['name']===right['parent']) {
-                    rights[i]['children'].push(right);
-                    found = true;
-                    break;
-                }
-                if (found === true) break;
-            }
-        }
-        else if(level === "tf"){
-            for (i in rights){
-                var grandparent = rights[i];
-                if (grandparent['name']===right['grandparent']){
-                    for (j in grandparent['children']){
-                        var parent = grandparent["children"][j];
-                        if(parent['name']===right['parent']){
-                            parent['children'].push(right);
-                            found=true;
-                            break;
-                        }
-                        if (found === true) break;
-                    }
-                }
-                if (found === true) break;
-            }
-        }
-      }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
       function update_rights(transfer,rights,level,d){
         if (d.depth===1){
             for (transfer_item in transfer) {
                 if (transfer[transfer_item]['name'] === d.data.name) {
                     console.log(transfer_item + "," + d.data.name);
-                    rechain_right_to_rights(transfer[transfer_item], rights, level);
                     update_right_counters(transfer[transfer_item],level);
                     transfer.splice(transfer_item, 1);
-                    alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
-                    break;
+                    alert("Berechtigung von\n\nTransferliste entfernt!\n");
+                    return;
                 }
             }
         }
-        else{
-            alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+        if (d.depth===2){
+            for (transfer_item in transfer) {
+                if (transfer[transfer_item]['name'] === d.parent.data.name) {
+                    var lev_2 = transfer[transfer_item]['children'];
+                    for(j in lev_2){
+                        if (lev_2[j]['name']===d.data.name){
+                            console.log(j + "," + d.data.name);
+                            update_right_counters(lev_2[j],level);
+                            lev_2.splice(j, 1);
+                            alert("Berechtigung von\n\nTransferliste entfernt!\n");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        if (d.depth===3){
+            for (transfer_item in transfer) {
+                if (transfer[transfer_item]['name'] === d.parent.parent.data.name) {
+                    var lev_2 = transfer[transfer_item]['children'];
+                    for(j in lev_2){
+                        if (lev_2[j]['name']===d.parent.data.name){
+                            var lev_3 = lev_2[j]['children'];
+                            for(k in lev_3) {
+                                if (lev_3[k]['name'] === d.data.name) {
+                                    console.log(k + "," + d.data.name);
+                                    update_right_counters(lev_3[k], level);
+                                    lev_3.splice(k, 1);
+                                    alert("Berechtigung von\n\nTransferliste entfernt!\n");
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
       }
     });

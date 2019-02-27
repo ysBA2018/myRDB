@@ -553,16 +553,18 @@ class Compare(generic.ListView):
 
         user_json_data, scatterData = prepareJSONdata(user.identity, user_json_data, False, headers)
 
+        transfer_list = self.prepareTransferJSONdata(user_json_data['transfer_list'])
+        transfer_list_table_data, transfer_list_count = self.prepareTransferTabledata(transfer_list)
+        self.extra_context['transfer_list_table_data'] = transfer_list_table_data
+        self.extra_context['transfer_list_count'] = transfer_list_count
+        #user_json_data = self.appendTransferListToUserJSONData(user_json_data,transfer_list)
+        self.extra_context['transfer_list'] = {"children": transfer_list}
+
         delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['delete_list'] = {"children": delete_list}
-
-        transfer_list = user_json_data['transfer_list']
-        # self.extra_context['transfer_list_table_data'] = transfer_list_table_data
-        # self.extra_context['transfer_list_count'] = transfer_list_count
-        self.extra_context['transfer_list'] = {"children": transfer_list}
 
         user_json_data = update_user_data(user_json_data, delete_list_with_category)
         self.extra_context['jsondata'] = user_json_data
@@ -580,6 +582,55 @@ class Compare(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
 
         return data
+
+    def appendTransferListToUserJSONData(self,user_json_data,trash_json_data):
+        for right in trash_json_data:
+            if right['type']=='af':
+                user_json_data['children'].append(right)
+        #TODO: gfs und tfs an richtiger stelle einbinden ! dafür parent & grandparent Infos benötigt
+        return user_json_data
+
+    def prepareTransferJSONdata(self, transfer_json_data):
+        print(type(transfer_json_data), transfer_json_data)
+        for right in transfer_json_data:
+            if 'gfs' in right.keys():
+                right["name"] = right.pop('af_name')
+                right["children"] = right.pop('gfs')
+                right['type'] = "af"
+                for gf in right['children']:
+                    gf["name"] = gf.pop('gf_name')
+                    gf["children"] = gf.pop('tfs')
+                    for tf in gf['children']:
+                        tf["name"] = tf.pop('tf_name')
+                        tf["size"] = 2000
+            elif 'tfs' in right.keys():
+                right["name"] = right.pop('gf_name')
+                right["children"] = right.pop('tfs')
+                right['type'] = "gf"
+                for tf in right['children']:
+                    tf["name"] = tf.pop('tf_name')
+                    tf["size"] = 2000
+            else:
+                right["name"] = right.pop('tf_name')
+                right["size"] = 2000
+                right['type'] = "tf"
+        return transfer_json_data
+
+    def prepareTransferTabledata(self, transfer_list):
+        tfList = []
+        gfList = []
+        afList = []
+        for af in transfer_list:
+            for gf in af['children']:
+                for tf in gf['children']:
+                    tfList.append(tf['name'])
+                    gfList.append(gf['name'])
+                    afList.append(af['name'])
+
+        data = zip(tfList, gfList, afList)
+        lis_data = list(data)
+        return lis_data, len(lis_data)
+
 
 
 class ProfileRightsAnalysis(generic.ListView):

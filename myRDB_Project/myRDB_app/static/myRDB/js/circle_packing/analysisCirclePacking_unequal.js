@@ -32,8 +32,7 @@ $(document).ready(function(){
           .attr("id","compareCPtooltip")
           .style("opacity",0);
 
-            function compare_graphs(d){
-          var compare_data = window.jsondata['children'];
+      function compare_graphs(d, compare_data){
           if(d.depth===1){
               for(i in compare_data){
                   if(compare_data[i].name===d.data.name) return true;
@@ -71,7 +70,7 @@ $(document).ready(function(){
               return "white";
           }
           else{
-              if(compare_graphs(d)){
+              if(compare_graphs(d,window.jsondata['children'])||compare_graphs(d,window.transferlistdata['children'])){
                   if(d.depth===1)return "darkgrey";
                   if(d.depth===2)return "grey";
                   if(d.depth===3)return "lightgrey";
@@ -262,8 +261,139 @@ $(document).ready(function(){
     window.updateCompareCP=function () {
         update(window.compare_jsondata)
     };
+
+    function check_user_rights_for_existance(d,right_type, parent, grandparent, user_rights, transfer_rights) {
+        var exists_in_user_rights = false;
+        var exists_in_transfer_rights = false;
+        if(right_type==="af"){
+            for(i in user_rights){
+                if(user_rights[i]['name']===d.data.name){
+                    exists_in_user_rights = true
+                }
+            }
+            for(i in transfer_rights){
+                if(transfer_rights[i]['name']===d.data.name){
+                    exists_in_transfer_rights = true;
+                }
+            }
+            if (!exists_in_user_rights && !exists_in_transfer_rights){
+                return false;
+            }else{
+                alert("AF existiert bereits\nund kann nicht übertragen werden!");
+                return true;
+            }
+
+        }
+        if(right_type==="gf"){
+            var parent_exists_in_user_rights=false;
+            var parent_exists_in_transfer_rights=false;
+            var transferable = true;
+            for(i in user_rights){
+                if(user_rights[i]['name']===parent){
+                    parent_exists_in_user_rights = true;
+                    var rights_lev_2 = user_rights[i]['children'];
+                    for(j in rights_lev_2){
+                        if(rights_lev_2[j]['name']===d.data.name){
+                            exists_in_user_rights = true;
+                        }
+                    }
+                }
+            }
+            for(i in transfer_rights){
+                if(transfer_rights[i]['name']===parent){
+                    parent_exists_in_transfer_rights = true;
+                    var rights_lev_2 = transfer_rights[i]['children'];
+                    for(j in rights_lev_2){
+                        if(rights_lev_2[j]['name']===d.data.name){
+                            exists_in_transfer_rights = true;
+                        }
+                    }
+                }
+            }
+            if(!exists_in_user_rights && !exists_in_transfer_rights){
+                if(parent_exists_in_user_rights || parent_exists_in_transfer_rights){
+                    return false
+                }
+                else{
+                    alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                    return true;
+                }
+            }else{
+                alert("GF existiert bereits\nund kann nicht übertragen werden!");
+                return true;
+            }
+        }
+        if(right_type==="tf") {
+            var grandparent_exists_in_user_rights = false;
+            var parent_exists_in_user_rights = false;
+            var grandparent_exists_in_transfer_rights = false;
+            var parent_exists_in_transfer_rights = false;
+            for (i in user_rights) {
+                if (user_rights[i]['name'] === grandparent) {
+                    grandparent_exists_in_user_rights = true;
+                    var rights_lev_2 = user_rights[i]['children'];
+                    for (j in rights_lev_2) {
+                        if (rights_lev_2[j]['name'] === parent) {
+                            parent_exists_in_user_rights = true;
+                            var rights_lev_3 = rights_lev_2[j]['children'];
+                            for (k in rights_lev_3) {
+                                if (rights_lev_3[k]['name'] === d.data.name) {
+                                    exists_in_user_rights = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (i in transfer_rights) {
+                if (transfer_rights[i]['name'] === grandparent) {
+                    grandparent_exists_in_transfer_rights = true;
+                    var rights_lev_2 = transfer_rights[i]['children'];
+                    for (j in rights_lev_2) {
+                        if (rights_lev_2[j]['name'] === parent) {
+                            parent_exists_in_transfer_rights = true;
+                            var rights_lev_3 = rights_lev_2[j]['children'];
+                            for (k in rights_lev_3) {
+                                if (rights_lev_3[k]['name'] === d.data.name) {
+                                    exists_in_transfer_rights = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!exists_in_user_rights && !exists_in_transfer_rights) {
+                if ((grandparent_exists_in_user_rights && parent_exists_in_user_rights)||(grandparent_exists_in_transfer_rights && parent_exists_in_transfer_rights)) {
+                    return false;
+                } else if (!grandparent_exists_in_user_rights && !grandparent_exists_in_transfer_rights) {
+                    alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                    return true;
+                } else if ((grandparent_exists_in_user_rights && !parent_exists_in_user_rights)||(grandparent_exists_in_transfer_rights && !parent_exists_in_transfer_rights)) {
+                    alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                    return true;
+                }
+            }else{
+                alert("TF existiert bereits\nund kann nicht übertragen werden!");
+                return true;
+            }
+        }
+    }
     function transferfunction(d,i){
         d3.event.preventDefault();
+        var right_type="",right_parent = "",right_grandparent = "";
+        if(d.depth===1) right_type="af";
+        else if(d.depth===2) {
+            right_type="gf";
+            right_parent = d.parent.data.name;
+        }
+        else if(d.depth===3){
+            right_type="tf";
+            right_grandparent = d.parent.parent.data.name;
+            right_parent = d.parent.data.name;
+        }
+        if(check_user_rights_for_existance(d,right_type,right_parent,right_grandparent, window.jsondata['children'],window.transferlistdata['children'])){
+            return;
+        }
         var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n");
         if (r === true){
             function getCookie(name) {
@@ -292,18 +422,8 @@ $(document).ready(function(){
                     }
                 }
             });
-            var right_type="",right_parent = "",right_grandparent = "";
-            if(d.depth===1) right_type="af";
-            else if(d.depth===2) {
-                right_type="gf";
-                right_parent = d.parent.data.name;
-            }
-            else if(d.depth===3){
-                right_type="tf";
-                right_grandparent = d.parent.parent.data.name;
-                right_parent = d.parent.data.name;
-            }
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
+
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"compare_user":window.compare_user,"action_type":"transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
@@ -317,23 +437,23 @@ $(document).ready(function(){
                 var compare_rights = window.compare_jsondata['children'];
                 var user_rights = window.jsondata['children'];
                 var transfer = window.transferlistdata['children'];
-                actualize_rights(user_rights,compare_rights, transfer, d);
+                update_rights(user_rights,compare_rights, transfer, d);
 
                 d3.select("body").selectAll("#compareCPtooltip").remove();
 
-                //d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
-                //update(window['compare_jsondata']);
+                d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
+                update(window['compare_jsondata']);
 
                 d3.select('#transferSVG').select('g').data(window.transferlistdata).exit().remove();
                 window.updateTransfer();
-                d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
-                window.updateCP();
+                //d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
+                //window.updateCP();
                 alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
                 //update_session();
             }
         }
       }
-      function actualize_right_counters(right,type){
+      function update_right_counters(right,type){
         if (type === "af"){
             for (j in right['children']){
                 window.transfer_table_count+=right['children'][j]['children'].length;
@@ -349,14 +469,48 @@ $(document).ready(function(){
             document.getElementById('graph_transfer_badge').innerHTML = window.transfer_table_count;
         }
       }
+      function add_to_transfer_list(transfer, right, parent_right, grandparent_right, level){
+        if(level === "gf"){
+            for(i in transfer){
+                var curr_af = transfer[i];
+                if(curr_af['name']===parent_right['name']){
+                    curr_af['children'].push(right);
+                    return;
+                }
+            }
+            var parent_cpy = Object.assign(parent_cpy,parent_right);
+            parent_cpy['children']=[right];
+            transfer.push(parent_cpy);
+        }
+        if(level === "tf"){
+            for(i in transfer){
+                var curr_af = transfer[i];
+                if(curr_af['name']===grandparent_right['name']){
+                    var curr_af_gfs = curr_af['children'];
+                    for(j in curr_af_gfs){
+                        var curr_gf = curr_af_gfs[j];
+                        if(curr_gf['name']===parent_right['name']){
+                            curr_gf['children'].push(right);
+                            return;
+                        }
+                    }
+                    var grandparent_cpy = Object.assign(grandparent_cpy,grandparent_right);
+                    var parent_cpy = Object.assign(parent_cpy,parent_right);
+                    parent_cpy['children']=[right];
+                    grandparent_cpy['children']=[parent_cpy];
+                    transfer.push(grandparent_cpy);
+                }
+            }
+        }
+      }
 
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function actualize_rights(user_rights,compare_rights, transfer, d){
+      function update_rights(user_rights,compare_rights, transfer, d){
         if (d.depth ===1){
             for (i in compare_rights) {
                 if (compare_rights[i]['name'] === d.data.name) {
                     console.log(i + "," + d.data.name);
-                    actualize_right_counters(compare_rights[i],"af");
+                    update_right_counters(compare_rights[i],"af");
                     transfer.push(compare_rights[i]);
                     user_rights.push(compare_rights[i]);
                     return;
@@ -364,16 +518,17 @@ $(document).ready(function(){
             }
         }
         else if(d.depth===2){
-            for (i in rights) {
-                var right = rights[i];
+            for (i in compare_rights) {
+                var right = compare_rights[i];
                 if (right['name'] === d.parent.data.name) {
                     for (j in right['children']) {
                         var right_lev_2 = right['children'][j];
                         if (right_lev_2['name'] === d.data.name) {
                             console.log(j + "," + d.data.name);
                             right_lev_2["parent"]=d.parent.data.name;
-                            actualize_right_counters(right_lev_2,"gf");
-                            transfer.push(right_lev_2);
+                            update_right_counters(right_lev_2,"gf");
+                            //user_rights.push(right_lev_2);
+                            add_to_transfer_list(transfer,right_lev_2,right,null,'gf');
                             return;
                         }
                     }
@@ -381,8 +536,8 @@ $(document).ready(function(){
             }
         }
         else if(d.depth===3){
-            for (i in rights) {
-                var right = rights[i];
+            for (i in compare_rights) {
+                var right = compare_rights[i];
                 if (right['name'] === d.parent.parent.data.name) {
                     for (j in right['children']) {
                         var right_lev_2 = right['children'][j];
@@ -393,8 +548,9 @@ $(document).ready(function(){
                                     console.log(k + "," + d.data.name);
                                     right_lev_3["grandparent"]= d.parent.parent.data.name;
                                     right_lev_3["parent"]=d.parent.data.name;
-                                    actualize_right_counters(right_lev_3,"tf");
-                                    transfer.push(right_lev_3);
+                                    update_right_counters(right_lev_3,"tf");
+                                    //user_rights.push(right_lev_3);
+                                    add_to_transfer_list(transfer,right_lev_3,right_lev_2,right,'tf');
                                     return;
                                 }
                             }
