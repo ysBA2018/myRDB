@@ -7,6 +7,7 @@
         var trash_table_count = {{ delete_list_count }};
         var current_site = "{{ current_site }}";
         var scatterData = {{ scatterData | asjson }};
+        var legendData = {{ legendData | asjson}};
     </script>
 
         <div class="row top-buffer">
@@ -34,7 +35,11 @@
                         {% endif %}
                     </div>
                     <div class="col">
-                        <div class="card">
+                        {# 'Hier Legende realisieren' #}
+                        {% if view_mode == "Graphische Ansicht" %}
+                            {% include 'myRDB/profile/profileLegendTemplate.html' %}
+                        {% endif %}
+                        <div class="card top-buffer">
                             <div class="card-body">
                                 {# Hier die verschiedenen Buttons realisieren #}
                                 <div class="row">
