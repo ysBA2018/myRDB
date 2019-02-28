@@ -5,6 +5,7 @@ $(document).ready(function(){
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
+    svg.select("g").style('transform','translate(50%, 50%)');
     var color = d3.scaleLinear()
         .domain([-1, 5])
         .range(["hsl(360,100%,100%)", "hsl(0,0%,0%)"])
@@ -128,6 +129,8 @@ $(document).ready(function(){
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+        svg.select("g").style('transform','translate(50%, 50%)');
 
         color = d3.scaleLinear()
             .domain([-1, 5])

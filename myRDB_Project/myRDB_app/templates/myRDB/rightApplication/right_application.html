@@ -1,0 +1,93 @@
+{% extends 'myRDB/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    {% include 'myRDB/profile/profile_head.html' %}
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <form action="{% url 'myRDB:profile' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-light btn-outline-secondary "><--</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="rightApplicationHeading">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#rightApplication" aria-expanded="true" aria-controls="rightApplication">
+                        Beantragung
+                    </button>
+                </h5>
+            </div>
+            <div id="rightApplication" class="collapse show" aria-labelledby="rightApplicationHeading" data-parent="#accordion">
+                <div class="card-body">
+                    <div id="inner_accordion_application">
+                        {% for right in transfer_list %}
+                            <div class="card">
+                                <div class="card-header" id="inner_rightApplicationHeading{{ forloop.counter0 }}">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#inner_rightApplication{{ forloop.counter0 }}" aria-expanded="true" aria-controls="inner_rightApplication{{ forloop.counter0 }}">
+                                            {{ right.name }}
+                                        </button>
+                                    </h5>
+                                </div>
+                                {% if forloop.counter0 == 0 %}
+                                    <div id="inner_rightApplication{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_rightApplicationHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_application">
+                                        {% include 'myRDB/rightApplication/right_application_card.html' %}
+                                    </div>
+                                {% else %}
+                                    <div id="inner_rightApplication{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_rightApplicationHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_application">
+                                        {% include 'myRDB/rightApplication/right_application_card.html' %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="rightDeletionHeading">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#rightDeletion" aria-expanded="true" aria-controls="rightDeletion">
+                        Löschung
+                    </button>
+                </h5>
+            </div>
+            <div id="rightDeletion" class="collapse" aria-labelledby="rightDeletionHeading" data-parent="#accordion">
+                <div class="card-body">
+                    <div id="inner_accordion_deletion">
+                        {% for right in delete_list %}
+                            <div class="card">
+                                <div class="card-header" id="inner_rightDeletionHeading{{ forloop.counter0 }}">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#inner_rightDeletion{{ forloop.counter0 }}" aria-expanded="true" aria-controls="inner_rightDeletion{{ forloop.counter0 }}">
+                                            {{ right.name }}
+                                        </button>
+                                    </h5>
+                                </div>
+                                {% if forloop.counter0 == 0 %}
+                                    <div id="inner_rightDeletion{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_rightDeletionHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_deletion">
+                                        {% include 'myRDB/rightApplication/right_deletion_card.html' %}
+                                    </div>
+                                {% else %}
+                                    <div id="inner_rightDeletion{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_rightDeletionHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_deletion">
+                                        {% include 'myRDB/rightApplication/right_deletion_card.html' %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'myRDB/rightApplication/right_application_footer_row.html' %}
+</div>
+
+{% endblock %}

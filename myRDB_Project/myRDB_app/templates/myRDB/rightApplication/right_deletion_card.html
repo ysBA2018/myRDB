@@ -1,0 +1,26 @@
+{% load static %}
+{% load index %}
+{% load asjson %}
+{% load getdictitem %}
+
+<script>var iDeletion = 0</script>
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-4">
+            {# hier right-to-delete circle packing #}
+            <script>
+                var jsondata_deletion{{ forloop.counter0 }} = {{ right | asjson }}
+            </script>
+            <svg id="rightDeletionSVG{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/analysisCirclePacking_unequal.js' %}"></script>
+        </div>
+        <div class="col-6">
+            {# hier Formular #}
+            <h5 class="text-left">Hier Name oder So</h5>
+            {% csrf_token %}
+            <label for="deletionReasonTextField{{ forloop.counter0 }}"></label>
+            <input type="text" id="deltionReasonTextField{{ forloop.counter0 }}">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+{% load static %}
+{% load asjson %}
+<div class="card">
+    <div class="card-header">
+        <h5>Legende</h5>
+    </div>
+    <div class="card-body">
+        {# Hier die Legende realisieren #}
+        <svg class="legend" id="profileLegendSVG" width="180" height="180"></svg>
+        <script type="text/javascript" src="{% static 'myRDB/js/legends/profile-legend.js' %}"></script>
+    </div>
+    <div class="card-footer">
+        <p>Farben beschreiben TF-Zugehörigkeit zu Applikation</p>
+    </div>
+</div>

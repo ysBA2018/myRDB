@@ -853,6 +853,9 @@ class Profile(generic.ListView):
         logged_in_user_token = self.request.user.auth_token
         url = 'http://127.0.0.1:8000/users/%d' % user.pk
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
+
+        self.extra_context['legendData'] = get_tf_applications(headers)['results']
+
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
 
@@ -883,6 +886,7 @@ class Profile(generic.ListView):
         self.request.session['delete_list_table_data'] = delete_list_table_data
         self.request.session['delete_list_count'] = delete_list_count
         '''
+
         self.extra_context['role_count'] = len(roles)
         self.extra_context['af_count'] = len(afs) + del_af_count
         self.extra_context['gf_count'] = gf_count + del_gf_count
@@ -899,6 +903,15 @@ class Profile(generic.ListView):
         self.request.session['tf_count'] = tf_count + del_tf_count
 
         return data
+
+class DigitalRightApplication(generic.ListView):
+    model = User
+    template_name = 'myRDB/rightApplication/right_application.html'
+    extra_context = {}
+    context_object_name = "list_data"
+
+    def get_queryset(self):
+        return []
 
 
 def get_delete_list_counts(list):
@@ -1013,6 +1026,13 @@ def prepareTableData(user, roles, afs, headers):
     data = zip(tfList, gfList, afList)
     tf_count = len(tfList)
     return list(data), gf_count, tf_count
+
+
+def get_tf_applications(headers):
+    url = 'http://127.0.0.1:8000/tf_applications/'
+    res = requests.get(url, headers=headers)
+    tf_applications_json = res.json()
+    return tf_applications_json
 
 
 def get_af_by_key(pk, headers):

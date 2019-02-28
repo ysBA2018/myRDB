@@ -16,4 +16,5 @@ urlpatterns = [
     path('csvToMongo/', views.CSVtoMongoDB.as_view(), name='csvToMongo'),
     path('users/', views.Users.as_view(), name='users'),
     path('search_all/', views.Search_All.as_view(), name='search_all'),
+    path('apply_changes/', views.DigitalRightApplication.as_view(), name='apply_changes'),
 ]

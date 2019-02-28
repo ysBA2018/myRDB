@@ -13,12 +13,25 @@
     background-size: contain;
     background-position: center;
     width: 100%;
-    height: 100%;
-
 }
+
+.transfer{
+    background-image: url('../images/transfer.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 100%;
+}
+
+.trash, .transfer{
+    min-height: 180px;
+    height: 180px;
+}
+
 td.highlight{
     background-color: whitesmoke !important;
 }
+
 .darkgrey{
     background-color: darkgrey!important;
 }
