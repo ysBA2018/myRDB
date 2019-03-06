@@ -1,0 +1,31 @@
+{% load static %}
+{% load index %}
+{% load getdictitem %}
+<script>
+    var iDeclinedApply = 0;
+</script>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6" align="left">
+                <h5>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#declined_apply_request{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="declined_apply_request{{ forloop.counter0 }}">
+                        Beantragung | {{ apply_request.request.right_name }}
+                    </a>
+                </h5>
+            </div>
+            <div class="col-6" align="right">
+                <p>
+                    <a class="btn btn-secondary" href="" role="button">
+                        X
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="collapse" id="declined_apply_request{{ forloop.counter0 }}">
+         {% include 'myRDB/myRequests/declined/declined_apply_request_card.html' %}
+    </div>
+</div>
+

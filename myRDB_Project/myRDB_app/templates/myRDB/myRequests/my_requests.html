@@ -1,0 +1,143 @@
+{% extends 'myRDB/base.html' %}
+{% load static %}
+{% load index %}
+{% load getdictitem %}
+{% block content %}
+    <h2> Meine Anfragen</h2>
+    <div id="accordion">
+        {% if accepted_list.apply or accepted_list.delete %}
+            <div class="container" id="outerAcceptedToggleGroup">
+                <div class="card top-buffer">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-2">
+                                <h5> Abgewiesen</h5>
+                            </div>
+                            {% if accepted_list.apply %}
+                                <div class="col-2">
+                                    <p>
+                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseAcceptedApply" role="button" aria-expanded="false" aria-controls="collapseAcceptedApply">
+                                            Beantragungen
+                                        </a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                            {% if accepted_list.delete %}
+                                <div class="col-2">
+                                    <p>
+                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseAcceptedDelete" role="button" aria-expanded="false" aria-controls="collapseAcceptedDelete">
+                                            Löschungen
+                                        </a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="collapse show" id="collapseAcceptedApply" data-parent="#outerAcceptedToggleGroup">
+                            {% for apply_request in accepted_list.apply %}
+                              {% include 'myRDB/myRequests/accepted/accepted_apply_requests.html' %}
+                            {% endfor %}
+                        </div>
+                        <div class="collapse" id="collapseAcceptedDelete" data-parent="#outerAcceptedToggleGroup">
+                            {% for delete_request in accepted_list.delete %}
+                              {% include 'myRDB/myRequests/accepted/accepted_delete_requests.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if declined_list.apply or declined_list.delete %}
+            <div class="container" id="outerDeclinedToggleGroup">
+                <div class="card top-buffer">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-2">
+                                <h5> Abgewiesen</h5>
+                            </div>
+                            {% if declined_list.apply %}
+                                <div class="col-2">
+                                    <p>
+                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseDeclinedApply" role="button" aria-expanded="false" aria-controls="collapseDeclinedApply">
+                                            Beantragungen
+                                        </a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                            {% if declined_list.delete %}
+                                <div class="col-2">
+                                    <p>
+                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseDeclinedDelete" role="button" aria-expanded="false" aria-controls="collapseDeclinedDelete">
+                                            Löschungen
+                                        </a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="collapse show" id="collapseDeclinedApply" data-parent="#outerDeclinedToggleGroup">
+                            {% for apply_request in declined_list.apply %}
+                              {% include 'myRDB/myRequests/declined/declined_apply_requests.html' %}
+                            {% endfor %}
+                        </div>
+                        <div class="collapse" id="collapseDeclinedDelete" data-parent="#outerDeclinedToggleGroup">
+                            {% for delete_request in declined_list.delete %}
+                              {% include 'myRDB/myRequests/declined/declined_delete_requests.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if unanswered_list.apply or unanswered_list.delete %}
+            <div class="container" id="outerUnansweredToggleGroup">
+                <div class="card top-buffer">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-2">
+                                <h5> Unbeantwortet</h5>
+                            </div>
+                            {% if unanswered_list.apply %}
+                                <div class="col-2">
+                                    <p>
+                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseUnansweredApply" role="button" aria-expanded="false" aria-controls="collapseUnansweredApply">
+                                            Beantragungen
+                                        </a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                            {% if unanswered_list.delete %}
+                                <div class="col-2">
+                                    <p>
+                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseUnansweredDelete" role="button" aria-expanded="false" aria-controls="collapseUnansweredDelete">
+                                            Löschungen
+                                        </a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="collapse show" id="collapseUnansweredApply" data-parent="#outerUnansweredToggleGroup">
+                            {% for apply_request in unanswered_list.apply %}
+                              {% include 'myRDB/myRequests/unanswered/unanswered_apply_requests.html' %}
+                            {% endfor %}
+                        </div>
+                        <div class="collapse" id="collapseUnansweredDelete" data-parent="#outerUnansweredToggleGroup">
+                            {% for delete_request in unanswered_list.delete %}
+                              {% include 'myRDB/myRequests/unanswered/unanswered_delete_requests.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if not unanswered_list and not declined_list and not accepted_list%}
+            <div class="card-body">
+                <p>Keine Anfragen vorhanden!</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

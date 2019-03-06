@@ -14,7 +14,7 @@
                 var jsondata_unequal{{ forloop.counter0 }} = {{ right | asjson }}
             </script>
             <svg id="analysisCirclePackingSVG_unequal{{ forloop.counter0 }}" width="300" height="300"></svg>
-            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/analysisCirclePacking_unequal.js' %}"></script>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/right_analysis/analysisCirclePacking_unequal.js' %}"></script>
         </div>
         <div class="col">
             {# hier Informationen und Vergleichsdaten #}
@@ -29,7 +29,7 @@
             <script>var jsonModeldata_unequal{{ forloop.counter0 }} = {{ unequal_model_rights|index:forloop.counter0 | asjson}}</script>
 
             <svg id="analysisModelCirclePackingSVG_unequal{{ forloop.counter0 }}" width="300" height="300"></svg>
-            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/analysisModelCirclePacking_unequal.js' %}"></script>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/right_analysis/analysisModelCirclePacking_unequal.js' %}"></script>
         </div>
     </div>
 </div>

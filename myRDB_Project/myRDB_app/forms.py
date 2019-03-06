@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Orga, Group, Department, ZI_Organisation, Role, AF, GF, TF, User_AF, User_GF, User_TF
+from django.utils.safestring import mark_safe
+
+from .models import User, Orga, Group, Department, ZI_Organisation, Role, AF, GF, TF, User_AF, User_GF, User_TF, \
+    ChangeRequests
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -90,10 +93,14 @@ class CustomUserCreationForm(UserCreationForm):
                     user.direct_connect_gfs = [GF()]
                 if not user.direct_connect_tfs:
                     user.direct_connect_tfs = [TF()]
+                if not user.my_requests:
+                    user.my_requests = [ChangeRequests()]
                 if not user.user_afs:
                     user.user_afs = []
                 if not user.transfer_list:
                     user.transfer_list = []
+                if not user.delete_list:
+                    user.delete_list = []
                 if commit:
                     user.save()
         return user
@@ -109,3 +116,14 @@ class CustomUserChangeForm(UserChangeForm):
 class SomeForm(forms.Form):
     start_import = forms.FileInput()
 
+class ApplyRightForm(forms.Form):
+    reason_for_application = forms.CharField(widget=forms.Textarea(attrs={'rows':'4'}), min_length=20, max_length=500, label=mark_safe('<strong>Grund der Beantragung:</strong>'))
+
+class DeleteRightForm(forms.Form):
+    reason_for_deletion = forms.CharField(widget=forms.Textarea(attrs={'rows':'4'}), min_length=20, max_length=500, label=mark_safe('<strong>Grund der Löschung:</strong>'))
+
+class AcceptChangeForm(forms.Form):
+    change_in_IIQ_check = forms.BooleanField(label="Änderungen in IIQ beantragt?")
+
+class DeclineChangeForm(forms.Form):
+    reason_for_decline = forms.CharField(widget=forms.Textarea(attrs={'rows':'2'}), min_length=20, max_length=500, label=mark_safe('<strong>Grund der Ablehnung:</strong>'))

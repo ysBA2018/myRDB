@@ -33,6 +33,10 @@ class HttpPostTunnelingMiddleware(object):
                 request.method = 'DELETE'
                 request.META['REQUEST_METHOD'] = 'DELETE'
                 request.DELETE = QueryDict(request.body)
+            if http_method.lower() == 'create':
+                request.method = 'CREATE'
+                request.META['REQUEST_METHOD'] = 'CREATE'
+                request.CREATE = QueryDict(request.body)
 
                 #TODO: Beim verlassen von Profile zu Compare oder RightAnalysis <- hier sessionvariablen wie table_data oder user_data anpassen auf templatevariablen
         return self.get_response(request)

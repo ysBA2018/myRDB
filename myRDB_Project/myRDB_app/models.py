@@ -15,6 +15,18 @@ from rest_framework.authtoken.models import Token
 
 from myRDB_Project import settings
 
+class ChangeRequests(models.Model):
+    requesting_user = models.CharField(max_length=7)
+    compare_user = models.CharField(max_length=7)
+    action = models.CharField(max_length=10)
+    right_name = models.CharField(max_length=150)
+    right_type = models.CharField(max_length=5)
+    reason_for_action = models.CharField(max_length=500)
+    status = models.CharField(max_length=10, default="unanswered")
+    reason_for_decline = models.CharField(max_length=500, default="")
+    created = models.DateTimeField(auto_now_add=True, editable=False,null=False, blank=False)
+    last_modified = models.DateTimeField(auto_now=True, editable=False,null=False, blank=False)
+
 
 # Create your models here.
 class Orga(models.Model):
@@ -175,10 +187,14 @@ class CustomAccountManager(BaseUserManager):
             user.direct_connect_gfs = [GF()]
         if not user.direct_connect_tfs:
             user.direct_connect_tfs = [TF()]
+        if not user.my_requests:
+            user.my_requests = [ChangeRequests()]
         if not user.user_afs:
             user.user_afs = []
         if not user.transfer_list:
             user.transfer_list = []
+        if not user.transfer_list:
+            user.delete_list = []
 
         user.save(using=self.db)
         return user
@@ -217,8 +233,10 @@ class User(AbstractUser):
     direct_connect_afs = djongomodels.ArrayReferenceField(to=AF, on_delete=models.CASCADE)
     direct_connect_gfs = djongomodels.ArrayReferenceField(to=GF, on_delete=models.CASCADE)
     direct_connect_tfs = djongomodels.ArrayReferenceField(to=TF, on_delete=models.CASCADE)
+    my_requests = djongomodels.ArrayReferenceField(to=ChangeRequests, on_delete=models.CASCADE)
     user_afs = djongomodels.ArrayModelField(model_container=User_AF)
     transfer_list = djongomodels.ArrayModelField(model_container=User_AF)
+    delete_list = djongomodels.ArrayModelField(model_container=User_AF)
     is_staff = models.BooleanField(default=False)
     password = models.CharField(max_length=32)
 

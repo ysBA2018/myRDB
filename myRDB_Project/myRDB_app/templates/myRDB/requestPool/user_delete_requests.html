@@ -1,0 +1,25 @@
+{% load static %}
+{% load index %}
+{% load getdictitem %}
+<script>
+    var iDeletion = 0;
+</script>
+
+<div class="card-body">
+    {% if requesting_users|index:forloop.counter0|getdictitem:'delete_requests' %}
+        {% for right in requesting_users|index:forloop.counter0|getdictitem:'delete_requests' %}
+            <div class="card top-buffer">
+                <div class="card-header">
+                    <h5>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseDeleteRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseDeleteRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                            {{ right.right_name }}
+                        </a>
+                    </h5>
+                </div>
+                <div class="collapse" id="collapseDeleteRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                     {% include 'myRDB/requestPool/right_delete_request_card.html' %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

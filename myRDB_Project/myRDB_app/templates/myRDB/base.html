@@ -37,11 +37,13 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="nav navbar-nav navbar-left">
             {% if user.is_authenticated %}
-            <li><a class="nav-item nav-link" href="{% url 'myRDB:profile' %}">Profile</a></li>
+                <li><a class="nav-item nav-link" href="{% url 'myRDB:profile' %}">Profile</a></li>
+                <li><a class="nav-item nav-link" href="{% url 'myRDB:my_requests' %}">Meine Anfragen</a></li>
                 {% if user.is_staff %}
-            <li><a class="nav-item nav-link" href="{% url 'myRDB:csvToMongo' %}">CSVintoMongoDB</a></li>
-            <li><a class="nav-item nav-link" href="{% url 'myRDB:users' %}">Users</a></li>
-            <li><a class="nav-item nav-link" href="{% url 'myRDB:search_all' %}">Search</a></li>
+                    <li><a class="nav-item nav-link" href="{% url 'myRDB:users' %}">Nutzer</a></li>
+                    <li><a class="nav-item nav-link" href="{% url 'myRDB:search_all' %}">Suche</a></li>
+                    <li><a class="nav-item nav-link" href="{% url 'myRDB:request_pool' %}">Anfragen-Pool</a></li>
+                    <li><a class="nav-item nav-link" href="{% url 'myRDB:csvToMongo' %}">Datenimport</a></li>
                 {% endif %}
             {% endif %}
         </ul>
