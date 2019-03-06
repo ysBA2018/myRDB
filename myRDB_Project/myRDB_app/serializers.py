@@ -13,6 +13,25 @@ class ChangeRequestsSerializer(serializers.HyperlinkedModelSerializer):
             'url', 'pk', 'requesting_user', 'compare_user', 'action', 'right_name',
             'right_type', 'reason_for_action', 'created', 'last_modified','status', 'reason_for_decline')
 
+    def update(self, instance, validated_data):
+        print("in ChangeRequests Upadate")
+        print(self._kwargs)
+        data = self._kwargs['data']
+        if data['action_type'] == 'decline_request':
+            instance = self.decline_request(instance, data)
+        if data['action_type'] == 'accept_request':
+            instance = self.accept_request(instance)
+        instance.save()
+        return instance
+
+    def decline_request(self, instance, data):
+        instance.status = "declined"
+        instance.reason_for_decline = data['reason_for_decline']
+        return instance
+
+    def accept_request(self, instance):
+        instance.status = "accepted"
+        return instance
 
 class OrgaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -3,8 +3,6 @@ $(document).ready(function(){
     var svgDeletionIndex = window.iDeletion;
     var userDeletionIndex = window.iDeletionUser;
 
-    console.log("svgDeleteIndex: "+svgDeletionIndex);
-    console.log('parentIndex: '+userDeletionIndex);
     var svg, margin, diameter, g;
     try{
         svg = d3.select("#rightDeletionSVG"+userDeletionIndex+svgDeletionIndex),

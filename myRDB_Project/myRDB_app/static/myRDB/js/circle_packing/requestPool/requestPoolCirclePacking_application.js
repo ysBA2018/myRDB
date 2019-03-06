@@ -3,8 +3,6 @@ $(document).ready(function(){
     var svgApplicationIndex = window.iApplication;
     var userApplicationIndex = window.iApplicationUser;
 
-    console.log("svgApplyIndex: "+svgApplicationIndex);
-    console.log('parentIndex: '+userApplicationIndex);
     var svg, margin, diameter, g;
     try{
         svg = d3.select("#rightApplicationSVG"+userApplicationIndex+svgApplicationIndex),

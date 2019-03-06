@@ -1,9 +1,9 @@
 (function(){
 $(document).ready(function(){
-    var svgDeletionIndex = window.iDeclinedDelete;
+    var svgDeletionIndex = window.iAcceptedDelete;
     var svg, margin, diameter, g;
 
-    svg = d3.select("#declinedDeletionSVG"+svgDeletionIndex),
+    svg = d3.select("#acceptedDeletionSVG"+svgDeletionIndex),
     margin = 20,
     diameter = +svg.attr("width"),
     g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -19,8 +19,8 @@ $(document).ready(function(){
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    var root = window['jsondata_declined_delete'+svgDeletionIndex];
-        window.iDeclinedDelete=window.iDeclinedDelete+1;
+    var root = window['jsondata_accepted_delete'+svgDeletionIndex];
+        window.iAcceptedDelete=window.iAcceptedDelete+1;
       root = d3.hierarchy(root)
           .sum(function(d) { return d.size; })
           .sort(function(a, b) { return b.value - a.value; });
