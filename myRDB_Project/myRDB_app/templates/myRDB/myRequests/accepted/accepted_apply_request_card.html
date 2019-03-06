@@ -9,7 +9,7 @@
         <div class="col-4">
             {# hier right-to-delete circle packing #}
             <script>
-                var jsondata_accepted_apply{{ forloop.counter0 }} = {{ apply_request.right | asjson }}
+                var jsondata_accepted_apply{{ forloop.counter0 }} = {{ apply_request.right | asjson }};
             </script>
             <svg id="acceptedApplicationSVG{{ forloop.counter0 }}" width="300" height="300"></svg>
             <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/myRequests/accepted/myRequestsCirclePacking_accepted_application.js' %}"></script>

@@ -18,22 +18,26 @@
     </div>
     <div class="collapse" id="accept{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" data-parent="#toggleGroup{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
       <div class="card card-body">
+          <script type="text/javascript" src="{% static 'myRDB/js/actions/accept_request.js' %}"></script>
+
           <p><a href="https://idm.ruv.de/home.jsf"> -> Änderung in IdentityIQ beantragen</a></p>
-          <form class="accept-form" action="">
+          <form class="accept-form" onsubmit="javascript: return accept_clicked(this);">
               {% csrf_token %}
               {{ accept_form | crispy}}
-              <input type="submit" class=" btn btn-success" value="Änderungen übernehmen">
+              <input type="hidden" name="request_pk" value="{{ right.request_pk }}">
+              <input type="submit" class="acceptButton btn btn-success" value="Änderungen übernehmen">
           </form>
-          <script type="text/javascript" src="{% static 'myRDB/js/actions/accept_request.js' %}"></script>
       </div>
     </div>
     <div class="collapse" id="decline{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" data-parent="#toggleGroup{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
       <div class="card card-body">
-          <form class="decline-form" action="">
+          <script type="text/javascript" src="{% static 'myRDB/js/actions/decline_request.js' %}"></script>
+
+          <form class="decline-form" onsubmit="javascript: return decline_clicked(this);">
               {% csrf_token %}
               {{ decline_form | crispy}}
-              <input type="submit" class="btn btn-danger" value="Abweisung übermitteln">
+              <input type="hidden" name="request_pk" value="{{ right.request_pk }}">
+              <input type="submit" class="declineButton btn btn-danger" value="Abweisung übermitteln">
           </form>
-          <script type="text/javascript" src="{% static 'myRDB/js/actions/decline_request.js' %}"></script>
       </div>
     </div>

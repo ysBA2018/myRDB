@@ -16,6 +16,10 @@
         </div>
         <div class="col-8">
             {# hier Formular #}
+            <label class="font-weight-bold" for="declined_deletion_date_of_decline{{ forloop.counter0 }}">Abweisungsdatum:</label>
+            <p class="text-left" id="declined_deletion_date_of_decline{{ forloop.counter0 }}">{{ delete_request.request.last_modified }}</p>
+            <label class="font-weight-bold" for="declined_deletion_reason_for_decline{{ forloop.counter0 }}">Begründung für Abweisung:</label>
+            <p class="text-left" id="declined_deletion_reason_for_decline{{ forloop.counter0 }}">{{ delete_request.request.reason_for_decline }}</p>
             <label class="font-weight-bold" for="declined_deletion_date_of_deletion{{ forloop.counter0 }}">Antragsdatum:</label>
             <p class="text-left" id="declined_deletion_date_of_deletion{{ forloop.counter0 }}">{{ delete_request.request.created }}</p>
             <label class="font-weight-bold" for="declined_deletion_compare_user{{ forloop.counter0 }}">Vergleichsnutzer:</label>

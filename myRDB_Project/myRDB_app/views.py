@@ -915,14 +915,14 @@ class RequestPool(generic.ListView):
                         right = get_comp_user_right(comp_user, data['right_type'], data['right_name'])
                         model = get_model_right(comp_user, data['right_type'], right['model_right_pk'],self.request)
                         user["apply_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
-                                      'right_name': data['right_name'], 'reason_for_action': data['reason_for_action']})
+                                      'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
                     else:
                         requesting_user = User.objects.get(identity=data['requesting_user'])
                         requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
                         right = get_comp_user_right(requesting_user, data['right_type'], data['right_name'])
                         model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],self.request)
                         user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
-                                      'right_name': data['right_name'], 'reason_for_action': data['reason_for_action']})
+                                      'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
 
         return list_by_user
 

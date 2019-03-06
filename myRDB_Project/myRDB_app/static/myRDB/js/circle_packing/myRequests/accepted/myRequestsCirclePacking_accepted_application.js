@@ -1,9 +1,9 @@
 (function(){
 $(document).ready(function(){
-    var svgApplicationIndex = window.iDeclinedApply;
+    var svgApplicationIndex = window.iAcceptedApply;
     var svg, margin, diameter, g;
 
-    svg = d3.select("#declinedApplicationSVG"+svgApplicationIndex),
+    svg = d3.select("#acceptedApplicationSVG"+svgApplicationIndex),
     margin = 20,
     diameter = +svg.attr("width"),
     g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -19,8 +19,8 @@ $(document).ready(function(){
         .size([diameter - margin, diameter - margin])
         .padding(2);
 
-    var root = window['jsondata_declined_apply'+svgApplicationIndex];
-        window.iDeclinedApply=window.iDeclinedApply+1;
+    var root = window['jsondata_accepted_apply'+svgApplicationIndex];
+        window.iAcceptedApply=window.iAcceptedApply+1;
       root = d3.hierarchy(root)
           .sum(function(d) { return d.size; })
           .sort(function(a, b) { return b.value - a.value; });
