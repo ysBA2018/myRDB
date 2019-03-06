@@ -1,0 +1,31 @@
+{% load static %}
+{% load index %}
+{% load asjson %}
+{% load getdictitem %}
+{% load crispy_forms_tags %}
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-4">
+            {# hier right-to-delete circle packing #}
+            <script>
+                var jsondata_application{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }} = {{ right.right | asjson }}
+            </script>
+            <svg id="rightApplicationSVG{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/requestPool/requestPoolCirclePacking_application.js' %}"></script>
+        </div>
+        <div class="col-8">
+            {# hier Formular #}
+
+            <label class="font-weight-bold" for="type_of_apply_right{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Berechtigungstyp:</label>
+            <p class="text-left" id="type_of_apply_right{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.type }}</p>
+            <label class="font-weight-bold" for="apply_right_description{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Beschreibung:</label>
+            <p class="text-left" id="apply_right_description{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.model.right_description }}</p>
+            <label class="font-weight-bold" for="reason_for_apply{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Begründung für Beantragung:</label>
+            <p class="text-left" id="reason_for_apply{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.reason_for_action }}</p>
+            <div class="container" id="toggleGroup{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                {% include 'myRDB/requestPool/accept_or_decline.html' %}
+            </div>
+        </div>
+    </div>
+</div>

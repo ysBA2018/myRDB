@@ -1,0 +1,34 @@
+{% load static %}
+{% load index %}
+{% load asjson %}
+{% load getdictitem %}
+{% load crispy_forms_tags %}
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-4">
+            {# hier right-to-delete circle packing #}
+            <script>
+                var jsondata_deletion{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }} = {{ right.right | asjson }}
+            </script>
+            <svg id="rightDeletionSVG{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/requestPool/requestPoolCirclePacking_deletion.js' %}"></script>
+        </div>
+        <div class="col-8">        
+            {# hier Formular #}
+            <label class="font-weight-bold" for="delete_right_applied{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Berechtigt seit:</label>
+            <p class="text-left" id="delete_right_applied{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.model.af_applied }}</p>
+            <label class="font-weight-bold" for="type_of_delete_right{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Berechtigungstyp:</label>
+            <p class="text-left" id="type_of_delete_right{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.type }}</p>
+            <label class="font-weight-bold" for="delete_right_description{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Beschreibung:</label>
+            <p class="text-left" id="delete_right_description{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.model.right_description }}</p>
+            <label class="font-weight-bold" for="reason_for_delete{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">Begründung für Löschung:</label>
+            <p class="text-left" id="reason_for_delete{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">{{ right.reason_for_action }}</p>
+
+            <div class="container" id="toggleGroup{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                {% include 'myRDB/requestPool/accept_or_decline.html' %}
+            </div>
+
+        </div>
+    </div>
+</div>

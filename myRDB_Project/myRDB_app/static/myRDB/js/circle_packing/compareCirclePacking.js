@@ -32,6 +32,7 @@ $(document).ready(function(){
           .attr("id","compareCPtooltip")
           .style("opacity",0);
 
+      //TODO: compare auch auf my_requests!
       function compare_graphs(d, compare_data){
           if(d.depth===1){
               for(i in compare_data){

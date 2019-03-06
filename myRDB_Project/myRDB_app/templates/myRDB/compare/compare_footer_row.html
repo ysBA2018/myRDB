@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-body">
                     {# Hier die verschiedenen Buttons realisieren #}
-                     <form id=”log” method=”POST” action="{% url 'myRDB:apply_changes' %}">
+                     <form id=”apply_changes” method=”POST” action="{% url 'myRDB:apply_changes' %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-light">Änderungen beantragen</button>
                     </form>

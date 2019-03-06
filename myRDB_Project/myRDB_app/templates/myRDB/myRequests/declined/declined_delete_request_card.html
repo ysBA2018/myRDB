@@ -1,0 +1,31 @@
+{% load static %}
+{% load index %}
+{% load asjson %}
+{% load getdictitem %}
+{% load crispy_forms_tags %}
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-4">
+            {# hier right-to-delete circle packing #}
+            <script>
+                var jsondata_declined_delete{{ forloop.counter0 }} = {{ delete_request.right | asjson }}
+            </script>
+            <svg id="declinedDeletionSVG{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/myRequests/declined/myRequestsCirclePacking_declined_deletion.js' %}"></script>
+        </div>
+        <div class="col-8">
+            {# hier Formular #}
+            <label class="font-weight-bold" for="declined_deletion_date_of_deletion{{ forloop.counter0 }}">Antragsdatum:</label>
+            <p class="text-left" id="declined_deletion_date_of_deletion{{ forloop.counter0 }}">{{ delete_request.request.created }}</p>
+            <label class="font-weight-bold" for="declined_deletion_compare_user{{ forloop.counter0 }}">Vergleichsnutzer:</label>
+            <p class="text-left" id="declined_deletion_compare_user{{ forloop.counter0 }}">{{ delete_request.request.compare_user }}</p>
+            <label class="font-weight-bold" for="declined_deletion_type_of_delete_right{{ forloop.counter0 }}">Berechtigungstyp:</label>
+            <p class="text-left" id="declined_deletion_type_of_delete_right{{ forloop.counter0 }}">{{ delete_request.request.right_type }}</p>
+            <label class="font-weight-bold" for="declined_deletion_delete_right_description{{ forloop.counter0 }}">Beschreibung:</label>
+            <p class="text-left" id="declined_deletion_delete_right_description{{ forloop.counter0 }}">{{ delete_request.model.right_description }}</p>
+            <label class="font-weight-bold" for="declined_deletion_reason_for_delete{{ forloop.counter0 }}">Begründung für Beantragung:</label>
+            <p class="text-left" id="declined_deletion_reason_for_delete{{ forloop.counter0 }}">{{ delete_request.request.reason_for_action }}</p>
+        </div>
+    </div>
+</div>

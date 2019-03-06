@@ -7,7 +7,7 @@
 </div>
 <div class="card-body">
     <script>
-        var user_pk = "{{ user.pk }}";
+        var user_pk = "{{ user_pk }}";
         var CSRF_TOKEN = "{{ csrf_token }}";
         var jsondata = {{ jsondata | asjson }};
         var updateCP;

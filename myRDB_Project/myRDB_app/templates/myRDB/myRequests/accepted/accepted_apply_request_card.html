@@ -1,0 +1,31 @@
+{% load static %}
+{% load index %}
+{% load asjson %}
+{% load getdictitem %}
+{% load crispy_forms_tags %}
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-4">
+            {# hier right-to-delete circle packing #}
+            <script>
+                var jsondata_accepted_apply{{ forloop.counter0 }} = {{ apply_request.right | asjson }}
+            </script>
+            <svg id="acceptedApplicationSVG{{ forloop.counter0 }}" width="300" height="300"></svg>
+            <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/myRequests/accepted/myRequestsCirclePacking_accepted_application.js' %}"></script>
+        </div>
+        <div class="col-8">
+            {# hier Formular #}
+            <label class="font-weight-bold" for="accepted_application_date_of_application{{ forloop.counter0 }}">Antragsdatum:</label>
+            <p class="text-left" id="accepted_application_date_of_application{{ forloop.counter0 }}">{{ apply_request.request.created }}</p>
+            <label class="font-weight-bold" for="accepted_application_compare_user{{ forloop.counter0 }}">Vergleichsnutzer:</label>
+            <p class="text-left" id="accepted_application_compare_user{{ forloop.counter0 }}">{{ apply_request.request.compare_user }}</p>
+            <label class="font-weight-bold" for="accepted_application_type_of_apply_right{{ forloop.counter0 }}">Berechtigungstyp:</label>
+            <p class="text-left" id="accepted_application_type_of_apply_right{{ forloop.counter0 }}">{{ apply_request.request.right_type }}</p>
+            <label class="font-weight-bold" for="accepted_application_apply_right_description{{ forloop.counter0 }}">Beschreibung:</label>
+            <p class="text-left" id="accepted_application_apply_right_description{{ forloop.counter0 }}">{{ apply_request.model.right_description }}</p>
+            <label class="font-weight-bold" for="accepted_application_reason_for_apply{{ forloop.counter0 }}">Begründung für Beantragung:</label>
+            <p class="text-left" id="accepted_application_reason_for_apply{{ forloop.counter0 }}">{{ apply_request.request.reason_for_action }}</p>
+        </div>
+    </div>
+</div>

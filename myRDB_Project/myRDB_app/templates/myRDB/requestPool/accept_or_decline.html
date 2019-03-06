@@ -1,0 +1,39 @@
+{% load static %}
+{% load crispy_forms_tags %}
+    <div class="row">
+        <div class="col">
+            <p>
+              <a class="btn btn-success" data-toggle="collapse" href="#accept{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="accept{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                Antrag akzeptieren
+              </a>
+            </p>
+        </div>
+        <div class="col">
+            <p>
+              <a class="btn btn-danger" data-toggle="collapse" href="#decline{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="decline{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                Antrag ablehnen
+              </a>
+            </p>
+        </div>
+    </div>
+    <div class="collapse" id="accept{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" data-parent="#toggleGroup{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+      <div class="card card-body">
+          <p><a href="https://idm.ruv.de/home.jsf"> -> Änderung in IdentityIQ beantragen</a></p>
+          <form class="accept-form" action="">
+              {% csrf_token %}
+              {{ accept_form | crispy}}
+              <input type="submit" class=" btn btn-success" value="Änderungen übernehmen">
+          </form>
+          <script type="text/javascript" src="{% static 'myRDB/js/actions/accept_request.js' %}"></script>
+      </div>
+    </div>
+    <div class="collapse" id="decline{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" data-parent="#toggleGroup{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+      <div class="card card-body">
+          <form class="decline-form" action="">
+              {% csrf_token %}
+              {{ decline_form | crispy}}
+              <input type="submit" class="btn btn-danger" value="Abweisung übermitteln">
+          </form>
+          <script type="text/javascript" src="{% static 'myRDB/js/actions/decline_request.js' %}"></script>
+      </div>
+    </div>
