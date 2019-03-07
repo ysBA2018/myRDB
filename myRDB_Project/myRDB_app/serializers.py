@@ -10,7 +10,7 @@ class ChangeRequestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ChangeRequests
         fields = (
-            'url', 'pk', 'requesting_user', 'compare_user', 'action', 'right_name',
+            'url', 'pk','requesting_user_pk', 'requesting_user', 'compare_user', 'action', 'right_name',
             'right_type', 'reason_for_action', 'created', 'last_modified','status', 'reason_for_decline')
 
     def update(self, instance, validated_data):
@@ -156,9 +156,107 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             instance = self.add_to_my_requests(instance, data)
         elif data['action_type'] == "clear_transfer_list_and_delete_list":
             instance = self.clear_transferlist_and_deletelist(instance)
+        elif data['action_type'] == "perform_action":
+            instance = self.perform_action(instance, data)
         instance.save()
 
         return instance
+
+    def perform_action(self, instance, data):
+        print("in perform_action")
+        request_data = json.loads(data['request_data'])
+        if request_data['action']=='apply':
+            instance = self.apply_right(instance, request_data['compare_user'],request_data['right_name'],request_data['right_type'], request_data['last_modified'])
+        if request_data['action']=='delete':
+            instance = self.delete_right(instance, request_data['right_name'],request_data['right_type'])
+
+        return instance
+
+    def apply_right(self, instance, compare_xv_user, right_name, right_type, application_date):
+        print("in apply right")
+        compareUser = User.objects.get(identity=compare_xv_user)
+        if right_type == "AF":
+            for af in compareUser.user_afs:
+                if af.af_name == right_name:
+                    #cpy_af = self.copy_user_right(right_name, right_type)
+                    #cpy_af.af_applied = application_date
+                    instance.user_afs.append(af)
+                    break
+        # TODO: ab hier noch nicht durchgetestet
+        '''
+        elif right_type == "gf":
+            for af in compareUser.user_afs:
+                if af.af_name == data['parent']:
+                    for gf in af.gfs:
+                        if gf.gf_name == data['right_name']:
+                            added = False
+                            cpy_gf = self.copy_user_right(gf, data['right_type'])
+                            for ele in instance.transfer_list:
+                                if ele.af_name == data['parent']:
+                                    ele.gfs.append(cpy_gf)
+                                    added = True
+                                    break
+                            else:
+                                continue
+                            if not added:
+                                cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk, gfs=[])
+                                cpy_af.gfs.append(cpy_gf)
+                                instance.transfer_list.append(cpy_af)
+                            break
+                    else:
+                        continue
+                    break
+        elif data['right_type'] == "tf":
+            for af in compareUser.user_afs:
+                if af.af_name == data['grandparent']:
+                    for gf in af.gfs:
+                        if gf.gf_name == data['parent']:
+                            for tf in gf.tfs:
+                                if tf.tf_name == data['right_name']:
+                                    cpy_tf = self.copy_user_right(tf, data['right_type'])
+                                    added = False
+                                    for ele in instance.transfer_list:
+                                        if ele.af_name == data['grandparent']:
+                                            for user_gf in ele.gfs:
+                                                if user_gf.gf_name == data['parent']:
+                                                    user_gf.tfs.append(cpy_tf)
+                                                    added = True
+                                                    break
+                                            else:
+                                                continue
+                                            break
+                                    else:
+                                        continue
+                                    if not added:
+                                        cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk, gfs=[])
+                                        cpy_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.mode_gf_pk, tfs=[])
+                                        cpy_gf.tfs.append(cpy_tf)
+                                        cpy_af.gfs.append(cpy_gf)
+                                        instance.transfer_list.append(cpy_af)
+                                    break
+                            else:
+                                continue
+                            break
+                    else:
+                        continue
+                    break
+                    '''
+
+        return instance
+
+    def delete_right(self, instance, right_name, right_type):
+        print("in delete right")
+        if right_type == "AF":
+            index = 0
+            for af in instance.user_afs:
+                if af.af_name == right_name:
+                    instance.user_afs.pop(index)
+                    break
+                index+=1
+
+        return instance
+
+
 
     def clear_transferlist_and_deletelist(self,instance):
         print("in clear transfer- and deletelist")
@@ -197,7 +295,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             return u_tf
 
     def add_to_transfer_list(self, instance, data):
-
         print("in add_to_transfer_lst")
         compareUser = User.objects.get(identity=data['compare_user'])
         if data['right_type'] == "af":

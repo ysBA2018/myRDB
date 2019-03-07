@@ -1636,7 +1636,7 @@ class ChangeRequestsViewSet(viewsets.ModelViewSet):
         serializer = None
         added_requests = []
         for obj in objects_to_change:
-            obj_data = {'requesting_user': data['requesting_user[value]'], 'compare_user': data['compare_user[value]'], 'action': obj[0]['value'], 'right_name':obj[1]['value'], 'right_type':obj[2]['value'], 'reason_for_action':obj[3]['value']}
+            obj_data = {'requesting_user_pk': data['requesting_user_pk'],'requesting_user': data['requesting_user[value]'], 'compare_user': data['compare_user[value]'], 'action': obj[0]['value'], 'right_name':obj[1]['value'], 'right_type':obj[2]['value'], 'reason_for_action':obj[3]['value']}
             serializer = self.get_serializer(data=obj_data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
