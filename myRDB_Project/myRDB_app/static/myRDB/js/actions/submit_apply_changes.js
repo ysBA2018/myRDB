@@ -39,7 +39,7 @@ function insert_change_request_to_database(formElement){
                 }
             }
         });
-        var data = {"X-CSRFToken":getCookie("csrftoken"),"requesting_user":requesting_user,"compare_user":compare_user,"objects_to_change":JSON.stringify(repacked_objects)};
+        var data = {"X-CSRFToken":getCookie("csrftoken"),"requesting_user_pk":window.requesting_user_pk,"requesting_user":requesting_user,"compare_user":compare_user,"objects_to_change":JSON.stringify(repacked_objects)};
         var successful=false;
         var response_data;
         $.ajax({type:'POST',

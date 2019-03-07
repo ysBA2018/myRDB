@@ -45,7 +45,23 @@ function change_request_state_to_accepted_and_perform_action(formElement) {
                 error: function(res){console.log(res);}
                 });
         if (successful){
-            alert("Antrag stattgegeben!");
+            data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"perform_action", "request_data":JSON.stringify(response_data)};
+            successful=false;
+            $.ajax({type:'POST',
+                    data:data,
+                    url:'http://127.0.0.1:8000/users/'+response_data['requesting_user_pk']+"/",
+                    async:false,
+                    success: function(res){console.log(res);
+                        response_data = res;
+                        successful=true},
+                    error: function(res){console.log(res);}
+                    });
+            if (successful){
+                alert("Antrag stattgegeben!");
+            }
+            else{
+                alert("Beim durchführen der Änderungen \n ist ein Fehler aufgetreten!")
+            }
         }else{
             alert("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!")
         }
