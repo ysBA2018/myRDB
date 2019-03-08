@@ -128,9 +128,6 @@ class User_GF(models.Model):
 class AF(models.Model):
     af_name = models.CharField(max_length=150)
     af_description = models.CharField(max_length=250)
-    af_applied = models.DateTimeField()
-    af_valid_from = models.DateTimeField()
-    af_valid_till = models.DateTimeField()
     gfs = djongomodels.ArrayReferenceField(to=GF, on_delete=models.CASCADE)
 
     objects = djongomodels.DjongoManager()
@@ -144,6 +141,9 @@ class User_AF(models.Model):
     model_af_pk = models.IntegerField()
     gfs = djongomodels.ArrayModelField(model_container=User_GF)
     on_delete_list = models.BooleanField(default=False)
+    af_applied = models.DateTimeField()
+    af_valid_from = models.DateTimeField()
+    af_valid_till = models.DateTimeField()
 
     objects = djongomodels.DjongoManager()
 
