@@ -2,19 +2,13 @@ import csv
 import json
 import re
 
-from json2html import *
 import requests
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponse
-from django.shortcuts import render
 import datetime
 
-# from django_filters.rest_framework import DjangoFilterBackend
-# from mongoengine import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-# from .filters import UserFilter
 
 from .forms import CustomUserCreationForm, SomeForm, ApplyRightForm, DeleteRightForm, AcceptChangeForm, DeclineChangeForm
 from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application, User_AF, User_TF, \
@@ -42,11 +36,13 @@ class CSVtoMongoDB(generic.FormView):
     def start_import_action(self):
         firstline = True
         # TODO: dateiimportfield und pfad müssen noch verbunden werden!
-        # , encoding='utf-8'
-        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv") as csvfile:
+        #
+        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv", encoding='utf-8') as csvfile:
             csvreader = csv.reader(csvfile, delimiter=';', quotechar='"')
             cur_val = 0
             for line in csvreader:
+                line =[re.sub(r'\s+','',e) for e in line]
+
                 if firstline == True:
                     firstline = False
                     pass
@@ -91,28 +87,8 @@ class CSVtoMongoDB(generic.FormView):
                         af = AF.objects.get(af_name=line[5])
                     except(KeyError, AF.DoesNotExist):
                         # TODO: Daten werden noch nicht korreckt eingetragen -> immer Null
+                        af = AF(af_name=line[5], af_description=line[6])
 
-                        if line[15] == "" and line[16] == "" and line[17] == "":
-                            af = AF(af_name=line[5], af_description=line[6])
-                        if line[15] != "" and line[16] == "" and line[17] == "":
-                            af = AF(af_name=line[5], af_description=line[6]
-                                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat())
-                        if line[15] != "" and line[16] != "" and line[17] == "":
-                            af = AF(af_name=line[5], af_description=line[6]
-                                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
-                                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat())
-                        if line[15] != "" and line[16] != "" and line[17] != "":
-                            af = AF(af_name=line[5], af_description=line[6],
-                                    af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat(),
-                                    af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat(),
-                                    af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
-                        if line[15] == "" and line[16] != "" and line[17] != "":
-                            af = AF(af_name=line[5], af_description=line[6]
-                                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
-                                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
-                        if line[15] == "" and line[16] == "" and line[17] != "":
-                            af = AF(af_name=line[5], af_description=line[6]
-                                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
                     af.save()
                     af.gfs.add(gf)
 
@@ -154,7 +130,7 @@ class CSVtoMongoDB(generic.FormView):
                     if user.user_afs.__len__() == 0:
                         user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk, color=tf_application.color)
                         user_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[])
-                        user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[])
+                        user_af = self.create_user_af(line,af)
                         user_gf.tfs.append(user_tf)
                         user_af.gfs.append(user_gf)
                         user.user_afs.append(user_af)
@@ -183,13 +159,37 @@ class CSVtoMongoDB(generic.FormView):
                                                            tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,
                                                                         color=tf_application.color)]))
                         if afcount == user.user_afs.__len__():
-                            user.user_afs.append(User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[
-                                User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
+                            user_af = self.create_user_af(line, af)
+                            user_af.gfs.append(User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
                                         tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,
-                                                     color=tf_application.color)])]))
+                                                     color=tf_application.color)]))
+                            user.user_afs.append(user_af)
 
                     user.direct_connect_afs.add(af)
                     user.save()
+    def create_user_af(self, line, af):
+        if line[15] == "" and line[16] == "" and line[17] == "":
+            user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[])
+        if line[15] != "" and line[16] == "" and line[17] == "":
+            user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
+                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat())
+        if line[15] != "" and line[16] != "" and line[17] == "":
+            user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
+                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
+                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat())
+        if line[15] != "" and line[16] != "" and line[17] != "":
+            user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
+                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
+                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
+                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
+        if line[15] == "" and line[16] != "" and line[17] != "":
+            user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
+                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
+                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
+        if line[15] == "" and line[16] == "" and line[17] != "":
+            user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
+                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
+        return user_af
 
 
 class Login(generic.TemplateView):
@@ -901,28 +901,30 @@ class RequestPool(generic.ListView):
     def repack_data(self, change_requests):
         list_by_user = []
         for data in change_requests:
-            user_dict = {'requesting_user':data['requesting_user'], 'apply_requests': [], 'delete_requests':[]}
-            if not list_by_user.__contains__(user_dict):
-                list_by_user.append(user_dict)
+            if data['status'] == "unanswered":
+                user_dict = {'requesting_user':data['requesting_user'], 'apply_requests': [], 'delete_requests':[]}
+                if not list_by_user.__contains__(user_dict):
+                    list_by_user.append(user_dict)
 
         for data in change_requests:
             for user in list_by_user:
                 if user['requesting_user']==data['requesting_user']:
-                    #TODO: xv-nummer als SLUG-Field -> dann url über xvnummer aufrufbar
-                    if data['action'] == 'apply':
-                        comp_user = User.objects.get(identity=data['compare_user'])
-                        comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
-                        right = get_comp_user_right(comp_user, data['right_type'], data['right_name'])
-                        model = get_model_right(comp_user, data['right_type'], right['model_right_pk'],self.request)
-                        user["apply_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
-                                      'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
-                    else:
-                        requesting_user = User.objects.get(identity=data['requesting_user'])
-                        requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
-                        right = get_comp_user_right(requesting_user, data['right_type'], data['right_name'])
-                        model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],self.request)
-                        user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
-                                      'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
+                    if data['status'] == "unanswered":
+                        #TODO: xv-nummer als SLUG-Field -> dann url über xvnummer aufrufbar
+                        if data['action'] == 'apply':
+                            comp_user = User.objects.get(identity=data['compare_user'])
+                            comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
+                            right = get_comp_user_right(comp_user, data['right_type'], data['right_name'])
+                            model = get_model_right(comp_user, data['right_type'], right['model_right_pk'],self.request)
+                            user["apply_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
+                                          'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
+                        else:
+                            requesting_user = User.objects.get(identity=data['requesting_user'])
+                            requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
+                            right = get_comp_user_right(requesting_user, data['right_type'], data['right_name'])
+                            model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],self.request)
+                            user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
+                                          'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
 
         return list_by_user
 
@@ -957,15 +959,31 @@ class MyRequests(generic.ListView):
         repacked_list = []
         for request in list:
             if request['action']=='apply':
-                comp_user = User.objects.get(identity=request['compare_user'])
-                comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
-                right = get_comp_user_right(comp_user,request['right_type'],request['right_name'])
-                model = get_model_right(comp_user,request['right_type'],right['model_right_pk'],self.request)
+                # TODO: wenn berechtigung auf comp_user oder user seite gelöscht wurde -> zuerst modell-recht anzeigen -> wenn auch gelöscht - dann erst None setzen und damit esatz-circle anzeigen
+
+                if request['status'] == "accepted":
+                    requesting_user = User.objects.get(identity=request['requesting_user'])
+                    requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
+                    right = get_comp_user_right(requesting_user, request['right_type'], request['right_name'])
+                    if right == None:
+                        model = None
+                    else:
+                        model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                                            self.request)
+                else:
+                    comp_user = User.objects.get(identity=request['compare_user'])
+                    comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
+                    right = get_comp_user_right(comp_user,request['right_type'],request['right_name'])
+                    model = get_model_right(comp_user,request['right_type'],right['model_right_pk'],self.request)
             if request['action']=='delete':
                 requesting_user = User.objects.get(identity=request['requesting_user'])
                 requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
-                right = get_comp_user_right(requesting_user,request['right_type'],request['right_name'])
-                model = get_model_right(requesting_user,request['right_type'],right['model_right_pk'],self.request)
+                if request['status'] == "accepted":
+                    right = None
+                    model = None
+                else:
+                    right = get_comp_user_right(requesting_user,request['right_type'],request['right_name'])
+                    model = get_model_right(requesting_user,request['right_type'],right['model_right_pk'],self.request)
             repacked_list.append({'right': right, 'model': model, 'request': request})
         return repacked_list
 
@@ -1355,10 +1373,11 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
         af['name'] = af.pop('af_name')
         af['children'] = af.pop('gfs')
         model_af = get_af_by_key(pk=af['model_af_pk'], headers=headers)
-        if model_af['af_applied'] is None:
+        af['description'] = model_af['af_description']
+        if af['af_applied'] is None:
             af_applied = ""
         else:
-            af_applied = model_af['af_applied']
+            af_applied = af['af_applied']
         for gf in af['children']:
             gf['name'] = gf.pop('gf_name')
             gf['children'] = gf.pop('tfs')

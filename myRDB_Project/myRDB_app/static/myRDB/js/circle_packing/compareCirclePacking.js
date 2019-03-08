@@ -479,7 +479,7 @@ $(document).ready(function(){
                     return;
                 }
             }
-            var parent_cpy = Object.assign(parent_cpy,parent_right);
+            var parent_cpy = jQuery.extend({},parent_right);
             parent_cpy['children']=[right];
             transfer.push(parent_cpy);
         }
@@ -495,13 +495,14 @@ $(document).ready(function(){
                             return;
                         }
                     }
-                    var grandparent_cpy = Object.assign(grandparent_cpy,grandparent_right);
-                    var parent_cpy = Object.assign(parent_cpy,parent_right);
-                    parent_cpy['children']=[right];
-                    grandparent_cpy['children']=[parent_cpy];
-                    transfer.push(grandparent_cpy);
+
                 }
             }
+            var grandparent_cpy = jQuery.extend({},grandparent_right);
+                var parent_cpy = jQuery.extend({},parent_right);
+                parent_cpy['children']=[right];
+                grandparent_cpy['children']=[parent_cpy];
+                transfer.push(grandparent_cpy);
         }
       }
 
