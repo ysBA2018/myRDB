@@ -6,9 +6,9 @@
 </script>
 
 <div class="card-body">
-    {% if requesting_users|index:forloop.counter0|getdictitem:'delete_requests' %}
-        {% for right in requesting_users|index:forloop.counter0|getdictitem:'delete_requests' %}
-            <div class="card top-buffer">
+    {% if user.delete_requests %}
+        {% for right in user.delete_requests %}
+            <div class="card top-buffer" id="deleteRequestCard{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
                 <div class="card-header">
                     <h5>
                         <a class="btn btn-primary" data-toggle="collapse" href="#collapseDeleteRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseDeleteRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">

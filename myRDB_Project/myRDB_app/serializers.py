@@ -101,24 +101,30 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
 class UserTFSerializer(serializers.Serializer):
     tf_name = serializers.CharField(max_length=150)
     model_tf_pk = serializers.IntegerField()
-    on_delete_list = serializers.BooleanField(default=False)
     color = serializers.CharField(default="hsl(0, 100, 100)", max_length=25)
+    transfer = serializers.BooleanField(default=False)
+    delete = serializers.BooleanField(default=False)
+    requested = serializers.BooleanField(default=False)
 
 
 class UserGFSerializer(serializers.Serializer):
     gf_name = serializers.CharField(max_length=150)
     model_gf_pk = serializers.IntegerField()
-    on_delete_list = serializers.BooleanField(default=False)
     tfs = UserTFSerializer(many=True, read_only=False)
+    transfer = serializers.BooleanField(default=False)
+    delete = serializers.BooleanField(default=False)
+    requested = serializers.BooleanField(default=False)
 
 
 class UserAFSerializer(serializers.Serializer):
     af_name = serializers.CharField(max_length=150)
     model_af_pk = serializers.IntegerField()
-    on_delete_list = serializers.BooleanField(default=False)
     af_applied = serializers.DateTimeField()
     af_valid_from = serializers.DateTimeField()
     af_valid_till = serializers.DateTimeField()
+    transfer = serializers.BooleanField(default=False)
+    delete = serializers.BooleanField(default=False)
+    requested = serializers.BooleanField(default=False)
     gfs = UserGFSerializer(many=True, read_only=False)
 
 
@@ -149,9 +155,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         print(self._kwargs)
         data = self._kwargs['data']
         if data['action_type'] == 'trash':
-            instance = self.set_on_delete_list(instance, data, True)
+            instance = self.add_to_delete_list(instance, data)
         elif data['action_type'] == "restore":
-            instance = self.set_on_delete_list(instance, data, False)
+            instance = self.remove_from_delete_list(instance, data)
         elif data['action_type'] == "transfer":
             instance = self.add_to_transfer_list(instance, data)
         elif data['action_type'] == "restore_transfer":
@@ -160,9 +166,109 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             instance = self.add_to_my_requests(instance, data)
         elif data['action_type'] == "clear_transfer_list_and_delete_list":
             instance = self.clear_transferlist_and_deletelist(instance)
+        elif data['action_type'] == "set_rights_as_requested":
+            instance = self.set_rights_as_requested(instance, data)
         elif data['action_type'] == "perform_action":
             instance = self.perform_action(instance, data)
+        elif data['action_type'] == "decline_action":
+            instance = self.decline_action(instance, data)
         instance.save()
+
+        return instance
+
+    def set_rights_as_requested(self, instance, data):
+        print("in set_rights_as_requested")
+        objects_to_change = json.loads(data['objects_to_change'])
+        for obj in objects_to_change:
+            action = obj[0]['value']
+            right_name = obj[1]['value']
+            right_type = obj[2]['value']
+
+            if action == 'apply':
+                list = instance.transfer_list
+            else:
+                list = instance.delete_list
+
+            if right_type == 'AF':
+                for right in list:
+                    if right_name == right.af_name:
+                        right.requested = True
+                        break
+            elif right_type == 'GF':
+                for right in list:
+                    for right_lev_2 in right.gfs:
+                        if right_name == right_lev_2.gf_name:
+                            right_lev_2.requested = True
+                            break
+                    else:
+                        continue
+                    break
+            elif right_type == 'TF':
+                for right in list:
+                    for right_lev_2 in right.gfs:
+                        for right_lev_3 in right_lev_2.tfs:
+                            if right_name == right_lev_3.tf_name:
+                                right_lev_3.requested = True
+                                break
+                        else:
+                            continue
+                        break
+                    else:
+                        continue
+                    break
+        return instance
+
+    def decline_action(self, instance, data):
+        print("in perform_action")
+        request_data = json.loads(data['request_data'])
+        if request_data['action'] == 'apply':
+            instance = self.restore_after_decline(instance, request_data, 'apply')
+        if request_data['action'] == 'delete':
+            instance = self.restore_after_decline(instance, request_data, 'delete')
+
+        return instance
+
+    def restore_after_decline(self, instance, request_data, action):
+        print("in restore_after_decline")
+        print(request_data)
+        if action == 'delete':
+            list = instance.delete_list
+        else:
+            list = instance.transfer_list
+
+        if request_data['right_type'] == 'AF':
+            data = {'right_name': request_data['right_name'], 'right_type':request_data['right_type'].lower()}
+
+        elif request_data['right_type'] == 'GF':
+            for right in list:
+                for gf in right.gfs:
+                    if gf.gf_name == request_data['right_name']:
+                        data = {'right_name': gf.gf_name, 'parent': right.af_name, 'right_type':request_data['right_type'].lower()}
+                        break
+                else:
+                    continue
+                break
+
+        elif request_data['right_type'] == 'TF':
+            for right in list:
+                for gf in right.gfs:
+                    for tf in gf.tfs:
+                        if tf.tf_name == request_data['right_name']:
+                            data = {'right_name': tf.tf_name, 'parent': gf.gf_name, 'grandparent': right.af_name, 'right_type':request_data['right_type'].lower()}
+                            break
+                    else:
+                        continue
+                    break
+                else:
+                    continue
+                break
+        if action == 'delete':
+            if request_data['right_type'] == 'AF':
+                instance = self.remove_from_delete_list(instance, {'right_name': request_data['right_name']})
+            else:
+                instance = self.remove_from_delete_list(instance, {'right_name':right.af_name})
+        else:
+            instance = self.remove_from_transfer_list(instance, data)
 
         return instance
 
@@ -180,72 +286,56 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     # TODO: apply und delete auch für gfs und tfs implementieren
     def apply_right(self, instance, compare_xv_user, right_name, right_type, application_date):
         print("in apply right")
-        compareUser = User.objects.get(identity=compare_xv_user)
         if right_type == "AF":
-            for af in compareUser.user_afs:
+            index = 0
+            for af in instance.transfer_list:
                 if af.af_name == right_name:
                     af.af_applied = application_date
                     instance.user_afs.append(af)
+                    instance.direct_connect_afs_id.add(af.model_af_pk)
+                    instance.transfer_list.pop(index)
                     break
-        # TODO: ab hier noch nicht durchgetestet
-        '''
-        elif right_type == "gf":
-            for af in compareUser.user_afs:
-                if af.af_name == data['parent']:
-                    for gf in af.gfs:
-                        if gf.gf_name == data['right_name']:
-                            added = False
-                            cpy_gf = self.copy_user_right(gf, data['right_type'])
-                            for ele in instance.transfer_list:
-                                if ele.af_name == data['parent']:
-                                    ele.gfs.append(cpy_gf)
-                                    added = True
-                                    break
-                            else:
-                                continue
-                            if not added:
-                                cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk, gfs=[])
-                                cpy_af.gfs.append(cpy_gf)
-                                instance.transfer_list.append(cpy_af)
-                            break
-                    else:
-                        continue
+                index += 1
+        if right_type == "GF":
+            af_index = 0
+            for af in instance.transfer_list:
+                index = 0
+                for gf in af.gfs:
+                    if gf.gf_name == right_name:
+                        for u_af in instance.user_afs:
+                            if u_af.af_name == af.af_name:
+                                u_af.gfs.append(gf)
+                                af.gfs.pop(index)
+                                break
+                    index += 1
+                if not af.gfs:
+                    instance.transfer_list.pop(af_index)
                     break
-        elif data['right_type'] == "tf":
-            for af in compareUser.user_afs:
-                if af.af_name == data['grandparent']:
-                    for gf in af.gfs:
-                        if gf.gf_name == data['parent']:
-                            for tf in gf.tfs:
-                                if tf.tf_name == data['right_name']:
-                                    cpy_tf = self.copy_user_right(tf, data['right_type'])
-                                    added = False
-                                    for ele in instance.transfer_list:
-                                        if ele.af_name == data['grandparent']:
-                                            for user_gf in ele.gfs:
-                                                if user_gf.gf_name == data['parent']:
-                                                    user_gf.tfs.append(cpy_tf)
-                                                    added = True
-                                                    break
-                                            else:
-                                                continue
+                af_index += 1
+        if right_type == "TF":
+            af_index = 0
+            for af in instance.transfer_list:
+                gf_index = 0
+                for gf in af.gfs:
+                    index = 0
+                    for tf in gf.tfs:
+                        if tf.tf_name == right_name:
+                            for u_af in instance.user_afs:
+                                if u_af.af_name == af.af_name:
+                                    for u_gf in u_af.gfs:
+                                        if u_gf.gf_name == gf.gf_name:
+                                            u_gf.tfs.append(tf)
+                                            gf.tfs.pop(index)
                                             break
-                                    else:
-                                        continue
-                                    if not added:
-                                        cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk, gfs=[])
-                                        cpy_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.mode_gf_pk, tfs=[])
-                                        cpy_gf.tfs.append(cpy_tf)
-                                        cpy_af.gfs.append(cpy_gf)
-                                        instance.transfer_list.append(cpy_af)
-                                    break
-                            else:
-                                continue
-                            break
-                    else:
-                        continue
+                        index += 1
+                    if not gf.tfs:
+                        af.gfs.pop(gf_index)
+                        break
+                    gf_index += 1
+                if not af.gfs:
+                    instance.transfer_list.pop(af_index)
                     break
-                    '''
+                af_index += 1
 
         return instance
 
@@ -253,26 +343,44 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         print("in delete right")
         if right_type == "AF":
             index = 0
-            for af in instance.user_afs:
+            for af in instance.delete_list:
                 if af.af_name == right_name:
-                    instance.user_afs.pop(index)
+                    instance.direct_connect_afs_id.remove(af.model_af_pk)
+                    instance.delete_list.pop(index)
                     break
                 index += 1
-        '''
         if right_type == "GF":
-            parent_name = None
+            index = 0
+            af_index = 0
             for af in instance.delete_list:
                 for gf in af.gfs:
                     if gf.gf_name == right_name:
-                        parent_name = af.af_name
-                        
-            for af in instance.user_afs:
-                if af.af_name == parent_name:
-                    for gf in af.gfs:
-                        if gf.gf_name == right_name:
-        '''
-
-
+                        af.gfs.pop(index)
+                        break
+                    index += 1
+                if not af.gfs:
+                    instance.delete_list.pop(af_index)
+                    break
+                af_index += 1
+        if right_type == "TF":
+            index = 0
+            af_index = 0
+            gf_index = 0
+            for af in instance.delete_list:
+                for gf in af.gfs:
+                    for tf in gf.tfs:
+                        if tf.tf_name == right_name:
+                            gf.tfs.pop(index)
+                            break
+                        index += 1
+                    if not gf.tfs:
+                        af.gfs.pop(gf_index)
+                        break
+                    gf_index += 1
+                if not af.gfs:
+                    instance.delete_list.pop(af_index)
+                    break
+                af_index += 1
 
         return instance
 
@@ -319,6 +427,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             for af in compareUser.user_afs:
                 if af.af_name == data['right_name']:
                     cpy_af = self.copy_user_right(af, data['right_type'])
+                    cpy_af.transfer = True
                     instance.transfer_list.append(cpy_af)
                     break
         # TODO: ab hier noch nicht durchgetestet
@@ -329,6 +438,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                         if gf.gf_name == data['right_name']:
                             added = False
                             cpy_gf = self.copy_user_right(gf, data['right_type'])
+                            cpy_gf.transfer = True
                             for ele in instance.transfer_list:
                                 if ele.af_name == data['parent']:
                                     ele.gfs.append(cpy_gf)
@@ -350,6 +460,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                             for tf in gf.tfs:
                                 if tf.tf_name == data['right_name']:
                                     cpy_tf = self.copy_user_right(tf, data['right_type'])
+                                    cpy_tf.transfer = True
                                     added = False
                                     for ele in instance.transfer_list:
                                         if ele.af_name == data['grandparent']:
@@ -386,6 +497,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                     break
                 index += 1
         elif data['right_type'] == "gf":
+            af_index = 0
             for right in instance.transfer_list:
                 if right.af_name == data['parent']:
                     index = 0
@@ -394,12 +506,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                             right.gfs.pop(index)
                             break
                         index += 1
-                    else:
-                        continue
-                    break
+                    if not right.gfs:
+                        instance.transfer_list.pop(af_index)
+                af_index += 1
         elif data['right_type'] == "tf":
+            af_index = 0
             for right in instance.transfer_list:
                 if right.af_name == data['grandparent']:
+                    gf_index = 0
                     for gf in right.gfs:
                         if gf.gf_name == data['parent']:
                             index = 0
@@ -409,109 +523,125 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                                     gf.tfs.pop(index)
                                     break
                                 index += 1
-                            else:
-                                continue
-                            break
-                    else:
-                        continue
-                    break
-
-        return instance
-
-    def remove_from_delete_list(self, right_name, parent_name, grandparent_name, type, instance):
-        if type == 'af':
-            index = 0
-            for af in instance.delete_list:
-                if af.af_name == right_name:
-                    instance.delete_list.pop(index)
-                    break
-                index += 1
-        if type == 'gf':
-            af_index = 0
-            for af in instance.delete_list:
-                if af.af_name == parent_name:
-                    index = 0
-                    for gf in af.gfs:
-                        if gf.gf_name == right_name:
-                            af.gfs.pop(index)
-                            break
-                        index += 1
-                    else:
-                        continue
-                    if not af.gfs:
-                        instance.delete_list.pop(af_index)
-                    break
-                af_index += 1
-        if type == 'tf':
-            af_index = 0
-            for af in instance.delete_list:
-                if af.af_name == grandparent_name:
-                    gf_index = 0
-                    for gf in af.gfs:
-                        if gf.gf_name == parent_name:
-                            index = 0
-                            for tf in gf.tfs:
-                                if tf.tf_name == right_name:
-                                    gf.tfs.pop(index)
-                                    break
-                                index += 1
-                            else:
-                                continue
                             if not gf.tfs:
-                                af.gfs.pop(gf_index)
-                            break
-                        gf_index += 1
-                    else:
-                        continue
-                    if not af.gfs:
-                        instance.delete_list.pop(af_index)
-                    break
+                                right.gfs.pop(gf_index)
+                                break
+                        gf_index+=1
+                    if not right.gfs:
+                        instance.transfer_list.pop(af_index)
+                        break
                 af_index += 1
+
         return instance
 
-    def set_on_delete_list(self, instance, data, bool):
+    def remove_from_delete_list(self, instance, data):
+        r_af = None
+        index = 0
+        for restore_af in instance.delete_list:
+            if restore_af.af_name == data['right_name']:
+                r_af = restore_af
+                break
+            index += 1
+
+        af_found = False
+        for af in instance.user_afs:
+            if af.af_name == r_af.af_name:
+                af_found = True
+                break
+        if af_found:
+            for r_gf in r_af.gfs:
+                gf_found = False
+                for gf in af.gfs:
+                    if gf.gf_name == r_gf.gf_name:
+                        gf_found = True
+                        break
+                if gf_found:
+                    for r_tf in r_gf.tfs:
+                        tf_found = False
+                        for tf in gf.tfs:
+                            if tf.tf_name == r_tf.tf_name:
+                                tf_found = True
+                        if not tf_found:
+                            r_tf.delete = False
+                            gf.tfs.append(r_tf)
+                else:
+                    r_gf.delete = False
+                    af.gfs.append(r_gf)
+        else:
+            r_af.delete = False
+            instance.user_afs.append(r_af)
+
+        instance.delete_list.pop(index)
+        return instance
+
+    def add_to_delete_list(self, instance, data):
         if data['right_type'] == 'af':
+            index = 0
             for af in instance.user_afs:
                 if af.af_name == data['right_name']:
-                    af.on_delete_list = bool
-                    for gf in af.gfs:
-                        gf.on_delete_list = bool
-                        for tf in gf.tfs:
-                            tf.on_delete_list = bool
-                    if bool == True:
+                    af.delete = True
+                    found = False
+                    for del_af in instance.delete_list:
+                        if del_af.af_name == data['right_name']:
+                            found = True
+                            break
+                    if not found:
                         instance.delete_list.append(af)
+                        instance.user_afs.pop(index)
+                        return instance
                     else:
-                        instance = self.remove_from_delete_list(af.af_name, None, None, 'af', instance)
-                    break
+                        for gf in af.gfs:
+                            del_af.gfs.append(gf)
+                        instance.user_afs.pop(index)
+                index += 1
+
         if data['right_type'] == 'gf':
+            af_index = 0
             for af in instance.user_afs:
                 if af.af_name == data['parent']:
+                    index = 0
                     for gf in af.gfs:
                         if gf.gf_name == data['right_name']:
-                            gf.on_delete_list = bool
-                            for tf in gf.tfs:
-                                tf.on_delete_list = bool
-                            if bool == True:
+                            found = False
+                            gf.delete = True
+                            for del_af in instance.delete_list:
+                                if del_af.af_name == data['parent']:
+                                    found = True
+                                    break
+                            if not found:
                                 cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk,
                                                  af_applied=af.af_applied,
                                                  af_valid_from=af.af_valid_from, af_valid_till=af.af_valid_till, gfs=[])
                                 cpy_af.gfs.append(gf)
                                 instance.delete_list.append(cpy_af)
                             else:
-                                instance = self.remove_from_delete_list(gf.gf_name, af.af_name, None, 'gf', instance)
-                            break
-                    else:
-                        continue
-                    break
+                                for del_af in instance.delete_list:
+                                    if del_af.af_name == data['parent']:
+                                        del_af.gfs.append(gf)
+                            af.gfs.pop(index)
+                            if not af.gfs:
+                                instance.user_afs.pop(af_index)
+                            return instance
+                        index += 1
+                af_index += 1
+
         if data['right_type'] == 'tf':
+            af_index = 0
             for af in instance.user_afs:
                 if af.af_name == data['grandparent']:
+                    gf_index = 0
                     for gf in af.gfs:
                         if gf.gf_name == data['parent']:
+                            index = 0
                             for tf in gf.tfs:
                                 if tf.tf_name == data['right_name']:
-                                    tf.on_delete_list = bool
-                                    if bool == True:
+                                    tf.delete = True
+                                    found = False
+                                    for del_af in instance.delete_list:
+                                        if del_af.af_name == data['grandparent']:
+                                            found = True
+                                            break
+                                    if not found:
                                         cpy_af = User_AF(af_name=af.af_name, model_af_pk=af.model_af_pk,
                                                          af_applied=af.af_applied,
                                                          af_valid_from=af.af_valid_from, af_valid_till=af.af_valid_till,
@@ -520,16 +650,40 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                                         cpy_af.gfs.append(cpy_gf)
                                         cpy_gf.tfs.append(tf)
                                         instance.delete_list.append(cpy_af)
+                                        gf.tfs.pop(index)
+                                        if not gf.tfs:
+                                            af.gfs.pop(gf_index)
+                                            if not af.gfs:
+                                                instance.user_afs.pop(af_index)
+                                        return instance
                                     else:
-                                        instance = self.remove_from_delete_list(tf.tf_name, gf.gf_name, af.af_name,
-                                                                                'tf', instance)
-                                    break
-                            else:
-                                continue
-                            break
-                    else:
-                        continue
-                    break
+                                        gf_found = False
+                                        for del_gf in del_af.gfs:
+                                            if del_gf.gf_name == data['parent']:
+                                                gf_found = True
+                                                break
+                                        if gf_found:
+                                            del_gf.tfs.append(tf)
+                                            gf.tfs.pop(index)
+                                            if not gf.tfs:
+                                                af.gfs.pop(gf_index)
+                                                if not af.gfs:
+                                                    instance.user_afs.pop(af_index)
+                                            return instance
+                                        else:
+                                            cpy_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.model_gf_pk, tfs=[])
+                                            cpy_gf.tfs.append(tf)
+                                            del_af.gfs.append(cpy_gf)
+                                            gf.tfs.pop(index)
+                                            if not gf.tfs:
+                                                af.gfs.pop(gf_index)
+                                                if not af.gfs:
+                                                    instance.user_afs.pop(af_index)
+                                            return instance
+                                index += 1
+                        gf_index += 1
+                af_index += 1
+
         return instance
 
 

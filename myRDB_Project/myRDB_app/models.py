@@ -87,8 +87,11 @@ class TF(models.Model):
 class User_TF(models.Model):
     tf_name = models.CharField(max_length=100)
     model_tf_pk = models.IntegerField()
-    on_delete_list = models.BooleanField(default=False)
     color = models.CharField(default="hsl(0, 100, 100)", max_length=25)
+    transfer = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
+    requested = models.BooleanField(default=False)
+
 
     objects = djongomodels.DjongoManager()
 
@@ -114,7 +117,10 @@ class User_GF(models.Model):
     gf_name = models.CharField(max_length=150)
     model_gf_pk = models.IntegerField()
     tfs = djongomodels.ArrayModelField(model_container=User_TF)
-    on_delete_list = models.BooleanField(default=False)
+    transfer = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
+    requested = models.BooleanField(default=False)
+
 
     objects = djongomodels.DjongoManager()
 
@@ -140,10 +146,12 @@ class User_AF(models.Model):
     af_name = models.CharField(max_length=150)
     model_af_pk = models.IntegerField()
     gfs = djongomodels.ArrayModelField(model_container=User_GF)
-    on_delete_list = models.BooleanField(default=False)
     af_applied = models.DateTimeField()
     af_valid_from = models.DateTimeField()
     af_valid_till = models.DateTimeField()
+    transfer = models.BooleanField(default=False)
+    delete = models.BooleanField(default=False)
+    requested = models.BooleanField(default=False)
 
     objects = djongomodels.DjongoManager()
 
@@ -230,10 +238,10 @@ class User(AbstractUser):
     department = djongomodels.EmbeddedModelField(model_container=Department)
     group = djongomodels.EmbeddedModelField(model_container=Group)
     zi_organisation = djongomodels.EmbeddedModelField(model_container=ZI_Organisation)
-    roles = djongomodels.ArrayReferenceField(to=Role, on_delete=models.CASCADE)
-    direct_connect_afs = djongomodels.ArrayReferenceField(to=AF, on_delete=models.CASCADE)
-    direct_connect_gfs = djongomodels.ArrayReferenceField(to=GF, on_delete=models.CASCADE)
-    direct_connect_tfs = djongomodels.ArrayReferenceField(to=TF, on_delete=models.CASCADE)
+    roles = djongomodels.ArrayReferenceField(to=Role)
+    direct_connect_afs = djongomodels.ArrayReferenceField(to=AF)
+    direct_connect_gfs = djongomodels.ArrayReferenceField(to=GF)
+    direct_connect_tfs = djongomodels.ArrayReferenceField(to=TF)
     my_requests = djongomodels.ArrayReferenceField(to=ChangeRequests, on_delete=models.CASCADE)
     user_afs = djongomodels.ArrayModelField(model_container=User_AF)
     transfer_list = djongomodels.ArrayModelField(model_container=User_AF)

@@ -273,7 +273,7 @@ class Search_All(generic.ListView):
         url = 'http://127.0.0.1:8000/tfs/'
         res = requests.get(url, headers=headers)
         tf_json_data = res.json()
-        for user in json_data['results']:
+        for user in json_data:
             for af in user['user_afs']:
                 if self.request.GET.keys().__contains__('af_name'):
                     if not af['af_name'].__contains__(self.request.GET['af_name']):
@@ -286,7 +286,7 @@ class Search_All(generic.ListView):
                         if self.request.GET.keys().__contains__('tf_name'):
                             if not tf['tf_name'].__contains__(self.request.GET['tf_name']):
                                 continue
-                        model_tf = [x for x in tf_json_data['results'] if x['pk'] == tf['model_tf_pk']].pop(0)
+                        model_tf = [x for x in tf_json_data if x['pk'] == tf['model_tf_pk']].pop(0)
                         line = [user['identity'], user['name'], user['first_name'], tf['tf_name'], gf['gf_name'],
                                 af['af_name'],
                                 model_tf['tf_owner_orga']['team'],
@@ -341,7 +341,7 @@ class Users(generic.ListView):
             res = requests.get(url, headers=headers)
             user_json_data = res.json()
             # user_count= user_json_data['count']
-            users = {'users': user_json_data['results']}
+            users = {'users': user_json_data}
             self.extra_context['paginated_users'] = users
         else:
             users = self.extra_context['paginated_users']
@@ -365,7 +365,10 @@ def populate_choice_fields(headers, field):
     url = 'http://127.0.0.1:8000/' + field + '/'
     res = requests.get(url, headers=headers)
     json_data = res.json()
-    results = {field: json_data['results']}
+    if type(json_data) == list:
+        results = {field: json_data}
+    if type(json_data) == dict:
+        results = {field: json_data['results']}
     response = Response(results)
     return response.data[field]
 
@@ -562,7 +565,6 @@ class Compare(generic.ListView):
 
         userid = user.id
         roles = user_json_data['roles']
-        print(userid, user)
 
         user_json_data, scatterData = prepareJSONdata(user.identity, user_json_data, False, headers)
 
@@ -570,16 +572,15 @@ class Compare(generic.ListView):
         transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
         self.extra_context['transfer_list_table_data'] = transfer_list_table_data
         self.extra_context['transfer_list_count'] = transfer_list_count
-        #user_json_data = self.appendTransferListToUserJSONData(user_json_data,transfer_list)
-        self.extra_context['transfer_list'] = {"children": transfer_list}
 
-        delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
+        self.extra_context['transfer_list'] = {"children": transfer_list}
+        delete_list = user_json_data['delete_list']
+        delete_list, delete_list_with_category = prepare_delete_list(delete_list)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['delete_list'] = {"children": delete_list}
 
-        user_json_data = update_user_data(user_json_data, delete_list_with_category)
         self.extra_context['jsondata'] = user_json_data
         afs = user_json_data['children']
 
@@ -595,13 +596,6 @@ class Compare(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
 
         return data
-
-    def appendTransferListToUserJSONData(self,user_json_data,trash_json_data):
-        for right in trash_json_data:
-            if right['type']=='af':
-                user_json_data['children'].append(right)
-        #TODO: gfs und tfs an richtiger stelle einbinden ! dafür parent & grandparent Infos benötigt
-        return user_json_data
 
 
 
@@ -740,7 +734,11 @@ class ProfileRightsAnalysis(generic.ListView):
             stats['gf_count_diff'] = gf_count_diff
 
             for gf in sorted(userRight['children'], key=lambda k: k['name']):
-                currentGFModel = next(modelGFIter)
+                try:
+                    currentGFModel = next(modelGFIter)
+                except StopIteration:
+                    print("in StopIteration")
+
                 if gf['name'] == currentGFModel['name']:
                     equalGFSum += 1
                 modelTFIter = iter(sorted(currentGFModel['children'], key=lambda k: k['name']))
@@ -784,7 +782,6 @@ class ProfileRightsAnalysis(generic.ListView):
         return equalRights, unequalRights, equalModelRights, unequalModelRights, equalRightsStats, unequalRightsStats
 
     def prepareModelJSONdata(self, json_data, is_af, is_gf, headers):
-        print(type(json_data), json_data)
         if is_af:
             json_data["name"] = json_data.pop('af_name')
             json_data["children"] = json_data.pop('gfs')
@@ -840,15 +837,16 @@ class Profile(generic.ListView):
         user_json_data, scatterData = prepareJSONdata(user.identity, user_json_data, False, headers)
         self.extra_context['scatterData'] = scatterData
 
-        delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
-        del_af_count, del_gf_count, del_tf_count = get_delete_list_counts(delete_list_with_category)
+        delete_list = user_json_data['delete_list']
+        delete_list, delete_list_with_category = prepare_delete_list(delete_list)
+        #del_af_count, del_gf_count, del_tf_count = get_delete_list_counts(delete_list_with_category)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         # self.extra_context['delete_list_table_data'] = get_extra_paginator("delete_list",delete_list_table_data,self.request)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['delete_list'] = {"children": delete_list}
 
-        user_json_data = update_user_data(user_json_data, delete_list_with_category)
+        #user_json_data = update_user_data(user_json_data, delete_list_with_category)
 
         afs = user_json_data['children']
         data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
@@ -862,9 +860,9 @@ class Profile(generic.ListView):
         '''
 
         self.extra_context['role_count'] = len(roles)
-        self.extra_context['af_count'] = len(afs) + del_af_count
-        self.extra_context['gf_count'] = gf_count + del_gf_count
-        self.extra_context['tf_count'] = tf_count + del_tf_count
+        self.extra_context['af_count'] = len(afs)
+        self.extra_context['gf_count'] = gf_count
+        self.extra_context['tf_count'] = tf_count
 
         self.extra_context['jsondata'] = user_json_data
         self.extra_context['user_identity'] = user_json_data['identity']
@@ -872,9 +870,9 @@ class Profile(generic.ListView):
         self.extra_context['user_name'] = user_json_data['name']
         self.extra_context['user_department'] = user_json_data['department']
         self.request.session['role_count'] = len(roles)
-        self.request.session['af_count'] = len(afs) + del_af_count
-        self.request.session['gf_count'] = gf_count + del_gf_count
-        self.request.session['tf_count'] = tf_count + del_tf_count
+        self.request.session['af_count'] = len(afs)
+        self.request.session['gf_count'] = gf_count
+        self.request.session['tf_count'] = tf_count
 
         return data
 
@@ -891,7 +889,7 @@ class RequestPool(generic.ListView):
         res = requests.get(url, headers=headers)
         change_requests_json_data = res.json()
         print(change_requests_json_data)
-        requests_by_users = self.repack_data(change_requests_json_data['results'])
+        requests_by_users = self.repack_data(change_requests_json_data)
         print(requests_by_users)
         self.extra_context['requesting_users'] = requests_by_users
         self.extra_context['accept_form'] = AcceptChangeForm
@@ -914,14 +912,14 @@ class RequestPool(generic.ListView):
                         if data['action'] == 'apply':
                             comp_user = User.objects.get(identity=data['compare_user'])
                             comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
-                            right = get_comp_user_right(comp_user, data['right_type'], data['right_name'])
+                            right = get_right_from_list(comp_user, data['right_type'], data['right_name'], comp_user['user_afs'])
                             model = get_model_right(comp_user, data['right_type'], right['model_right_pk'],self.request)
                             user["apply_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
                                           'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
                         else:
                             requesting_user = User.objects.get(identity=data['requesting_user'])
                             requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
-                            right = get_comp_user_right(requesting_user, data['right_type'], data['right_name'])
+                            right = get_right_from_list(requesting_user, data['right_type'], data['right_name'], requesting_user['delete_list'])
                             model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],self.request)
                             user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
                                           'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
@@ -958,31 +956,38 @@ class MyRequests(generic.ListView):
     def repack_list(self, list):
         repacked_list = []
         for request in list:
+            requesting_user = User.objects.get(identity=request['requesting_user'])
+            requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
             if request['action']=='apply':
                 # TODO: wenn berechtigung auf comp_user oder user seite gelöscht wurde -> zuerst modell-recht anzeigen -> wenn auch gelöscht - dann erst None setzen und damit esatz-circle anzeigen
-
                 if request['status'] == "accepted":
-                    requesting_user = User.objects.get(identity=request['requesting_user'])
-                    requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
-                    right = get_comp_user_right(requesting_user, request['right_type'], request['right_name'])
-                    if right == None:
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'], requesting_user['user_afs'])
+                    if right is None:
                         model = None
                     else:
                         model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
                                             self.request)
+                elif request['status'] == "declined":
+                    compare_user = User.objects.get(identity=request['compare_user'])
+                    compare_user = get_user_by_key(compare_user.pk, headers=get_headers(self.request))
+                    right = get_right_from_list(compare_user, request['right_type'], request['right_name'],
+                                                compare_user['user_afs'])
+                    model = get_model_right(compare_user, request['right_type'], right['model_right_pk'],
+                                            self.request)
                 else:
-                    comp_user = User.objects.get(identity=request['compare_user'])
-                    comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
-                    right = get_comp_user_right(comp_user,request['right_type'],request['right_name'])
-                    model = get_model_right(comp_user,request['right_type'],right['model_right_pk'],self.request)
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'], requesting_user['transfer_list'])
+                    model = get_model_right(requesting_user,request['right_type'],right['model_right_pk'],self.request)
             if request['action']=='delete':
-                requesting_user = User.objects.get(identity=request['requesting_user'])
-                requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
                 if request['status'] == "accepted":
                     right = None
                     model = None
+                elif request['status'] == "declined":
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
+                                                requesting_user['user_afs'])
+                    model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                                            self.request)
                 else:
-                    right = get_comp_user_right(requesting_user,request['right_type'],request['right_name'])
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'], requesting_user['delete_list'])
                     model = get_model_right(requesting_user,request['right_type'],right['model_right_pk'],self.request)
             repacked_list.append({'right': right, 'model': model, 'request': request})
         return repacked_list
@@ -1052,21 +1057,26 @@ class DigitalRightApplication(generic.ListView):
         #transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
         #self.extra_context['transfer_list_table_data'] = transfer_list_table_data
         #self.extra_context['transfer_list_count'] = transfer_list_count
-        # user_json_data = self.appendTransferListToUserJSONData(user_json_data,transfer_list)
         self.extra_context['transfer_list'] = transfer_list
+        self.extra_context['stripped_transfer_list'] = [right['right'] for right in transfer_list_with_category ]
+        print(self.extra_context.get('stripped_transfer_list'))
         self.extra_context['model_transfer_list'] = model_transfer_list
         self.extra_context['transfer_form'] = ApplyRightForm
 
-        delete_list, delete_list_with_category = build_up_delete_list(user_json_data)
+        delete_list = user_json_data['delete_list']
+        delete_list, delete_list_with_category = prepare_delete_list(delete_list)
         model_delete_list = get_model_list(delete_list_with_category,headers)
-        #delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
+        delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         #self.extra_context['delete_list_table_data'] = delete_list_table_data
         #self.extra_context['delete_list_count'] = delete_list_count
+
         self.extra_context['delete_list'] = delete_list
+        self.extra_context['stripped_delete_list'] = [right['right'] for right in delete_list_with_category ]
+        print(self.extra_context.get('stripped_delete_list'))
         self.extra_context['model_delete_list'] = model_delete_list
         self.extra_context['delete_form'] = DeleteRightForm
 
-        user_json_data = update_user_data(user_json_data, delete_list_with_category)
+        #user_json_data = update_user_data(user_json_data, delete_list_with_category)
         self.extra_context['jsondata'] = user_json_data
 
         #afs = user_json_data['children']
@@ -1096,8 +1106,8 @@ def get_model_right(comp_user, type, pk, request):
         model['right_description'] = model.pop('tf_description')
     return model
 
-def get_comp_user_right(comp_user, type, right):
-    for af in comp_user['user_afs']:
+def get_right_from_list(comp_user, type, right, rights):
+    for af in rights:
         if type == 'AF':
             if af['af_name'] == right:
                 af['name'] = af.pop('af_name')
@@ -1151,33 +1161,26 @@ def get_model_list(transfer_list_with_category, headers):
 
 
 def prepareTransferJSONdata(transfer_json_data):
-    print(type(transfer_json_data), transfer_json_data)
     transfer_list_with_category = []
     for right in transfer_json_data:
-        if 'gfs' in right.keys():
-            right["name"] = right.pop('af_name')
-            right["children"] = right.pop('gfs')
-            right['type'] = "af"
-            for gf in right['children']:
-                gf["name"] = gf.pop('gf_name')
-                gf["children"] = gf.pop('tfs')
-                for tf in gf['children']:
-                    tf["name"] = tf.pop('tf_name')
-                    tf["size"] = 2000
-            transfer_list_with_category.append({'right':right,'type':'af'})
-        elif 'tfs' in right.keys():
-            right["name"] = right.pop('gf_name')
-            right["children"] = right.pop('tfs')
-            right['type'] = "gf"
-            for tf in right['children']:
+        right["name"] = right.pop('af_name')
+        right["children"] = right.pop('gfs')
+        for gf in right['children']:
+            gf["name"] = gf.pop('gf_name')
+            gf["children"] = gf.pop('tfs')
+            for tf in gf['children']:
                 tf["name"] = tf.pop('tf_name')
                 tf["size"] = 2000
-            transfer_list_with_category.append({'right': right, 'type': 'gf'})
-        else:
-            right["name"] = right.pop('tf_name')
-            right["size"] = 2000
-            right['type'] = "tf"
-            transfer_list_with_category.append({'right': right, 'type': 'tf'})
+                if tf['transfer']:
+                    type = 'tf'
+                    transfer_list_with_category.append({"right": tf, "type": type})
+            if gf['transfer']:
+                type = 'gf'
+                transfer_list_with_category.append({"right": gf, "type": type})
+        if right['transfer']:
+            type = 'af'
+            transfer_list_with_category.append({"right": right, "type": type})
+
     return transfer_json_data, transfer_list_with_category
 
 def prepareTransferTabledata(transfer_list):
@@ -1264,26 +1267,13 @@ def prepareTrashTableData(afs):
     afList = []
 
     for af in afs:
-        if af.keys().__contains__('parent') and af.keys().__contains__('grandparent'):
-            # wegen löschliste-tabelle: af hat keine kinder aber parent & grandparent-key -> af ist einzelne tf
-            tfList.append(af['name'])
-            gfList.append(af['parent'])
-            afList.append(af['grandparent'])
-        elif af.keys().__contains__('parent') and not af.keys().__contains__('grandparent'):
-            # wegen löschliste-tabelle: af hat nur parent aber kein grandparent -> af ist gf
-            gfs = af['children']
-            for gf in gfs:
-                tfList.append(gf['name'])
-                gfList.append(af['name'])
-                afList.append(af['parent'])
-        else:
-            gfs = af['children']
-            for gf in gfs:
-                tfs = gf['children']
-                for tf in tfs:
-                    tfList.append(tf['name'])
-                    gfList.append(gf['name'])
-                    afList.append(af['name'])
+        gfs = af['children']
+        for gf in gfs:
+            tfs = gf['children']
+            for tf in tfs:
+                tfList.append(tf['name'])
+                gfList.append(gf['name'])
+                afList.append(af['name'])
 
     data = zip(tfList, gfList, afList)
     lis_data = list(data)
@@ -1398,30 +1388,30 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
     return user_json_data, scatterData
 
 
-def build_up_delete_list(user_json_data):
+def prepare_delete_list(delete_list):
     # TODO: umbauen auf db-delete-list <-> bei lösch-aktion zu del-list hinzufügen <- dann hier nur auslesen und json preparieren
-    delete_list = []
     delete_list_with_category = []
-    rights = user_json_data['children']
-    for right in rights:
-        if right['on_delete_list']:
-            delete_list_with_category.append({"right": right, "type": "af"})
-            delete_list.append(right)
-        else:
-            rights_lev_2 = right['children']
-            for right_lev_2 in rights_lev_2:
-                if right_lev_2['on_delete_list']:
-                    right_lev_2['parent'] = right['name']
-                    delete_list_with_category.append({"right": right_lev_2, "type": "gf"})
-                    delete_list.append(right_lev_2)
-                else:
-                    rights_lev_3 = right_lev_2['children']
-                    for right_lev_3 in rights_lev_3:
-                        if right_lev_3['on_delete_list']:
-                            right_lev_3['grandparent'] = right['name']
-                            right_lev_3['parent'] = right_lev_2['name']
-                            delete_list_with_category.append({"right": right_lev_3, "type": "tf"})
-                            delete_list.append(right_lev_3)
+
+    for right in delete_list:
+        right['name'] = right.pop('af_name')
+        right['children'] = right.pop('gfs')
+        for right_lev_2 in right['children']:
+            right_lev_2['name'] = right_lev_2.pop('gf_name')
+            right_lev_2['children'] = right_lev_2.pop('tfs')
+            for right_lev_3 in right_lev_2['children']:
+                right_lev_3['name'] = right_lev_3.pop('tf_name')
+                right_lev_3['size'] = 2000
+                if right_lev_3['delete']:
+                    type = 'tf'
+                    delete_list_with_category.append({"right": right_lev_3, "type": type})
+            if right_lev_2['delete']:
+                type = 'gf'
+                delete_list_with_category.append({"right": right_lev_2, "type": type})
+        if right['delete']:
+            type = 'af'
+            delete_list_with_category.append({"right": right, "type": type})
+
+
 
     return delete_list, delete_list_with_category
 
@@ -1475,9 +1465,9 @@ class CompleteUserListingViewSet(viewsets.ModelViewSet):
         """
     permission_classes = (IsAuthenticated,)
     serializer_class = CompleteUserListingSerializer
+    pagination_class = None
 
     def get_queryset(self):
-        self.paginator.page_size = 1000
         if 'search_what' in self.request.GET:
             search_what = self.request.GET["search_what"]
             user_search = self.request.GET["userSearch"]
@@ -1502,9 +1492,9 @@ class UserListingViewSet(viewsets.ModelViewSet):
         """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserListingSerializer
+    pagination_class = None
 
     def get_queryset(self):
-        self.paginator.page_size = 1000
 
         if 'search_what' in self.request.GET:
             search_what = self.request.GET["search_what"]
@@ -1577,9 +1567,9 @@ class TFViewSet(viewsets.ModelViewSet):
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = TFSerializer
+    pagination_class = None
 
     def get_queryset(self):
-        self.paginator.page_size = 5000
         return TF.objects.all()
 
 
@@ -1589,9 +1579,9 @@ class OrgaViewSet(viewsets.ModelViewSet):
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = OrgaSerializer
+    pagination_class = None
 
     def get_queryset(self):
-        self.paginator.page_size = 1000
         return Orga.objects.all()
 
 
@@ -1644,6 +1634,7 @@ class ChangeRequestsViewSet(viewsets.ModelViewSet):
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangeRequestsSerializer
+    pagination_class = None
 
     def get_queryset(self):
         return ChangeRequests.objects.all()

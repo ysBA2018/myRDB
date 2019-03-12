@@ -1,4 +1,4 @@
-function change_request_state_to_accepted_and_perform_action(formElement) {
+function change_request_state_to_accepted_and_perform_action(formElement, current_card) {
     var inputs = formElement.serializeArray();
     console.log("in accept-request");
     console.log(inputs);
@@ -57,7 +57,13 @@ function change_request_state_to_accepted_and_perform_action(formElement) {
                     error: function(res){console.log(res);}
                     });
             if (successful){
+                //var collapsible = current_card.parentElement;
+                //collapsible.pop(current_card);
+                var id = current_card[0].id;
+                console.log(id);
+                $('#'+id).remove();
                 alert("Antrag stattgegeben!");
+
             }
             else{
                 alert("Beim durchführen der Änderungen \n ist ein Fehler aufgetreten!")
@@ -70,6 +76,7 @@ function change_request_state_to_accepted_and_perform_action(formElement) {
 
 function accept_clicked(d) {
     var form = $(d);
-    change_request_state_to_accepted_and_perform_action(form);
+    var current_card = $(d.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+    change_request_state_to_accepted_and_perform_action(form,current_card);
    return false;
 }

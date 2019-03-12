@@ -1,4 +1,4 @@
-function change_request_state_to_declined(formElement) {
+function change_request_state_to_declined(formElement, current_card) {
     var inputs = formElement.serializeArray();
     console.log("in decline-request");
     console.log(inputs);
@@ -45,7 +45,29 @@ function change_request_state_to_declined(formElement) {
                 error: function(res){console.log(res);}
                 });
         if (successful){
-            alert("Antrag abgewiesen!");
+            data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"decline_action", "request_data":JSON.stringify(response_data)};
+            successful=false;
+            $.ajax({type:'POST',
+                    data:data,
+                    url:'http://127.0.0.1:8000/users/'+response_data['requesting_user_pk']+"/",
+                    async:false,
+                    success: function(res){console.log(res);
+                        response_data = res;
+                        successful=true},
+                    error: function(res){console.log(res);}
+                    });
+            if (successful){
+                //var collapsible = current_card.parentElement;
+                //collapsible.pop(current_card);
+                var id = current_card[0].id;
+                console.log(id);
+                $('#'+id).remove();
+                alert("Antrag abgewiesen!");
+
+            }
+            else{
+                alert("Beim durchführen der Abweisung \n ist ein Fehler aufgetreten!")
+            }
         }else{
             alert("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!")
         }
@@ -53,6 +75,7 @@ function change_request_state_to_declined(formElement) {
 }
 function decline_clicked(d) {
     var form = $(d);
-    change_request_state_to_declined(form);
+    var current_card = $(d.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+    change_request_state_to_declined(form,current_card);
    return false;
 }

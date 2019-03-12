@@ -391,6 +391,74 @@ $(document).ready(function(){
             document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
         }
       }
+      function add_to_delete_list(delete_list, right, parent_right, grandparent_right, level){
+        if(level === "gf"){
+            var af_found = false;
+            for(i in delete_list){
+                var curr_af = delete_list[i];
+                if(curr_af['name']===parent_right['name']){
+                    af_found = true;
+                    var gf_found =false;
+                    var gfs = curr_af['children'];
+                    for(gf in gfs){
+                        var curr_gf = gfs[gf];
+                        if(curr_gf['name']===right['name']){
+                            gf_found = true;
+                            break
+                        }
+                    }
+                    if(gf_found){
+                        for(child in right['children']){
+                            curr_gf['children'].push(right['children'][child]);
+
+                            return;
+                        }
+                    }
+                    break
+                }
+            }
+            if(af_found){
+                curr_af['children'].push(right);
+                return;
+            }
+            var parent_cpy = jQuery.extend({},parent_right);
+            parent_cpy['children']=[right];
+            delete_list.push(parent_cpy);
+        }
+        if(level === "tf"){
+            for(i in delete_list){
+                var curr_af = delete_list[i];
+                if(curr_af['name']===grandparent_right['name']){
+                    var curr_af_gfs = curr_af['children'];
+                    var gf_found = false;
+                    for(j in curr_af_gfs){
+                        var curr_gf = curr_af_gfs[j];
+                        if(curr_gf['name']===parent_right['name']){
+                            gf_found = true;
+                            break
+                        }
+                    }
+                    if (gf_found){
+                        curr_gf['children'].push(right);
+                        return;
+                    }
+                    else{
+                        var parent_cpy = jQuery.extend({},parent_right);
+                        parent_cpy['children']=[right];
+                        curr_af_gfs.push(parent_cpy);
+                        return
+                    }
+
+                }
+            }
+            var grandparent_cpy = jQuery.extend({},grandparent_right);
+                var parent_cpy = jQuery.extend({},parent_right);
+                parent_cpy['children']=[right];
+                grandparent_cpy['children']=[parent_cpy];
+                delete_list.push(grandparent_cpy);
+        }
+      }
+
 
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
       function update_rights(rights, trash, d){
@@ -415,8 +483,11 @@ $(document).ready(function(){
                             console.log(j + "," + d.data.name);
                             right_lev_2["parent"]=d.parent.data.name;
                             update_right_counters(right_lev_2,"gf");
-                            trash.push(right_lev_2);
+                            add_to_delete_list(trash,right_lev_2,right,null,'gf');
                             right['children'].splice(j, 1);
+                            if(right['children'].length===0){
+                                rights.splice(i,1)
+                            }
                             return;
                         }
                     }
@@ -437,8 +508,15 @@ $(document).ready(function(){
                                     right_lev_3["grandparent"]= d.parent.parent.data.name;
                                     right_lev_3["parent"]=d.parent.data.name;
                                     update_right_counters(right_lev_3,"tf");
-                                    trash.push(right_lev_3);
+                                    add_to_delete_list(trash,right_lev_3,right_lev_2,right,'tf');
                                     right_lev_2['children'].splice(k, 1);
+                                    if(right_lev_2['children'].length===0){
+                                        right['children'].splice(j,1)
+                                    }
+                                    if(right['children'].length===0){
+                                        rights.splice(i,1)
+                                    }
+
                                     return;
                                 }
                             }

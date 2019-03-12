@@ -260,8 +260,8 @@ $(document).ready(function(){
                     });
             if(successful===true){
                 var transfer = window.transferlistdata['children'];
-                var rights = window.jsondata['children'];
-                update_rights(transfer,rights,data['right_type'],d);
+                //var rights = window.jsondata['children'];
+                update_rights(transfer,data['right_type'],d);
 
                 d3.select("body").selectAll("#transferTooltip").remove();
 
@@ -291,13 +291,16 @@ $(document).ready(function(){
       }
 
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function update_rights(transfer,rights,level,d){
+      function update_rights(transfer,level,d){
         if (d.depth===1){
             for (transfer_item in transfer) {
                 if (transfer[transfer_item]['name'] === d.data.name) {
                     console.log(transfer_item + "," + d.data.name);
                     update_right_counters(transfer[transfer_item],level);
                     transfer.splice(transfer_item, 1);
+                    console.log("transfer");
+                    console.log(transfer);
+
                     alert("Berechtigung von\n\nTransferliste entfernt!\n");
                     return;
                 }

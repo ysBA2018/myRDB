@@ -5,20 +5,18 @@
     var iApplication = 0;
 </script>
 <div class="card-body">
-    {% if requesting_users|index:forloop.counter0|getdictitem:'apply_requests' %}
-        {% for right in requesting_users|index:forloop.counter0|getdictitem:'apply_requests'  %}
-            <div class="card top-buffer">
-                <div class="card-header">
-                    <h5>
-                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseApplyRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseApplyRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
-                            {{ right.right_name }}
-                        </a>
-                    </h5>
-                </div>
-                <div class="collapse" id="collapseApplyRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
-                     {% include 'myRDB/requestPool/right_apply_request_card.html' %}
-                </div>
+    {% for right in user.apply_requests  %}
+        <div class="card top-buffer" id="applyRequestCard{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+            <div class="card-header">
+                <h5>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseApplyRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseApplyRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                        {{ right.right_name }}
+                    </a>
+                </h5>
             </div>
-        {% endfor %}
-    {% endif %}
+            <div class="collapse" id="collapseApplyRequest{{ forloop.parentloop.counter0 }}{{ forloop.counter0 }}">
+                 {% include 'myRDB/requestPool/right_apply_request_card.html' %}
+            </div>
+        </div>
+    {% endfor %}
 </div>
