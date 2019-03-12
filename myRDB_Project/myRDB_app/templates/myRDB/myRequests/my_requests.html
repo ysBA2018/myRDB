@@ -3,6 +3,7 @@
 {% load index %}
 {% load getdictitem %}
 {% block content %}
+    <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card.js' %}"></script>
     <h2> Meine Anfragen</h2>
     <div id="accordion">
         {% if accepted_list.apply or accepted_list.delete %}
@@ -34,16 +35,30 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="collapse show" id="collapseAcceptedApply" data-parent="#outerAcceptedToggleGroup">
-                            {% for apply_request in accepted_list.apply %}
-                              {% include 'myRDB/myRequests/accepted/accepted_apply_requests.html' %}
-                            {% endfor %}
-                        </div>
-                        <div class="collapse" id="collapseAcceptedDelete" data-parent="#outerAcceptedToggleGroup">
-                            {% for delete_request in accepted_list.delete %}
-                              {% include 'myRDB/myRequests/accepted/accepted_delete_requests.html' %}
-                            {% endfor %}
-                        </div>
+                        {% if accepted_list.apply and not accepted_list.delete %}
+                            <div class="collapse show" id="collapseAcceptedApply" data-parent="#outerAcceptedToggleGroup">
+                                {% for apply_request in accepted_list.apply %}
+                                  {% include 'myRDB/myRequests/accepted/accepted_apply_requests.html' %}
+                                {% endfor %}
+                            </div>
+                        {% elif accepted_list.delete and not accepted_list.apply %}
+                            <div class="collapse show" id="collapseAcceptedDelete" data-parent="#outerAcceptedToggleGroup">
+                                {% for delete_request in accepted_list.delete %}
+                                  {% include 'myRDB/myRequests/accepted/accepted_delete_requests.html' %}
+                                {% endfor %}
+                            </div>
+                        {% elif accepted_list.delete and accepted_list.apply %}
+                            <div class="collapse show" id="collapseAcceptedApply" data-parent="#outerAcceptedToggleGroup">
+                                {% for apply_request in accepted_list.apply %}
+                                  {% include 'myRDB/myRequests/accepted/accepted_apply_requests.html' %}
+                                {% endfor %}
+                            </div>
+                            <div class="collapse" id="collapseAcceptedDelete" data-parent="#outerAcceptedToggleGroup">
+                                {% for delete_request in accepted_list.delete %}
+                                  {% include 'myRDB/myRequests/accepted/accepted_delete_requests.html' %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -77,16 +92,30 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="collapse show" id="collapseDeclinedApply" data-parent="#outerDeclinedToggleGroup">
-                            {% for apply_request in declined_list.apply %}
-                              {% include 'myRDB/myRequests/declined/declined_apply_requests.html' %}
-                            {% endfor %}
-                        </div>
-                        <div class="collapse" id="collapseDeclinedDelete" data-parent="#outerDeclinedToggleGroup">
-                            {% for delete_request in declined_list.delete %}
-                              {% include 'myRDB/myRequests/declined/declined_delete_requests.html' %}
-                            {% endfor %}
-                        </div>
+                        {% if declined_list.apply and not declined_list.delete %}
+                            <div class="collapse show" id="collapseDeclinedApply" data-parent="#outerDeclinedToggleGroup">
+                                {% for apply_request in declined_list.apply %}
+                                  {% include 'myRDB/myRequests/declined/declined_apply_requests.html' %}
+                                {% endfor %}
+                            </div>
+                        {% elif not declined_list.apply and declined_list.delete%}
+                            <div class="collapse show" id="collapseDeclinedDelete" data-parent="#outerDeclinedToggleGroup">
+                                {% for delete_request in declined_list.delete %}
+                                  {% include 'myRDB/myRequests/declined/declined_delete_requests.html' %}
+                                {% endfor %}
+                            </div>
+                        {% elif declined_list.apply and declined_list.delete %}
+                            <div class="collapse show" id="collapseDeclinedApply" data-parent="#outerDeclinedToggleGroup">
+                                {% for apply_request in declined_list.apply %}
+                                  {% include 'myRDB/myRequests/declined/declined_apply_requests.html' %}
+                                {% endfor %}
+                            </div>
+                            <div class="collapse" id="collapseDeclinedDelete" data-parent="#outerDeclinedToggleGroup">
+                                {% for delete_request in declined_list.delete %}
+                                  {% include 'myRDB/myRequests/declined/declined_delete_requests.html' %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -120,6 +149,19 @@
                         </div>
                     </div>
                     <div class="card-body">
+                    {% if unanswered_list.apply and not unanswered_list.delete %}
+                        <div class="collapse show" id="collapseUnansweredApply" data-parent="#outerUnansweredToggleGroup">
+                            {% for apply_request in unanswered_list.apply %}
+                              {% include 'myRDB/myRequests/unanswered/unanswered_apply_requests.html' %}
+                            {% endfor %}
+                        </div>
+                    {% elif not unanswered_list.apply and unanswered_list.delete %}
+                        <div class="collapse show" id="collapseUnansweredDelete" data-parent="#outerUnansweredToggleGroup">
+                            {% for delete_request in unanswered_list.delete %}
+                              {% include 'myRDB/myRequests/unanswered/unanswered_delete_requests.html' %}
+                            {% endfor %}
+                        </div>
+                    {% elif unanswered_list.apply and unanswered_list.delete %}
                         <div class="collapse show" id="collapseUnansweredApply" data-parent="#outerUnansweredToggleGroup">
                             {% for apply_request in unanswered_list.apply %}
                               {% include 'myRDB/myRequests/unanswered/unanswered_apply_requests.html' %}
@@ -130,6 +172,7 @@
                               {% include 'myRDB/myRequests/unanswered/unanswered_delete_requests.html' %}
                             {% endfor %}
                         </div>
+                    {% endif %}
                     </div>
                 </div>
             </div>

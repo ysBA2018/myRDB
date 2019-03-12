@@ -34,7 +34,7 @@
                 <div id="rightApplication" class="collapse show" aria-labelledby="rightApplicationHeading" data-parent="#accordion">
                     <div class="card-body">
                         <div id="inner_accordion_application">
-                            {% for right in transfer_list %}
+                            {% for right in stripped_transfer_list %}
                                 <div class="card">
                                     <div class="card-header" id="inner_rightApplicationHeading{{ forloop.counter0 }}">
                                         <h5 class="mb-0">
@@ -69,7 +69,7 @@
                 <div id="rightDeletion" class="collapse" aria-labelledby="rightDeletionHeading" data-parent="#accordion">
                     <div class="card-body">
                         <div id="inner_accordion_deletion">
-                            {% for right in delete_list %}
+                            {% for right in stripped_delete_list %}
                                 <div class="card">
                                     <div class="card-header" id="inner_rightDeletionHeading{{ forloop.counter0 }}">
                                         <h5 class="mb-0">

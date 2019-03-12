@@ -39,7 +39,8 @@ function insert_change_request_to_database(formElement){
                 }
             }
         });
-        var data = {"X-CSRFToken":getCookie("csrftoken"),"requesting_user_pk":window.requesting_user_pk,"requesting_user":requesting_user,"compare_user":compare_user,"objects_to_change":JSON.stringify(repacked_objects)};
+        var objects_to_change = JSON.stringify(repacked_objects);
+        var data = {"X-CSRFToken":getCookie("csrftoken"),"requesting_user_pk":window.requesting_user_pk,"requesting_user":requesting_user,"compare_user":compare_user,"objects_to_change":objects_to_change};
         var successful=false;
         var response_data;
         $.ajax({type:'POST',
@@ -63,7 +64,7 @@ function insert_change_request_to_database(formElement){
                     error: function(res){console.log(res);}
                 });
             if(successful){
-                data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"clear_transfer_list_and_delete_list","requesting_user_pk":window.requesting_user_pk};
+                data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"set_rights_as_requested","requesting_user_pk":window.requesting_user_pk, "objects_to_change": objects_to_change};
                 successful=false;
                 $.ajax({type:'POST',
                         data:data,

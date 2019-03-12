@@ -5,7 +5,7 @@
     var iAcceptedDelete = 0;
 </script>
 
-<div class="card">
+<div class="card" id="accepted_delete_request_card{{ forloop.counter0 }}">
     <div class="card-header">
         <div class="row">
             <div class="col-6" align="left">
@@ -16,11 +16,11 @@
                 </h5>
             </div>
             <div class="col-6" align="right">
-                <p>
-                    <a class="btn btn-secondary" href="" role="button">
-                        X
-                    </a>
-                </p>
+                <form class="accepted_delete_form" onsubmit="javascript: return remove_card_clicked(this);">
+                    <input type="hidden" value="{{ delete_request.request.pk }}" name="pk">
+                    <input type="hidden" value="{{ delete_request.request.requesting_user }}" name="requesting_user">
+                    <input type="submit" class="btn btn-danger" value="X">
+                </form>
             </div>
         </div>
     </div>

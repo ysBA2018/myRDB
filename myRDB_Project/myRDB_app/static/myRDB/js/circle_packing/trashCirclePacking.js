@@ -203,20 +203,8 @@ $(document).ready(function(){
     };
     function restorefunction(d,i){
         d3.event.preventDefault();
-        var right_type="",right_parent = "",right_grandparent = "";
-        if(d.depth===1 && d.hasOwnProperty('children') && d.children[0].hasOwnProperty('children')){
-            right_type="af";
-        }
-        else if((d.depth===1 && d.hasOwnProperty('children') && !d.children[0].hasOwnProperty('children'))){
-            right_type="gf";
-            right_parent = d.data.parent;
-        }
-        else if(d.depth===1 && !d.hasOwnProperty('children')){
-            right_type="tf";
-            right_grandparent = d.data.grandparent;
-            right_parent = d.data.parent;
-        }
-        else{
+
+        if(d.depth !== 1){
             alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
             return;
         }
@@ -248,7 +236,7 @@ $(document).ready(function(){
                     }
                 }
             });
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore","right_name":d.data.name};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
@@ -261,7 +249,7 @@ $(document).ready(function(){
             if(successful===true){
                 var trash = window.trashlistdata['children'];
                 var rights = window.jsondata['children'];
-                update_rights(trash,rights,data['right_type'],d);
+                update_rights(trash,rights,d);
 
                 d3.select("body").selectAll("#trashTooltip").remove();
 
@@ -281,64 +269,73 @@ $(document).ready(function(){
             }
         }
       }
-      function update_right_counters(right,type){
-        if (type === "af"){
-            for (j in right['children']){
-                window.trash_table_count-=right['children'][j]['children'].length;
-            }
-            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+      function update_right_counters(right){
+        //TODO: Counters in Profile-head anpassen!
+        for (j in right['children']){
+            window.trash_table_count-=right['children'][j]['children'].length;
         }
-        else if (type === "gf"){
-            window.trash_table_count-=right['children'].length;
-            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
-        }
-        else if (type === "tf"){
-            window.trash_table_count-=1;
-            document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
-        }
+        document.getElementById('graph_trash_badge').innerHTML = window.trash_table_count;
+
       }
 
-      function rechain_right_to_rights(right,rights,level){
-        var found = false;
-        if (level === "af"){
-            rights.push(right);
-        }
-        else if(level === "gf"){
-            for (i in rights){
-                if (rights[i]['name']===right['parent']) {
-                    rights[i]['children'].push(right);
-                    found = true;
-                    break;
-                }
-                if (found === true) break;
+      function rechain_right_to_rights(right,rights){
+        var af_found = false;
+        for(i in rights){
+            var curr_af = rights[i];
+            if(curr_af['name']===right['name']){
+                af_found = true;
+                break
             }
         }
-        else if(level === "tf"){
-            for (i in rights){
-                var grandparent = rights[i];
-                if (grandparent['name']===right['grandparent']){
-                    for (j in grandparent['children']){
-                        var parent = grandparent["children"][j];
-                        if(parent['name']===right['parent']){
-                            parent['children'].push(right);
-                            found=true;
-                            break;
-                        }
-                        if (found === true) break;
+        if(af_found){
+            var right_gfs = right['children'];
+            for(rgf in right_gfs){
+                var right_gf = right_gfs[rgf];
+                var gf_found = false;
+                for(j in curr_af['children']){
+                    var curr_gf = curr_af['children'][j];
+                    if(curr_gf['name']===right_gf['name']){
+                        gf_found = true;
+                        break
                     }
                 }
-                if (found === true) break;
+                if(gf_found){
+                    var right_tfs = right_gf['children'];
+                    for(rtf in right_tfs){
+                        var right_tf = right_tfs[rtf];
+                        var tf_found = false;
+                        for(k in curr_gf['children']){
+                            var curr_tf = curr_gf['children'][k];
+                            if(curr_tf['name']===right_tf['name']){
+                                tf_found = true;
+                                break
+                            }
+                        }
+                        if(! tf_found){
+                            curr_gf['children'].push(right_tf)
+                        }
+                    }
+                }
+                else{
+                    curr_af['children'].push(right_gf)
+                }
             }
+
         }
+        else{
+            rights.push(right)
+        }
+
+
       }
       //-------> TODO: an ein level für Rollen denken sobald rollen eingefügt
-      function update_rights(trash,rights,level,d){
+      function update_rights(trash,rights,d){
         if (d.depth===1){
             for (trash_item in trash) {
                 if (trash[trash_item]['name'] === d.data.name) {
                     console.log(trash_item + "," + d.data.name);
-                    rechain_right_to_rights(trash[trash_item], rights, level);
-                    update_right_counters(trash[trash_item],level);
+                    rechain_right_to_rights(trash[trash_item], rights);
+                    update_right_counters(trash[trash_item]);
                     trash.splice(trash_item, 1);
                     alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
                     break;

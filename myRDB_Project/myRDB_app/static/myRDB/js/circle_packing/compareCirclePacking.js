@@ -514,7 +514,7 @@ $(document).ready(function(){
                     console.log(i + "," + d.data.name);
                     update_right_counters(compare_rights[i],"af");
                     transfer.push(compare_rights[i]);
-                    user_rights.push(compare_rights[i]);
+                    //user_rights.push(compare_rights[i]);
                     return;
                 }
             }

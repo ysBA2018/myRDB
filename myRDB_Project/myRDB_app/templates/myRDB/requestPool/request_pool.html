@@ -16,24 +16,28 @@
                     <div class="card top-buffer">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-2">
-                                    <h3> {{ requesting_users |index:forloop.counter0 |getdictitem:'requesting_user' }}</h3>
+                                <div class="col-7" align="left">
+                                    <h3> {{ user.requesting_user }}</h3>
                                 </div>
                                 <div class="col-2">
-                                    <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseApply{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseApply{{ forloop.counter0 }}">
-                                            Beantragungen
-                                        </a>
-                                    </p>
+                                    {% if user.apply_requests %}
+                                        <p>
+                                            <a class="btn btn-info" data-toggle="collapse" href="#collapseApply{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseApply{{ forloop.counter0 }}">
+                                                Beantragungen
+                                            </a>
+                                        </p>
+                                    {% endif %}
                                 </div>
                                 <div class="col-2">
-                                    <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseDelete{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseDelete{{ forloop.counter0 }}">
-                                            Löschungen
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="col-6" align="right">
+                                    {% if user.delete_requests %}
+                                        <p>
+                                            <a class="btn btn-info" data-toggle="collapse" href="#collapseDelete{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseDelete{{ forloop.counter0 }}">
+                                                Löschungen
+                                            </a>
+                                        </p>
+                                    {% endif %}
+                                 </div>
+                                <div class="col-1" align="right">
                                     <p>
                                         <a class="btn btn-secondary" href="" role="button">
                                             X
