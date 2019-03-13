@@ -338,8 +338,7 @@ class Users(generic.ListView):
         self.extra_context['params_for_pagination'] = params
 
         if changed == True or not self.extra_context.keys().__contains__('paginated_users'):
-            res = requests.get(url, headers=headers)
-            user_json_data = res.json()
+            user_json_data = get_by_url(url, headers=headers)
             # user_count= user_json_data['count']
             users = {'users': user_json_data}
             self.extra_context['paginated_users'] = users
@@ -519,26 +518,21 @@ class Compare(generic.ListView):
         print(compareUserIdentity)
 
         # TODO: hier noch lösung mit Params über API finden! <-xv-nummer als SLUG-Field - dann urlrequest mit xv möglich
-        compareUser = User.objects.get(identity=compareUserIdentity)
-        self.extra_context['compare_user_pk'] = compareUser.pk
-        logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/%d' % compareUser.pk
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        res = requests.get(url, headers=headers)
-        user_json_data = res.json()
+        headers = get_headers(self.request)
+        user_json_data = get_user_by_key(compareUserIdentity, headers=headers)
 
         user_json_data, scatterData = prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
 
         compUserRoles = user_json_data['roles']
         compUserAfs = user_json_data['children']
 
-        data, comp_gf_count, comp_tf_count = prepareTableData(compareUser, compUserRoles, compUserAfs, headers)
+        data, comp_gf_count, comp_tf_count = prepareTableData(user_json_data, compUserRoles, compUserAfs, headers)
 
         context['comp_role_count'] = len(compUserRoles)
         context['comp_af_count'] = len(compUserAfs)
         context['comp_gf_count'] = comp_gf_count
         context['comp_tf_count'] = comp_tf_count
-        context["compareUser"] = compareUser
+        context["compareUser"] = user_json_data
         context["compareUser_table_data"] = data
         context["compareUser_graph_data"] = user_json_data
 
@@ -552,21 +546,16 @@ class Compare(generic.ListView):
             self.extra_context['identity_param'] = self.request.session.get('user_identity')
         else:
             # TODO: hier noch lösung mit Params über API finden!
-            user = User.objects.get(identity=self.request.GET['user_identity'])
             self.extra_context['identity_param'] = self.request.GET['user_identity']
-        self.extra_context['user_pk'] = user.pk
+
         self.request.session['user_identity'] = self.extra_context['identity_param']
-
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/%d' % user.pk
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        res = requests.get(url, headers=headers)
-        user_json_data = res.json()
+        headers = headers=get_headers(self.request)
+        user_json_data = get_user_by_key(self.extra_context['identity_param'], headers)
 
-        userid = user.id
         roles = user_json_data['roles']
 
-        user_json_data, scatterData = prepareJSONdata(user.identity, user_json_data, False, headers)
+        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
 
         transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
         transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
@@ -584,7 +573,7 @@ class Compare(generic.ListView):
         self.extra_context['jsondata'] = user_json_data
         afs = user_json_data['children']
 
-        data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
+        data, gf_count, tf_count = prepareTableData(user_json_data, roles, afs, headers)
 
         self.extra_context['user_identity'] = user_json_data['identity']
         self.extra_context['user_first_name'] = user_json_data['first_name']
@@ -625,13 +614,17 @@ class ProfileRightsAnalysis(generic.ListView):
 
         if self.extra_context['level'] == "AF":
             afs = sorted(user_data['children'], key=lambda k: k['name'])
-            model_afs = iter(sorted(get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs'],
-                                    key=lambda k: k['af_name']))
-
             for af in afs:
+                through = False
+                model_afs = iter(sorted(get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs'],
+                                        key=lambda k: k['af_name']))
                 # if af['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
-                while True:
-                    current_model = next(model_afs)
+                while not through:
+                    try:
+                        current_model = next(model_afs)
+                    except StopIteration:
+                        print('model_af stop iteration')
+                        through = True
                     if af['name'] == current_model['af_name']:
                         stats = {}
                         stats['right_name'] = current_model['af_name']
@@ -813,16 +806,16 @@ class Profile(generic.ListView):
 
         if not "identity" in self.request.GET.keys():
             user = self.request.user
-            self.extra_context['identity_param'] = None
             self.request.session['user_identity'] = user.identity
+            url = 'http://127.0.0.1:8000/users/%s' % user.identity
+            self.extra_context['identity_param'] = user.identity
         else:
             # TODO: hier noch lösung mit Params über API finden!
-            user = User.objects.get(identity=self.request.GET['identity'])
             self.extra_context['identity_param'] = self.request.GET['identity']
             self.request.session['user_identity'] = self.extra_context['identity_param']
-        self.extra_context['user_pk']= user.pk
+            url = 'http://127.0.0.1:8000/users/%s' % self.request.GET['identity']
+
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/%d' % user.pk
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
 
         self.extra_context['legendData'] = get_tf_applications(headers)['results']
@@ -830,11 +823,9 @@ class Profile(generic.ListView):
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
 
-        userid = user.id
         roles = user_json_data['roles']
-        print(userid, user)
 
-        user_json_data, scatterData = prepareJSONdata(user.identity, user_json_data, False, headers)
+        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
         self.extra_context['scatterData'] = scatterData
 
         delete_list = user_json_data['delete_list']
@@ -849,7 +840,7 @@ class Profile(generic.ListView):
         #user_json_data = update_user_data(user_json_data, delete_list_with_category)
 
         afs = user_json_data['children']
-        data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
+        data, gf_count, tf_count = prepareTableData(user_json_data, roles, afs, headers)
 
         self.request.session['user_data'] = user_json_data
         '''
@@ -910,15 +901,13 @@ class RequestPool(generic.ListView):
                     if data['status'] == "unanswered":
                         #TODO: xv-nummer als SLUG-Field -> dann url über xvnummer aufrufbar
                         if data['action'] == 'apply':
-                            comp_user = User.objects.get(identity=data['compare_user'])
-                            comp_user = get_user_by_key(comp_user.pk, headers=get_headers(self.request))
+                            comp_user = get_user_by_key(data['compare_user'], headers=get_headers(self.request))
                             right = get_right_from_list(comp_user, data['right_type'], data['right_name'], comp_user['user_afs'])
                             model = get_model_right(comp_user, data['right_type'], right['model_right_pk'],self.request)
                             user["apply_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
                                           'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
                         else:
-                            requesting_user = User.objects.get(identity=data['requesting_user'])
-                            requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
+                            requesting_user = get_user_by_key(data['requesting_user'], headers=get_headers(self.request))
                             right = get_right_from_list(requesting_user, data['right_type'], data['right_name'], requesting_user['delete_list'])
                             model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],self.request)
                             user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
@@ -941,11 +930,7 @@ class MyRequests(generic.ListView):
             user_identity = self.request.user.identity
         self.extra_context['requesting_user'] = user_identity
         # setViewMode(self.request, self.extra_context)
-
-        print("user_id:    ", user_identity)
-        user = User.objects.get(identity=user_identity)
-        self.extra_context['requesting_user_pk'] = user.pk
-        user = get_user_by_key(user.pk, get_headers(self.request))
+        user = get_user_by_key(user_identity, get_headers(self.request))
         request_list = self.get_my_requests(user)
         repacked_request_list = self.repack_list(request_list)
         unanswered_list, accepted_list, declined_list = self.presort(repacked_request_list)
@@ -956,8 +941,7 @@ class MyRequests(generic.ListView):
     def repack_list(self, list):
         repacked_list = []
         for request in list:
-            requesting_user = User.objects.get(identity=request['requesting_user'])
-            requesting_user = get_user_by_key(requesting_user.pk, headers=get_headers(self.request))
+            requesting_user = get_user_by_key(request['requesting_user'], headers=get_headers(self.request))
             if request['action']=='apply':
                 # TODO: wenn berechtigung auf comp_user oder user seite gelöscht wurde -> zuerst modell-recht anzeigen -> wenn auch gelöscht - dann erst None setzen und damit esatz-circle anzeigen
                 if request['status'] == "accepted":
@@ -968,8 +952,7 @@ class MyRequests(generic.ListView):
                         model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
                                             self.request)
                 elif request['status'] == "declined":
-                    compare_user = User.objects.get(identity=request['compare_user'])
-                    compare_user = get_user_by_key(compare_user.pk, headers=get_headers(self.request))
+                    compare_user = get_user_by_key(request['compare_user'], headers=get_headers(self.request))
                     right = get_right_from_list(compare_user, request['right_type'], request['right_name'],
                                                 compare_user['user_afs'])
                     model = get_model_right(compare_user, request['right_type'], right['model_right_pk'],
@@ -1023,7 +1006,7 @@ class MyRequests(generic.ListView):
         return request_list
 
 
-class DigitalRightApplication(generic.ListView):
+class RightApplication(generic.ListView):
     model = User
     template_name = 'myRDB/rightApplication/right_application.html'
     extra_context = {}
@@ -1036,21 +1019,15 @@ class DigitalRightApplication(generic.ListView):
         self.extra_context['requesting_user'] = user_identity
         #setViewMode(self.request, self.extra_context)
 
-        print("user_id:    ",user_identity)
-        user = User.objects.get(identity= user_identity)
-        self.extra_context['requesting_user_pk'] = user.pk
-
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/%d' % user.pk
+        url = 'http://127.0.0.1:8000/users/%s' % user_identity
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
 
-        userid = user.id
         roles = user_json_data['roles']
-        print(userid, user)
 
-        user_json_data, scatterData = prepareJSONdata(user.identity, user_json_data, False, headers)
+        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
 
         transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
         model_transfer_list = get_model_list(transfer_list_with_category, headers)
@@ -1340,7 +1317,7 @@ def get_user_model_rights_by_key(pk, headers):
 
 
 def get_user_by_key(pk, headers):
-    url = 'http://127.0.0.1:8000/users/%d' % pk
+    url = 'http://127.0.0.1:8000/users/%s' % pk
     res = requests.get(url, headers=headers)
     json = res.json()
     return json
@@ -1520,6 +1497,7 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     page_size = 10
+    lookup_field = 'identity'
 
     # filter_backends = (DjangoFilterBackend,)
     # filterset_class = UserFilter
@@ -1646,7 +1624,7 @@ class ChangeRequestsViewSet(viewsets.ModelViewSet):
         serializer = None
         added_requests = []
         for obj in objects_to_change:
-            obj_data = {'requesting_user_pk': data['requesting_user_pk'],'requesting_user': data['requesting_user[value]'], 'compare_user': data['compare_user[value]'], 'action': obj[0]['value'], 'right_name':obj[1]['value'], 'right_type':obj[2]['value'], 'reason_for_action':obj[3]['value']}
+            obj_data = {'requesting_user': data['requesting_user[value]'], 'compare_user': data['compare_user[value]'], 'action': obj[0]['value'], 'right_name':obj[1]['value'], 'right_type':obj[2]['value'], 'reason_for_action':obj[3]['value']}
             serializer = self.get_serializer(data=obj_data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)

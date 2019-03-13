@@ -16,7 +16,6 @@ from rest_framework.authtoken.models import Token
 from myRDB_Project import settings
 
 class ChangeRequests(models.Model):
-    requesting_user_pk = models.IntegerField()
     requesting_user = models.CharField(max_length=7)
     compare_user = models.CharField(max_length=7)
     action = models.CharField(max_length=10)

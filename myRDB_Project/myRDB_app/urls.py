@@ -18,5 +18,5 @@ urlpatterns = [
     path('search_all/', views.Search_All.as_view(), name='search_all'),
     path('request_pool/', views.RequestPool.as_view(), name='request_pool'),
     path('my_requests/', views.MyRequests.as_view(), name='my_requests'),
-    path('profile/compare/apply_changes/', views.DigitalRightApplication.as_view(), name='apply_changes'),
+    path('profile/compare/apply_changes/', views.RightApplication.as_view(), name='apply_changes'),
 ]

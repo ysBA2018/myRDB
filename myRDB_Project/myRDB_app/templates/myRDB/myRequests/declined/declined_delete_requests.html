@@ -19,7 +19,7 @@
                <form class="declined_delete_form" onsubmit="javascript: return remove_card_clicked(this);">
                     <input type="hidden" value="{{ delete_request.request.pk }}" name="pk">
                     <input type="hidden" value="{{ delete_request.request.requesting_user }}" name="requesting_user">
-                    <input type="submit" class="btn btn-danger" value="X">
+                    <input type="submit" class="btn btn-danger" value="X" formmethod="post">
                 </form>
             </div>
         </div>

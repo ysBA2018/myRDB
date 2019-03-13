@@ -40,7 +40,7 @@ function insert_change_request_to_database(formElement){
             }
         });
         var objects_to_change = JSON.stringify(repacked_objects);
-        var data = {"X-CSRFToken":getCookie("csrftoken"),"requesting_user_pk":window.requesting_user_pk,"requesting_user":requesting_user,"compare_user":compare_user,"objects_to_change":objects_to_change};
+        var data = {"X-CSRFToken":getCookie("csrftoken"),"requesting_user":requesting_user,"compare_user":compare_user,"objects_to_change":objects_to_change};
         var successful=false;
         var response_data;
         $.ajax({type:'POST',
@@ -53,22 +53,22 @@ function insert_change_request_to_database(formElement){
                 error: function(res){console.log(res);}
                 });
         if (successful){
-            data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"add_to_requests","requesting_user_pk":window.requesting_user_pk,"request_pks":response_data};
+            data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"add_to_requests","requesting_user":requesting_user,"request_pks":response_data};
             successful=false;
             $.ajax({type:'POST',
                     data:data,
-                    url:'http://127.0.0.1:8000/users/'+window.requesting_user_pk+'/',
+                    url:'http://127.0.0.1:8000/users/'+requesting_user['value']+'/',
                     async:false,
                     success: function(res){console.log(res);
                         successful=true},
                     error: function(res){console.log(res);}
                 });
             if(successful){
-                data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"set_rights_as_requested","requesting_user_pk":window.requesting_user_pk, "objects_to_change": objects_to_change};
+                data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"set_rights_as_requested","requesting_user":requesting_user, "objects_to_change": objects_to_change};
                 successful=false;
                 $.ajax({type:'POST',
                         data:data,
-                        url:'http://127.0.0.1:8000/users/'+window.requesting_user_pk+'/',
+                        url:'http://127.0.0.1:8000/users/'+requesting_user['value']+'/',
                         async:false,
                         success: function(res){console.log(res);
                             successful=true},
@@ -76,6 +76,7 @@ function insert_change_request_to_database(formElement){
                     });
                 if(successful){
                     alert("Antrag erfolgreich gestellt!");
+                    return true;
                 }else{
                     alert("Beim leeren der Transfer- und Deleteliste \n ist ein Fehler aufgetreten!")
                 }
@@ -87,9 +88,15 @@ function insert_change_request_to_database(formElement){
             alert("Beim erstellen der Requests \n ist ein Fehler aufgetreten!")
         }
     }
+    return false;
 }
 
 $('.apply-changes-form').submit(function () {
-    insert_change_request_to_database($(this));
-   return true;
+   var success = insert_change_request_to_database($(this));
+   if(success){
+       return true;
+   }else{
+       return false;
+   }
+
 });

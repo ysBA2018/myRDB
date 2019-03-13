@@ -4,6 +4,7 @@
 {% load getdictitem %}
 {% block content %}
     <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card.js' %}"></script>
+    <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card_and_reverse_action.js' %}"></script>
     <h2> Meine Anfragen</h2>
     <div id="accordion">
         {% if accepted_list.apply or accepted_list.delete %}

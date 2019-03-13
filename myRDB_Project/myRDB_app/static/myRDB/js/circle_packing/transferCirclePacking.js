@@ -248,11 +248,11 @@ $(document).ready(function(){
                 right_parent = d.parent.data.name;
             }
 
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore_transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user":window.user,"action_type":"restore_transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
-                    url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
+                    url:'http://127.0.0.1:8000/users/'+window.user+'/',
                     async:false,
                     success: function(res){console.log(res);
                         successful=true},
@@ -270,6 +270,9 @@ $(document).ready(function(){
 
                 d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
                 window.updateCompareCP();
+            }
+            else{
+                alert("Beim entfernen der Berechtigung\nvon der Transferliste\nist ein Fehler aufgetreten!")
             }
         }
       }

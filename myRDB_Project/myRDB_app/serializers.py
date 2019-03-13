@@ -10,7 +10,7 @@ class ChangeRequestsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ChangeRequests
         fields = (
-            'url', 'pk', 'requesting_user_pk', 'requesting_user', 'compare_user', 'action', 'right_name',
+            'url', 'pk', 'requesting_user', 'compare_user', 'action', 'right_name',
             'right_type', 'reason_for_action', 'created', 'last_modified', 'status', 'reason_for_decline')
 
     def update(self, instance, validated_data):
@@ -135,6 +135,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             'url', 'pk', 'identity', 'name', 'first_name', 'deleted', 'orga', 'department', 'group', 'zi_organisation',
             'roles', 'direct_connect_afs', 'direct_connect_gfs', 'direct_connect_tfs', 'is_staff', 'password',
             'user_afs', 'transfer_list', 'my_requests', 'delete_list')
+        lookup_field = 'identity'
+        extra_kwargs = {
+            'url': {'lookup_field': 'identity'}
+        }
 
     roles = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='role-detail')
     direct_connect_afs = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='af-detail')
@@ -164,6 +168,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             instance = self.remove_from_transfer_list(instance, data)
         elif data['action_type'] == "add_to_requests":
             instance = self.add_to_my_requests(instance, data)
+        elif data['action_type'] == "remove_from_requests":
+            instance = self.remove_from_my_requests(instance, data)
+        elif data['action_type'] == "reverse_action":
+            instance = self.reverse_action(instance, data)
         elif data['action_type'] == "clear_transfer_list_and_delete_list":
             instance = self.clear_transferlist_and_deletelist(instance)
         elif data['action_type'] == "set_rights_as_requested":
@@ -173,6 +181,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         elif data['action_type'] == "decline_action":
             instance = self.decline_action(instance, data)
         instance.save()
+
+        return instance
+
+    def reverse_action(self, instance, data):
+        print("in Reverse_action")
+        if data['action'] == 'delete':
+            instance = self.restore_after_decline(instance, data, 'delete')
+        if data['action'] == 'apply':
+            instance = self.remove_from_transfer_list(instance, data, 'apply')
 
         return instance
 
@@ -390,6 +407,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         instance.delete_list.clear()
         return instance
 
+    def remove_from_my_requests(self, instance, data):
+        print("in remove_from_my_requests")
+        instance.my_requests_id.remove(int(data['request_pk']))
+        return instance
+
     def add_to_my_requests(self, instance, data):
         print("in add_to_my_requests")
         keys = json.loads(data['request_pks'])
@@ -519,7 +541,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                             index = 0
                             for tf in gf.tfs:
                                 if tf.tf_name == data['right_name']:
-                                    # TODO: immer fehler beim versuch einzelne TF zu löschen -> meta.pk Nonetype dosent hav attr attaname
                                     gf.tfs.pop(index)
                                     break
                                 index += 1
@@ -731,11 +752,19 @@ class UserListingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'pk', 'identity', 'name', 'first_name', 'deleted',)
+        lookup_field = 'identity'
+        extra_kwargs = {
+            'url': {'lookup_field': 'identity'}
+        }
 
 
 class CompleteUserListingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'pk', 'identity', 'name', 'first_name', 'deleted', 'user_afs')
+        lookup_field = 'identity'
+        extra_kwargs = {
+            'url': {'lookup_field': 'identity'}
+        }
 
     user_afs = UserAFSerializer(many=True, read_only=True)
