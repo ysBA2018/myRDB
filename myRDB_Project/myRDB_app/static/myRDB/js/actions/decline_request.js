@@ -49,7 +49,7 @@ function change_request_state_to_declined(formElement, current_card) {
             successful=false;
             $.ajax({type:'POST',
                     data:data,
-                    url:'http://127.0.0.1:8000/users/'+response_data['requesting_user_pk']+"/",
+                    url:'http://127.0.0.1:8000/users/'+response_data['requesting_user']+"/",
                     async:false,
                     success: function(res){console.log(res);
                         response_data = res;

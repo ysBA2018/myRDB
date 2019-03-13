@@ -15,10 +15,7 @@
             </div>
         </div>
     </div>
-    <script>
-        var requesting_user_pk = {{ requesting_user_pk }};
-    </script>
-    <form class="apply-changes-form form-horizontal" action="{% url 'myRDB:my_requests' %}">
+    <form class="apply-changes-form form-horizontal" action= "{% url 'myRDB:my_requests' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="requesting_user" value="{{ requesting_user }}">
     <input type="hidden" name="compare_user" value="{{ compare_user }}">
