@@ -189,7 +189,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         if data['action'] == 'delete':
             instance = self.restore_after_decline(instance, data, 'delete')
         if data['action'] == 'apply':
-            instance = self.remove_from_transfer_list(instance, data, 'apply')
+            instance = self.restore_after_decline(instance, data, 'apply')
 
         return instance
 

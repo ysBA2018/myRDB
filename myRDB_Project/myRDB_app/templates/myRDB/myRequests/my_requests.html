@@ -1,12 +1,21 @@
 {% extends 'myRDB/base.html' %}
 {% load static %}
 {% load index %}
+{% load asjson %}
 {% load getdictitem %}
 {% block content %}
     <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card.js' %}"></script>
     <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card_and_reverse_action.js' %}"></script>
-    <h2> Meine Anfragen</h2>
-    <div id="accordion">
+    <script>
+        var accepted_apply = {{ accepted_list.apply | asjson}};
+        var accepted_delete = {{ accepted_list.delete | asjson}};
+        var declined_apply = {{ declined_list.apply | asjson}};
+        var declined_delete = {{ declined_list.delete | asjson}};
+        var unanswered_apply = {{ unanswered_list.apply | asjson}};
+        var unanswered_delete = {{ unanswered_list.delete | asjson}};
+    </script>
+    <h1 class="top-buffer"> Meine Anfragen</h1>
+    <div id="accordion" class="top-buffer">
         {% if accepted_list.apply or accepted_list.delete %}
             <div class="container" id="outerAcceptedToggleGroup">
                 <div class="card top-buffer">
@@ -18,7 +27,7 @@
                             {% if accepted_list.apply %}
                                 <div class="col-2">
                                     <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseAcceptedApply" role="button" aria-expanded="false" aria-controls="collapseAcceptedApply">
+                                        <a class="btn btn-info" id="collapseAcceptedApplyButton" data-toggle="collapse" href="#collapseAcceptedApply" role="button" aria-expanded="false" aria-controls="collapseAcceptedApply">
                                             Beantragungen
                                         </a>
                                     </p>
@@ -27,7 +36,7 @@
                             {% if accepted_list.delete %}
                                 <div class="col-2">
                                     <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseAcceptedDelete" role="button" aria-expanded="false" aria-controls="collapseAcceptedDelete">
+                                        <a class="btn btn-info" id="collapseAcceptedDeleteButton" data-toggle="collapse" href="#collapseAcceptedDelete" role="button" aria-expanded="false" aria-controls="collapseAcceptedDelete">
                                             Löschungen
                                         </a>
                                     </p>
@@ -75,7 +84,7 @@
                             {% if declined_list.apply %}
                                 <div class="col-2">
                                     <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseDeclinedApply" role="button" aria-expanded="false" aria-controls="collapseDeclinedApply">
+                                        <a class="btn btn-info" id="collapseDeclinedApplyButton" data-toggle="collapse" href="#collapseDeclinedApply" role="button" aria-expanded="false" aria-controls="collapseDeclinedApply">
                                             Beantragungen
                                         </a>
                                     </p>
@@ -84,7 +93,7 @@
                             {% if declined_list.delete %}
                                 <div class="col-2">
                                     <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseDeclinedDelete" role="button" aria-expanded="false" aria-controls="collapseDeclinedDelete">
+                                        <a class="btn btn-info" id="collapseDeclinedDeleteButton" data-toggle="collapse" href="#collapseDeclinedDelete" role="button" aria-expanded="false" aria-controls="collapseDeclinedDelete">
                                             Löschungen
                                         </a>
                                     </p>
@@ -132,7 +141,7 @@
                             {% if unanswered_list.apply %}
                                 <div class="col-2">
                                     <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseUnansweredApply" role="button" aria-expanded="false" aria-controls="collapseUnansweredApply">
+                                        <a class="btn btn-info" id="collapseUnansweredApplyButton" data-toggle="collapse" href="#collapseUnansweredApply" role="button" aria-expanded="false" aria-controls="collapseUnansweredApply">
                                             Beantragungen
                                         </a>
                                     </p>
@@ -141,7 +150,7 @@
                             {% if unanswered_list.delete %}
                                 <div class="col-2">
                                     <p>
-                                        <a class="btn btn-info" data-toggle="collapse" href="#collapseUnansweredDelete" role="button" aria-expanded="false" aria-controls="collapseUnansweredDelete">
+                                        <a class="btn btn-info" id="collapseUnansweredDeleteButton" data-toggle="collapse" href="#collapseUnansweredDelete" role="button" aria-expanded="false" aria-controls="collapseUnansweredDelete">
                                             Löschungen
                                         </a>
                                     </p>
@@ -178,10 +187,14 @@
                 </div>
             </div>
         {% endif %}
-        {% if not unanswered_list and not declined_list and not accepted_list%}
-            <div class="card-body">
-                <p>Keine Anfragen vorhanden!</p>
-            </div>
-        {% endif %}
     </div>
+    {% if not unanswered_list.delete and not unanswered_list.apply and not declined_list.delete and not declined_list.apply and not accepted_list.delete and not accepted_list.apply %}
+        <div class="container-fluid top-buffer" id="empty_my_requests">
+            <div class="card top-buffer">
+                <div class="card-header">
+                    <h4 class="text-center">Keine Anfragen vorhanden!</h4>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

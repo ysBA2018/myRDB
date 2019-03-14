@@ -1,9 +1,6 @@
-function remove_current_unanswered_card(form, card){
-    console.log(form);
-    console.log(card);
+function remove_current_unanswered_card(form, card_id, collapse_id){
     var inputs = form.serializeArray();
     console.log(inputs);
-    var id = card[0].id;
     var remove_confirm;
     function getCookie(name) {
         var cookieValue = null;
@@ -56,7 +53,7 @@ function remove_current_unanswered_card(form, card){
                 error: function(res){console.log(res);}
             });
             if (successful) {
-                data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"reverse_action","action":inputs[2]['value'],"right_name":inputs[3]['value']};
+                data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"action_type":"reverse_action","action":inputs[2]['value'],"right_name":inputs[3]['value'],"right_type":inputs[4]['value']};
                 $.ajax({type:'POST',
                     data:data,
                     url:'http://127.0.0.1:8000/users/'+inputs[1]['value']+'/',
@@ -66,7 +63,43 @@ function remove_current_unanswered_card(form, card){
                     error: function(res){console.log(res);}
                 });
                 if (successful) {
-                    $('#'+id).remove();
+                    $('#'+card_id).remove();
+                    var list, partnerList, controll_id;
+                    if(card_id.includes('unanswered_apply')){
+                        list = window.unanswered_apply;
+                        partnerList = window.unanswered_delete;
+                        controll_id="#collapseUnansweredApplyButton"
+                    }
+                    else if(card_id.includes('accepted_delete')){
+                        list = window.unanswered_delete;
+                        partnerList = window.unanswered_apply;
+                        controll_id="#collapseUnansweredDeleteButton"
+                    }
+
+                    for(i in list){
+                        var curr_pk = list[i]['request']['pk'];
+                        console.log(curr_pk);
+                        if (curr_pk===parseInt(inputs[0]['value'])){
+                            list.splice(i,1);
+                            break;
+                        }
+                    }
+                    if(list.length === 0 && partnerList.length === 0){
+                        $('#'+collapse_id).remove();
+                    }
+                    else if(list.length === 0 ){
+                        $(controll_id).remove()
+                    }
+                    if(window.accepted_delete.length===0&&window.accepted_apply.length===0
+                    &&window.declined_delete.length===0&&window.declined_apply.length===0
+                    &&window.unanswered_delete.length===0&&window.unanswered_apply.length===0){
+                        var empty_my_requests_div = $("<div class='container-fluid top-buffer'>" +
+                            "<div class='card top-buffer'>" +
+                            "<div class='card-header'>" +
+                            "<h4 class='text-center'>Keine Anfragen vorhanden!</h4>" +
+                            "</div></div></div>");
+                        $("#content_container").append(empty_my_requests_div);
+                    }
                     alert("Request erfolgreich\nzurückgezogen!")
                 }else{
                     alert("Beim zrückdrehen der Änderungen\nist ein Fehler aufgetreten!")
@@ -86,6 +119,9 @@ function remove_current_unanswered_card(form, card){
 function remove_unanswered_card_clicked(d) {
     var form = $(d);
     var current_card = $(d.parentElement.parentElement.parentElement.parentElement);
-    remove_current_unanswered_card(form,current_card);
+    var card_id = current_card[0].id;
+    var current_collapse = $(d.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+    var collapse_id = current_collapse[0].id;
+    remove_current_unanswered_card(form,card_id,collapse_id);
    return false;
 }
