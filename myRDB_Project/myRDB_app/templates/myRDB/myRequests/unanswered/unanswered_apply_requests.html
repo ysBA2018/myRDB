@@ -19,9 +19,9 @@
                 <form class="unanswered_apply_form" onsubmit="javascript: return remove_unanswered_card_clicked(this);">
                     <input type="hidden" value="{{ apply_request.request.pk }}" name="pk">
                     <input type="hidden" value="{{ apply_request.request.requesting_user }}" name="requesting_user">
-                    <input type="hidden" value="{{ delete_request.request.action }}" name="action">
-                    <input type="hidden" value="{{ delete_request.request.right_name }}" name="right_names">
-                    <input type="hidden" value="{{ delete_request.request.right_type }}" name="right_type">
+                    <input type="hidden" value="{{ apply_request.request.action }}" name="action">
+                    <input type="hidden" value="{{ apply_request.request.right_name }}" name="right_names">
+                    <input type="hidden" value="{{ apply_request.request.right_type }}" name="right_type">
                     <input type="submit" class="btn btn-danger" value="X" formmethod="post">
                 </form>
             </div>

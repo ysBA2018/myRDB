@@ -1,6 +1,7 @@
 {% extends 'myRDB/base.html' %}
 {% load static %}
 {% load index %}
+{% load asjson %}
 {% load getdictitem %}
 {% block content %}
     <script>
@@ -8,13 +9,18 @@
         var iApplicationUser = 0;
     </script>
 
-    <h1>Anfragen-Pool</h1>
-    <div class="container-fluid">
+    <h1 class="top-buffer">Anfragen-Pool</h1>
+    <div class="container-fluid top-buffer">
         {% if requesting_users %}
             {% for user in requesting_users %}
                 <div class="container" id="outerToggleGroup{{ forloop.counter0 }}">
                     <div class="card top-buffer">
                         <div class="card-header">
+                            <script>
+                                var user_apply_requests{{ forloop.counter0 }} = {{ user.apply_requests | asjson}};
+                                var user_delete_requests{{ forloop.counter0 }} = {{ user.delete_requests | asjson}};
+                            </script>
+
                             <div class="row">
                                 <div class="col-7" align="left">
                                     <h3> {{ user.requesting_user }}</h3>
@@ -22,7 +28,7 @@
                                 <div class="col-2">
                                     {% if user.apply_requests %}
                                         <p>
-                                            <a class="btn btn-info" data-toggle="collapse" href="#collapseApply{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseApply{{ forloop.counter0 }}">
+                                            <a class="btn btn-info" id="applyButton{{ forloop.counter0 }}" data-toggle="collapse" href="#collapseApply{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseApply{{ forloop.counter0 }}">
                                                 Beantragungen
                                             </a>
                                         </p>
@@ -31,7 +37,7 @@
                                 <div class="col-2">
                                     {% if user.delete_requests %}
                                         <p>
-                                            <a class="btn btn-info" data-toggle="collapse" href="#collapseDelete{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseDelete{{ forloop.counter0 }}">
+                                            <a class="btn btn-info" id="deleteButton{{ forloop.counter0 }}" data-toggle="collapse" href="#collapseDelete{{ forloop.counter0 }}" role="button" aria-expanded="false" aria-controls="collapseDelete{{ forloop.counter0 }}">
                                                 Löschungen
                                             </a>
                                         </p>
@@ -56,7 +62,11 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p>Keine Anfragen im Pool</p>
+            <div class="card top-buffer" id="empty_pool">
+                <div class="card-header">
+                    <h4 class="text-center">Keine Anfragen im Pool vorhanden!</h4>
+                </div>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

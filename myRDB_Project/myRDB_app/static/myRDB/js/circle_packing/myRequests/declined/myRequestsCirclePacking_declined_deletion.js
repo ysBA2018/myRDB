@@ -20,6 +20,9 @@ $(document).ready(function(){
         .padding(2);
 
     var root = window['jsondata_declined_delete'+svgDeletionIndex];
+    if(root == null){
+        root = {'name':'doesnt exist','size' : 2000}
+    }
         window.iDeclinedDelete=window.iDeclinedDelete+1;
       root = d3.hierarchy(root)
           .sum(function(d) { return d.size; })
@@ -31,6 +34,7 @@ $(document).ready(function(){
 
 
       function get_color(d) {
+          if(d.data.name === "doesnt exist" && d.depth ===0){return "lightgrey"}
           if(!d.hasOwnProperty('children')){return d.data.color}
           else{return "white"}
       }
@@ -61,15 +65,15 @@ $(document).ready(function(){
       var leaves = d3.selectAll("circle").filter(function(d){
         return d.children === null;
       });
-/*
+
       var text = g.selectAll("text")
         .data(nodes)
         .enter().append("text")
           .attr("class", "label")
-          .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-          .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
-          .text(function(d) { return d.data.name; });
-*/
+          .style("fill-opacity", function(d) {return d ;})
+          .style("display", function(d) {  return d ;})
+          .text(function(d) { if(d.data.name==="doesnt exist" && d.depth ===0) return "Berechtigung wurde bereits gelöscht!"; });
+
       var node = g.selectAll("circle,text");
 
       svg
@@ -88,12 +92,6 @@ $(document).ready(function(){
               var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
               return function(t) { zoomTo(i(t)); };
             });
-
-        transition.selectAll("text")
-          .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
-            .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
-            .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
-            .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
       }
 
       function zoomTo(v) {

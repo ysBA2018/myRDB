@@ -6,11 +6,12 @@ import requests
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import datetime
 
+from django.http import HttpResponseRedirect
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-
-from .forms import CustomUserCreationForm, SomeForm, ApplyRightForm, DeleteRightForm, AcceptChangeForm, DeclineChangeForm
+from .forms import CustomUserCreationForm, SomeForm, ApplyRightForm, DeleteRightForm, AcceptChangeForm, \
+    DeclineChangeForm
 from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application, User_AF, User_TF, \
     User_GF, ChangeRequests
 from rest_framework import viewsets, status
@@ -37,11 +38,12 @@ class CSVtoMongoDB(generic.FormView):
         firstline = True
         # TODO: dateiimportfield und pfad müssen noch verbunden werden!
         #
-        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv", encoding='utf-8') as csvfile:
+        with open("myRDB_app/static/myRDB/data/Aus IIQ - User und TF komplett Neu_20180817_abMe.csv",
+                  encoding='utf-8') as csvfile:
             csvreader = csv.reader(csvfile, delimiter=';', quotechar='"')
             cur_val = 0
             for line in csvreader:
-                line =[re.sub(r'\s+','',e) for e in line]
+                line = [re.sub(r'\s+', '', e) for e in line]
 
                 if firstline == True:
                     firstline = False
@@ -130,7 +132,7 @@ class CSVtoMongoDB(generic.FormView):
                     if user.user_afs.__len__() == 0:
                         user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk, color=tf_application.color)
                         user_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[])
-                        user_af = self.create_user_af(line,af)
+                        user_af = self.create_user_af(line, af)
                         user_gf.tfs.append(user_tf)
                         user_af.gfs.append(user_gf)
                         user.user_afs.append(user_af)
@@ -161,34 +163,35 @@ class CSVtoMongoDB(generic.FormView):
                         if afcount == user.user_afs.__len__():
                             user_af = self.create_user_af(line, af)
                             user_af.gfs.append(User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk,
-                                        tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,
-                                                     color=tf_application.color)]))
+                                                       tfs=[User_TF(tf_name=tf.tf_name, model_tf_pk=tf.pk,
+                                                                    color=tf_application.color)]))
                             user.user_afs.append(user_af)
 
                     user.direct_connect_afs.add(af)
                     user.save()
+
     def create_user_af(self, line, af):
         if line[15] == "" and line[16] == "" and line[17] == "":
             user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[])
         if line[15] != "" and line[16] == "" and line[17] == "":
             user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
-                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat())
+                              , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat())
         if line[15] != "" and line[16] != "" and line[17] == "":
             user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
-                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
-                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat())
+                              , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
+                              , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat())
         if line[15] != "" and line[16] != "" and line[17] != "":
             user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
-                    , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
-                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
-                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
+                              , af_valid_from=datetime.datetime.strptime(line[15], "%d.%m.%Y").isoformat()
+                              , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
+                              , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
         if line[15] == "" and line[16] != "" and line[17] != "":
             user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
-                    , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
-                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
+                              , af_valid_till=datetime.datetime.strptime(line[16], "%d.%m.%Y").isoformat()
+                              , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
         if line[15] == "" and line[16] == "" and line[17] != "":
             user_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[]
-                    , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
+                              , af_applied=datetime.datetime.strptime(line[17], "%d.%m.%Y").isoformat())
         return user_af
 
 
@@ -550,7 +553,7 @@ class Compare(generic.ListView):
 
         self.request.session['user_identity'] = self.extra_context['identity_param']
         logged_in_user_token = self.request.user.auth_token
-        headers = headers=get_headers(self.request)
+        headers = headers = get_headers(self.request)
         user_json_data = get_user_by_key(self.extra_context['identity_param'], headers)
 
         roles = user_json_data['roles']
@@ -585,7 +588,6 @@ class Compare(generic.ListView):
         self.extra_context['tf_count'] = self.request.session.get('tf_count')
 
         return data
-
 
 
 class ProfileRightsAnalysis(generic.ListView):
@@ -830,14 +832,14 @@ class Profile(generic.ListView):
 
         delete_list = user_json_data['delete_list']
         delete_list, delete_list_with_category = prepare_delete_list(delete_list)
-        #del_af_count, del_gf_count, del_tf_count = get_delete_list_counts(delete_list_with_category)
+        # del_af_count, del_gf_count, del_tf_count = get_delete_list_counts(delete_list_with_category)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         # self.extra_context['delete_list_table_data'] = get_extra_paginator("delete_list",delete_list_table_data,self.request)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['delete_list'] = {"children": delete_list}
 
-        #user_json_data = update_user_data(user_json_data, delete_list_with_category)
+        # user_json_data = update_user_data(user_json_data, delete_list_with_category)
 
         afs = user_json_data['children']
         data, gf_count, tf_count = prepareTableData(user_json_data, roles, afs, headers)
@@ -867,6 +869,7 @@ class Profile(generic.ListView):
 
         return data
 
+
 class RequestPool(generic.ListView):
     model = ChangeRequests
     template_name = 'myRDB/requestPool/request_pool.html'
@@ -891,27 +894,38 @@ class RequestPool(generic.ListView):
         list_by_user = []
         for data in change_requests:
             if data['status'] == "unanswered":
-                user_dict = {'requesting_user':data['requesting_user'], 'apply_requests': [], 'delete_requests':[]}
+                user_dict = {'requesting_user': data['requesting_user'], 'apply_requests': [], 'delete_requests': []}
                 if not list_by_user.__contains__(user_dict):
                     list_by_user.append(user_dict)
 
         for data in change_requests:
             for user in list_by_user:
-                if user['requesting_user']==data['requesting_user']:
+                if user['requesting_user'] == data['requesting_user']:
+                    requesting_user = get_user_by_key(data['requesting_user'],
+                                                      headers=get_headers(self.request))
                     if data['status'] == "unanswered":
-                        #TODO: xv-nummer als SLUG-Field -> dann url über xvnummer aufrufbar
+                        # TODO: xv-nummer als SLUG-Field -> dann url über xvnummer aufrufbar
                         if data['action'] == 'apply':
-                            comp_user = get_user_by_key(data['compare_user'], headers=get_headers(self.request))
-                            right = get_right_from_list(comp_user, data['right_type'], data['right_name'], comp_user['user_afs'])
-                            model = get_model_right(comp_user, data['right_type'], right['model_right_pk'],self.request)
+                            right = get_right_from_list(requesting_user, data['right_type'], data['right_name'],
+                                                        requesting_user['transfer_list'])
+                            if right is None:
+                                model = None
+                            else:
+                                model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],
+                                                        self.request)
                             user["apply_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
-                                          'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
+                                                           'right_name': data['right_name'],
+                                                           'reason_for_action': data['reason_for_action'],
+                                                           'request_pk': data['pk']})
                         else:
-                            requesting_user = get_user_by_key(data['requesting_user'], headers=get_headers(self.request))
-                            right = get_right_from_list(requesting_user, data['right_type'], data['right_name'], requesting_user['delete_list'])
-                            model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],self.request)
+                            right = get_right_from_list(requesting_user, data['right_type'], data['right_name'],
+                                                        requesting_user['delete_list'])
+                            model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],
+                                                    self.request)
                             user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
-                                          'right_name': data['right_name'], 'reason_for_action': data['reason_for_action'],'request_pk':data['pk']})
+                                                            'right_name': data['right_name'],
+                                                            'reason_for_action': data['reason_for_action'],
+                                                            'request_pk': data['pk']})
 
         return list_by_user
 
@@ -921,6 +935,10 @@ class MyRequests(generic.ListView):
     template_name = 'myRDB/myRequests/my_requests.html'
     extra_context = {}
     context_object_name = "accepted_list"
+
+    def post(self, request, *args, **kwargs):
+        print("I'm in my_requests-post")
+        return HttpResponseRedirect(self.request.path_info)
 
     def get_queryset(self):
         self.extra_context['current_site'] = "my_requests"
@@ -942,15 +960,16 @@ class MyRequests(generic.ListView):
         repacked_list = []
         for request in list:
             requesting_user = get_user_by_key(request['requesting_user'], headers=get_headers(self.request))
-            if request['action']=='apply':
+            if request['action'] == 'apply':
                 # TODO: wenn berechtigung auf comp_user oder user seite gelöscht wurde -> zuerst modell-recht anzeigen -> wenn auch gelöscht - dann erst None setzen und damit esatz-circle anzeigen
                 if request['status'] == "accepted":
-                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'], requesting_user['user_afs'])
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
+                                                requesting_user['user_afs'])
                     if right is None:
                         model = None
                     else:
                         model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
-                                            self.request)
+                                                self.request)
                 elif request['status'] == "declined":
                     compare_user = get_user_by_key(request['compare_user'], headers=get_headers(self.request))
                     right = get_right_from_list(compare_user, request['right_type'], request['right_name'],
@@ -958,46 +977,51 @@ class MyRequests(generic.ListView):
                     model = get_model_right(compare_user, request['right_type'], right['model_right_pk'],
                                             self.request)
                 else:
-                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'], requesting_user['transfer_list'])
-                    model = get_model_right(requesting_user,request['right_type'],right['model_right_pk'],self.request)
-            if request['action']=='delete':
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
+                                                requesting_user['transfer_list'])
+                    model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                                            self.request)
+            if request['action'] == 'delete':
                 if request['status'] == "accepted":
                     right = None
                     model = None
                 elif request['status'] == "declined":
                     right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
                                                 requesting_user['user_afs'])
-                    model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                    if right is None:
+                        model = None
+                    else:
+                        model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
                                             self.request)
                 else:
-                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'], requesting_user['delete_list'])
-                    model = get_model_right(requesting_user,request['right_type'],right['model_right_pk'],self.request)
+                    right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
+                                                requesting_user['delete_list'])
+                    model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                                            self.request)
             repacked_list.append({'right': right, 'model': model, 'request': request})
         return repacked_list
 
-
     def presort(self, list):
-        unanswered_dict = {'apply':[],'delete':[]}
-        accepted_dict = {'apply':[],'delete':[]}
-        declined_dict = {'apply':[],'delete':[]}
+        unanswered_dict = {'apply': [], 'delete': []}
+        accepted_dict = {'apply': [], 'delete': []}
+        declined_dict = {'apply': [], 'delete': []}
         for request in list:
-            if request['request']['status']=='unanswered':
+            if request['request']['status'] == 'unanswered':
                 if request['request']['action'] == 'apply':
                     unanswered_dict['apply'].append(request)
                 if request['request']['action'] == 'delete':
                     unanswered_dict['delete'].append(request)
-            if request['request']['status']=='accepted':
+            if request['request']['status'] == 'accepted':
                 if request['request']['action'] == 'apply':
                     accepted_dict['apply'].append(request)
                 if request['request']['action'] == 'delete':
                     accepted_dict['delete'].append(request)
-            if request['request']['status']=='declined':
+            if request['request']['status'] == 'declined':
                 if request['request']['action'] == 'apply':
                     declined_dict['apply'].append(request)
                 if request['request']['action'] == 'delete':
                     declined_dict['delete'].append(request)
         return unanswered_dict, accepted_dict, declined_dict
-
 
     def get_my_requests(self, user):
         request_list = []
@@ -1017,7 +1041,7 @@ class RightApplication(generic.ListView):
         self.extra_context['compare_user'] = self.request.session.get('user_search')
         user_identity = self.request.session.get('user_identity')
         self.extra_context['requesting_user'] = user_identity
-        #setViewMode(self.request, self.extra_context)
+        # setViewMode(self.request, self.extra_context)
 
         logged_in_user_token = self.request.user.auth_token
         url = 'http://127.0.0.1:8000/users/%s' % user_identity
@@ -1031,33 +1055,33 @@ class RightApplication(generic.ListView):
 
         transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
         model_transfer_list = get_model_list(transfer_list_with_category, headers)
-        #transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
-        #self.extra_context['transfer_list_table_data'] = transfer_list_table_data
-        #self.extra_context['transfer_list_count'] = transfer_list_count
+        # transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
+        # self.extra_context['transfer_list_table_data'] = transfer_list_table_data
+        # self.extra_context['transfer_list_count'] = transfer_list_count
         self.extra_context['transfer_list'] = transfer_list
-        self.extra_context['stripped_transfer_list'] = [right['right'] for right in transfer_list_with_category ]
+        self.extra_context['stripped_transfer_list'] = [right['right'] for right in transfer_list_with_category]
         print(self.extra_context.get('stripped_transfer_list'))
         self.extra_context['model_transfer_list'] = model_transfer_list
         self.extra_context['transfer_form'] = ApplyRightForm
 
         delete_list = user_json_data['delete_list']
         delete_list, delete_list_with_category = prepare_delete_list(delete_list)
-        model_delete_list = get_model_list(delete_list_with_category,headers)
+        model_delete_list = get_model_list(delete_list_with_category, headers)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
-        #self.extra_context['delete_list_table_data'] = delete_list_table_data
-        #self.extra_context['delete_list_count'] = delete_list_count
+        # self.extra_context['delete_list_table_data'] = delete_list_table_data
+        # self.extra_context['delete_list_count'] = delete_list_count
 
         self.extra_context['delete_list'] = delete_list
-        self.extra_context['stripped_delete_list'] = [right['right'] for right in delete_list_with_category ]
+        self.extra_context['stripped_delete_list'] = [right['right'] for right in delete_list_with_category]
         print(self.extra_context.get('stripped_delete_list'))
         self.extra_context['model_delete_list'] = model_delete_list
         self.extra_context['delete_form'] = DeleteRightForm
 
-        #user_json_data = update_user_data(user_json_data, delete_list_with_category)
+        # user_json_data = update_user_data(user_json_data, delete_list_with_category)
         self.extra_context['jsondata'] = user_json_data
 
-        #afs = user_json_data['children']
-        #data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
+        # afs = user_json_data['children']
+        # data, gf_count, tf_count = prepareTableData(user, roles, afs, headers)
 
         self.extra_context['user_identity'] = user_json_data['identity']
         self.extra_context['user_first_name'] = user_json_data['first_name']
@@ -1083,6 +1107,7 @@ def get_model_right(comp_user, type, pk, request):
         model['right_description'] = model.pop('tf_description')
     return model
 
+
 def get_right_from_list(comp_user, type, right, rights):
     for af in rights:
         if type == 'AF':
@@ -1094,8 +1119,8 @@ def get_right_from_list(comp_user, type, right, rights):
                     gf['name'] = gf.pop('gf_name')
                     gf['children'] = gf.pop('tfs')
                     for tf in gf['children']:
-                        tf['name']=tf.pop('tf_name')
-                        tf['size']= 2000
+                        tf['name'] = tf.pop('tf_name')
+                        tf['size'] = 2000
                 return af
         if type == 'GF':
             for gf in af['gfs']:
@@ -1110,26 +1135,27 @@ def get_right_from_list(comp_user, type, right, rights):
         if type == 'TF':
             for gf in af['gfs']:
                 for tf in gf['tfs']:
-                    if tf['tf_name']==right:
+                    if tf['tf_name'] == right:
                         tf['name'] = tf.pop('tf_name')
                         tf['size'] = 2000
                         tf['model_right_pk'] = tf.pop('model_tf_pk')
                         return tf
 
+
 def get_model_list(transfer_list_with_category, headers):
     model_list = []
     for right in transfer_list_with_category:
         model = None
-        if right['type']=='af':
-            model = get_af_by_key(pk=right['right']['model_af_pk'],headers=headers)
+        if right['type'] == 'af':
+            model = get_af_by_key(pk=right['right']['model_af_pk'], headers=headers)
             model['right_name'] = model.pop('af_name')
             model['description'] = model.pop('af_description')
-        if right['type']=='gf':
-            model = get_gf_by_key(pk=right['right']['model_gf_pk'],headers=headers)
+        if right['type'] == 'gf':
+            model = get_gf_by_key(pk=right['right']['model_gf_pk'], headers=headers)
             model['right_name'] = model.pop('gf_name')
             model['description'] = model.pop('gf_description')
-        if right['type']=='tf':
-            model = get_tf_by_key(pk=right['right']['model_tf_pk'],headers=headers)
+        if right['type'] == 'tf':
+            model = get_tf_by_key(pk=right['right']['model_tf_pk'], headers=headers)
             model['right_name'] = model.pop('tf_name')
             model['description'] = model.pop('tf_description')
         model['type'] = right['type'].upper()
@@ -1159,6 +1185,7 @@ def prepareTransferJSONdata(transfer_json_data):
             transfer_list_with_category.append({"right": right, "type": type})
 
     return transfer_json_data, transfer_list_with_category
+
 
 def prepareTransferTabledata(transfer_list):
     tfList = []
@@ -1276,10 +1303,12 @@ def prepareTableData(user, roles, afs, headers):
     tf_count = len(tfList)
     return list(data), gf_count, tf_count
 
+
 def get_headers(request):
     logged_in_user_token = request.user.auth_token
     headers = {'Authorization': 'Token ' + logged_in_user_token.key}
     return headers
+
 
 def get_tf_applications(headers):
     url = 'http://127.0.0.1:8000/tf_applications/'
@@ -1387,8 +1416,6 @@ def prepare_delete_list(delete_list):
         if right['delete']:
             type = 'af'
             delete_list_with_category.append({"right": right, "type": type})
-
-
 
     return delete_list, delete_list_with_category
 
@@ -1606,6 +1633,7 @@ class TF_ApplicationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return TF_Application.objects.all()
 
+
 class ChangeRequestsViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows ChangeRequests to be viewed or edited.
@@ -1624,11 +1652,13 @@ class ChangeRequestsViewSet(viewsets.ModelViewSet):
         serializer = None
         added_requests = []
         for obj in objects_to_change:
-            obj_data = {'requesting_user': data['requesting_user[value]'], 'compare_user': data['compare_user[value]'], 'action': obj[0]['value'], 'right_name':obj[1]['value'], 'right_type':obj[2]['value'], 'reason_for_action':obj[3]['value']}
+            obj_data = {'requesting_user': data['requesting_user[value]'], 'compare_user': data['compare_user[value]'],
+                        'action': obj[0]['value'], 'right_name': obj[1]['value'], 'right_type': obj[2]['value'],
+                        'reason_for_action': obj[3]['value']}
             serializer = self.get_serializer(data=obj_data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             added_requests.append(serializer.data['pk'])
         headers = self.get_success_headers(serializer.data)
-        return Response(json.dumps(added_requests), status=status.HTTP_201_CREATED,headers=headers)
+        return Response(json.dumps(added_requests), status=status.HTTP_201_CREATED, headers=headers)
 # Create your views here.
