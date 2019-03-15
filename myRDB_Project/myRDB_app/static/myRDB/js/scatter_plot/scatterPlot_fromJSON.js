@@ -14,7 +14,7 @@
 
         var data = window.scatterData;
 
-        var div = d3.select("body").append("div")
+        var div = d3.select('#scatterPlotSVG').append("div")
           .attr("class","tooltip")
           .attr("id","scattertooltip")
           .style("opacity",0);
@@ -35,7 +35,12 @@
 
             scatterSVG.append('g')
                 .attr('transform',`translate(0, ${scatterHeight})`)
-                .call(scatterXaxis);
+                .call(scatterXaxis)
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "8px")
+                .attr("dy", "-8px")
+                .attr("transform", "rotate(-25)");
 
             var scatterRscale= d3.scaleSqrt()
                 .domain([0,d3.max(data, d => new Date(d.af_applied))])
@@ -63,9 +68,9 @@
                       div.transition()
                           .duration(200)
                           .style("opacity",9);
-                      div .html(d.name+"<br/>"+"Aktiv seit: "+d.af_applied+"<br/>")
+                      div .html("<b>TF:</b> "+d.name+"<br/>"+"<b>GF:</b> "+d.gf_name+"<br/>"+"<b>AF:</b> "+d.af_name+"<br/>"+"<b>AF aktiv seit:</b> "+d.af_applied+"<br/>")
                           .style("right","px")
-                          .style("top",(d3.event.pageY-28)+"px")
+                          .style("top","py"+(d3.event.pageY))
                   })
                   .on("mouseout",function (d) {
                       d3.select(this).style("stroke",null);

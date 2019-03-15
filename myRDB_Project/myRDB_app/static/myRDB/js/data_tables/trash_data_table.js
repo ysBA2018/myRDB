@@ -1,9 +1,27 @@
 $(document).ready(function() {
+     $('#trash_table tbody tr').each( function() {
+        var sTitle;
+        console.log(this);
+        var user_data = window.trashlistdata;
+
+        for (i in user_data['children']){
+            if(user_data['children'][i]['name']===this.lastElementChild.textContent){
+                var right = user_data['children'][i];
+                break;
+            }
+        }
+        var text = "AF-Beschreibung: "+ right['description']+"\nAF gültig seit: "+right['af_applied'];
+
+        this.setAttribute( 'title', text );
+    } );
+
     trash_table = $('#trash_table').DataTable({
         "pageLength":3,
         "aLengthMenu":[[3,10,25,50,100,-1],[3,10,25,50,100,"All"]],
         "order":[[2,'asc']]
     });
+
+    trash_table.$('tr').tooltip();
 
     $('#trash_table tbody').on('contextmenu', 'td', function (e) {
         e.preventDefault();
@@ -67,11 +85,11 @@ $(document).ready(function() {
                     }
                 }
             });
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"restore","right_type":right_type,"right_name":cell_data,"parent":right_parent,"grandparent":right_grandparent};
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user":window.user,"action_type":"restore","right_type":right_type,"right_name":cell_data,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
-                    url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
+                    url:'http://127.0.0.1:8000/users/'+window.user+'/',
                     async:false,
                     success: function(res){console.log("Success!: "+res);
                         update_table_data(cell_data,right_type,row_data);

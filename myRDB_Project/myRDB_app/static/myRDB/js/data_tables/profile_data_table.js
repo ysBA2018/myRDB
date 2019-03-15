@@ -8,16 +8,62 @@ function check_for_row_in_user_table(row,data,dataIndex){
 }
 
 $(document).ready(function() {
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+            }
+        }
+    });
+    $('#data_table tbody tr').each( function() {
+        var sTitle;
+        console.log(this);
+        var user_data = window.jsondata;
 
+        for (i in user_data['children']){
+            if(user_data['children'][i]['name']===this.lastElementChild.textContent){
+                var right = user_data['children'][i];
+                break;
+            }
+        }
+        var text = "AF-Beschreibung: "+ right['description']+"\nAF gültig seit: "+right['af_applied'];
+
+        this.setAttribute( 'title', text );
+    } );
 
     data_table = $('#data_table').DataTable({
+        "processing": true,
+        "serverSide": false,
         "pageLength":10,
         "aLengthMenu":[[10,25,50,100,-1],[10,25,50,100,"All"]],
         "createdRow":function (row, data, dataIndex) {
-            check_for_row_in_user_table(row,data,dataIndex);
+            if (window.current_site === 'compare') {
+                check_for_row_in_user_table(row, data, dataIndex);
+            }
         },
         "order":[[2,'asc']]
     });
+    data_table.$('tr').tooltip();
+
 
     $('#data_table tbody').on('contextmenu', 'td', function (e) {
         e.preventDefault();
@@ -40,37 +86,12 @@ $(document).ready(function() {
 
         var r = confirm("Berechtigung:\n\n"+cell_data+"\n\nwirklich zu Löschliste hinzufügen?\n\n");
         if (r === true){
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            function csrfSafeMethod(method) {
-                // these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-                    }
-                }
-            });
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"action_type":"trash","right_type":right_type,"right_name":cell_data,"parent":right_parent,"grandparent":right_grandparent};
+
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user":window.user,"action_type":"trash","right_type":right_type,"right_name":cell_data,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
-                    url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
+                    url:'http://127.0.0.1:8000/users/'+window.user+'/',
                     async:false,
                     success: function(res){console.log(res);
                         alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");

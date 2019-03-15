@@ -35,4 +35,17 @@ td.highlight{
 .darkgrey{
     background-color: darkgrey!important;
 }
-
+.ui-tooltip, div.tooltip {
+    position: absolute;
+    padding: 2px;
+    font: 12px sans-serif;
+    border-radius: 8px;
+    pointer-events: none;
+    white-space: pre-line;
+    max-width: 1000px;
+    border: 1px solid #dddddd;
+	background: #ffffff;
+	color: #333333;
+    -webkit-box-shadow: 0px 0px 5px #666666;
+	box-shadow: 0px 0px 5px #666666;
+}

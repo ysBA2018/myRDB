@@ -5,9 +5,12 @@
         var trash_table_count = {{ delete_list_count }};
         var transfer_table_count = {{ transfer_list_count }};
         var transferlistdata = {{ transfer_list | asjson }};
+        var trashlistdata = {{ delete_list | asjson }};
         var compare_jsondata = {{ compareUser_graph_data | asjson }};
+        var jsondata = {{ jsondata | asjson }};
         var current_site = "{{ current_site }}";
         var compare_user = "{{ compareUser.identity }}";
+        var user = "{{ identity_param }}";
         var user_table_data = "{{ table_data }}";
         var compare_user_table_data = "{{ compareUser_table_data }}";
         var transfer_list_table_data = "{{ transfer_list_table_data }}";

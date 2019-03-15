@@ -3,11 +3,15 @@
     {% load asjson %}
 <div class="container-fluid">
     {% include 'myRDB/profile/profile_head.html' %}
+
     <script>
         var trash_table_count = {{ delete_list_count }};
         var current_site = "{{ current_site }}";
         var scatterData = {{ scatterData | asjson }};
+        var jsondata = {{ jsondata | asjson }};
+        var trashlistdata = {{ delete_list | asjson }};
         var legendData = {{ legendData | asjson}};
+        var user = "{{ identity_param }}";
     </script>
 
         <div class="row top-buffer">
