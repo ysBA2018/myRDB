@@ -14,6 +14,21 @@ function check_for_row_in_user_and_transfer_table(row,data,dataIndex){
 }
 
 $(document).ready(function() {
+    $('#compare_data_table tbody tr').each( function() {
+        var sTitle;
+        console.log(this);
+        var user_data = window.compare_jsondata;
+
+        for (i in user_data['children']){
+            if(user_data['children'][i]['name']===this.lastElementChild.textContent){
+                var right = user_data['children'][i];
+                break;
+            }
+        }
+        var text = "AF-Beschreibung: "+ right['description']+"\nAF gültig seit: "+right['af_applied'];
+
+        this.setAttribute( 'title', text );
+    } );
 
     compare_data_table = $('#compare_data_table').DataTable({
         "pageLength":10,
@@ -23,6 +38,9 @@ $(document).ready(function() {
         },
         "order":[[2,'asc']]
     });
+
+    compare_data_table.$('tr').tooltip();
+
     function check_for_parent_existance(type, parent, grandparent){
         var data_table = window.transfer_list_table_data;
         var data_table_stripped = data_table.replace(/(&#39;)|(\s)/g,"");
@@ -133,11 +151,11 @@ $(document).ready(function() {
                     }
                 }
             });
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user_pk,"compare_user":window.compare_user,"action_type":"transfer","right_type":right_type,"right_name":cell_data,"parent":right_parent,"grandparent":right_grandparent};
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user":window.user,"compare_user":window.compare_user,"action_type":"transfer","right_type":right_type,"right_name":cell_data,"parent":right_parent,"grandparent":right_grandparent};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
-                    url:'http://127.0.0.1:8000/users/'+window.user_pk+'/',
+                    url:'http://127.0.0.1:8000/users/'+window.user+'/',
                     async:false,
                     success: function(res){console.log(res);
                         alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");

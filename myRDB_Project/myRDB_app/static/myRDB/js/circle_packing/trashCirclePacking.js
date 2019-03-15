@@ -5,10 +5,15 @@ $(document).ready(function(){
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
-    var color = d3.scaleLinear()
-        .domain([-1, 5])
-        .range(["hsl(360,100%,100%)", "hsl(0,0%,0%)"])
-        .interpolate(d3.interpolateHcl);
+    function get_color(d) {
+          if(d.depth===0){
+              return "white";
+          }
+          else{
+              if(d.depth===3){return d.data.color}
+              else{return "white"}
+          }
+      }
 
 
     var pack = d3.pack()
@@ -36,20 +41,35 @@ $(document).ready(function(){
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .style("stroke","grey")
+          .style("opacity",function(d){if(d.depth ===0) return 0.5;
+                                        if(d.depth ===1) return 0.7;
+                                        if(d.depth ===2) return 0.8;
+                                        if(d.depth ===3) return 0.9;})
+          .style("fill", function(d) { return get_color(d) })
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
           .on("contextmenu",function(d,i){restorefunction(d,i)})
           .on("mouseover",function (d) {
+              d3.select(this).style("stroke","black");
               div.transition()
                   .duration(200)
-                  .style("opacity",9)
-              div .html(d.data.name+"<br/>")
+                  .style("opacity",9);
+              var text;
+              if(d.depth === 1){
+                  text = "<b>AF:</b> "+d.data.name
+              }else if(d.depth === 2){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name
+              }else if(d.depth === 3){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name
+              }
+              div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
           })
           .on("mouseout",function (d) {
+              d3.select(this).style("stroke","grey");
               div.transition()
                   .duration(500)
                   .style("opacity",0)
@@ -156,20 +176,31 @@ $(document).ready(function(){
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .style("stroke","grey")
+          .style("fill", function(d) { return get_color(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
           .on("contextmenu", function(d,i){restorefunction(d,i)})
           .on("mouseover",function (d) {
+              d3.select(this).style("stroke","black");
               div.transition()
                   .duration(200)
-                  .style("opacity",9)
-              div .html(d.data.name+"<br/>")
+                  .style("opacity",9);
+              var text;
+              if(d.depth === 1){
+                  text = "<b>AF:</b> "+d.data.name
+              }else if(d.depth === 2){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"
+              }else if(d.depth === 3){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name
+              }
+              div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
           })
           .on("mouseout",function (d) {
+              d3.select(this).style("stroke","grey");
               div.transition()
                   .duration(500)
                   .style("opacity",0)

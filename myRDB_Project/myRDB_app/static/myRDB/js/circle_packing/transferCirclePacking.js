@@ -38,6 +38,10 @@ $(document).ready(function(){
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
           .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .style("opacity",function(d){if(d.depth ===0) return 0.5;
+                                        if(d.depth ===1) return 0.7;
+                                        if(d.depth ===2) return 0.8;
+                                        if(d.depth ===3) return 0.9;})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
@@ -46,7 +50,15 @@ $(document).ready(function(){
               div.transition()
                   .duration(200)
                   .style("opacity",9)
-              div .html(d.data.name+"<br/>")
+              var text;
+              if(d.depth === 1){
+                  text = "<b>AF:</b> "+d.data.name
+              }else if(d.depth === 2){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name
+              }else if(d.depth === 3){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name
+              }
+              div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
           })
@@ -168,7 +180,15 @@ $(document).ready(function(){
               div.transition()
                   .duration(200)
                   .style("opacity",9)
-              div .html(d.data.name+"<br/>")
+              var text;
+              if(d.depth === 1){
+                  text = "<b>AF:</b> "+d.data.name
+              }else if(d.depth === 2){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name
+              }else if(d.depth === 3){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name
+              }
+              div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
           })

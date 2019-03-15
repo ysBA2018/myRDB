@@ -592,7 +592,7 @@ class Compare(generic.ListView):
 
 class ProfileRightsAnalysis(generic.ListView):
     model = User
-    template_name = 'myRDB/profile/profile_rights_analysis.html'
+    template_name = 'myRDB/profile/templates/myRDB/profileRightsAnalysis/profile_rights_analysis.html'
     extra_context = {}
 
     def get_queryset(self):
@@ -1382,7 +1382,7 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
                 tf['size'] = 3000
 
                 # TODO: scatter-graph für zugewiesen, auf delete-list gesetzt, gelöscht
-                scatterData.append({"name": tf['name'], "af_applied": af_applied, "color": tf['color']})
+                scatterData.append({"name": tf['name'],"gf_name": gf['name'],"af_name":af['name'],"af_applied": af_applied, "color": tf['color']})
 
     if not compareUser:
         scatterData.sort(key=lambda r: r["af_applied"])

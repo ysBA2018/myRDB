@@ -7,9 +7,7 @@
 </div>
 <div class="card-body">
     <script>
-        var user = "{{ identity_param }}";
         var CSRF_TOKEN = "{{ csrf_token }}";
-        var jsondata = {{ jsondata | asjson }};
         var updateCP;
     </script>
     <svg id="circlePackingSVG" width="480" height="480"></svg>
