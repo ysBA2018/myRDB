@@ -1,7 +1,12 @@
 {% extends 'myRDB/base.html' %}
+{% load asjson %}
 {% block content %}
 <div class="container-fluid">
     {% include 'myRDB/profile/profile_head.html' %}
+    <script>
+        var trashlistdata = {{ trash_graph_data | asjson}};
+        var transferlistdata = {{ transfer_graph_data | asjson}};
+    </script>
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -11,7 +16,7 @@
                         <button type="submit" class="btn btn-light btn-outline-secondary "><--</button>
                     </form>
                 </div>
-                <div class="col-8">
+                <div class="col-6">
                     <p class="text-right">Vergleichensebene:</p>
                 </div>
                 <div class="col-2">
@@ -25,6 +30,20 @@
                             {% elif level == "GF" %}
                                 <option>AF</option>
                                 <option selected>GF</option>
+                            {% endif %}
+                        </select>
+                    </form>
+                </div>
+                <div class="col-2">
+                    <form>
+                        {% csrf_token %}
+                        <select id="viewMode" name="view_mode" class="form-control" onchange="form.submit()">
+                            {% if view_mode == "Graphische Ansicht"%}
+                                <option selected>Graphische Ansicht</option>
+                                <option>Tabellarische Ansicht</option>
+                            {% else %}
+                                <option>Graphische Ansicht</option>
+                                <option selected>Tabellarische Ansicht</option>
                             {% endif %}
                         </select>
                     </form>
@@ -68,11 +87,11 @@
                                 </div>
                                 {% if forloop.counter0 == 0 %}
                                     <div id="inner_unequalRights{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_unequalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_unequal">
-                                        {% include 'myRDB/profile/profile_rights_analysis_unequal_compare_card.html' %}
+                                        {% include 'myRDB/profileRightsAnalysis/profile_rights_analysis_unequal_compare_card.html' %}
                                     </div>
                                 {% else %}
                                     <div id="inner_unequalRights{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_unequalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_unequal">
-                                        {% include 'myRDB/profile/profile_rights_analysis_unequal_compare_card.html' %}
+                                        {% include 'myRDB/profileRightsAnalysis/profile_rights_analysis_unequal_compare_card.html' %}
                                     </div>
                                 {% endif %}
                             </div>
@@ -103,11 +122,11 @@
                                 </div>
                                 {% if forloop.counter0 == 0 %}
                                     <div id="inner_equalRights{{ forloop.counter0 }}" class="collapse show" aria-labelledby="inner_equalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_equal">
-                                        {% include 'myRDB/profile/profile_rights_analysis_equal_compare_card.html' %}
+                                        {% include 'myRDB/profileRightsAnalysis/profile_rights_analysis_equal_compare_card.html' %}
                                     </div>
                                 {% else %}
                                     <div id="inner_equalRights{{ forloop.counter0 }}" class="collapse" aria-labelledby="inner_equalRightsHeading{{ forloop.counter0 }}" data-parent="#inner_accordion_equal">
-                                        {% include 'myRDB/profile/profile_rights_analysis_equal_compare_card.html' %}
+                                        {% include 'myRDB/profileRightsAnalysis/profile_rights_analysis_equal_compare_card.html' %}
                                     </div>
                                 {% endif %}
                             </div>

@@ -4,7 +4,7 @@ $(document).ready(function(){
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-
+    svg.select("g").style('transform','translate(50%, 50%)');
     function get_color(d) {
           if(d.depth===0){
               return "white";
@@ -36,16 +36,20 @@ $(document).ready(function(){
           .attr("id","trashTooltip")
           .style("opacity",0);
 
+      function get_opacity(d) {
+          if(d.depth ===0) return 0.5;
+          if(d.depth ===1) return 0.7;
+          if(d.depth ===2) return 0.8;
+          if(d.depth ===3) return 0.9;
+      }
+
     //TODO: bei erstellen von json color für leaves mitgeben!!!
       var circle = g.selectAll("circle")
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
           .style("stroke","grey")
-          .style("opacity",function(d){if(d.depth ===0) return 0.5;
-                                        if(d.depth ===1) return 0.7;
-                                        if(d.depth ===2) return 0.8;
-                                        if(d.depth ===3) return 0.9;})
+          .style("opacity",function(d){return get_opacity(d)})
           .style("fill", function(d) { return get_color(d) })
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");

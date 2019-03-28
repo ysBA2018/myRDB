@@ -32,16 +32,31 @@ $(document).ready(function(){
           .attr("id","transferTooltip")
           .style("opacity",0);
 
+      function get_opacity(d) {
+          if(d.depth ===0) return 0.5;
+          if(d.depth ===1) return 0.7;
+          if(d.depth ===2) return 0.8;
+          if(d.depth ===3) return 0.9;
+      }
+      function get_color(d) {
+          if(d.depth===0){
+              return "white";
+          }
+          else{
+              if(d.depth===3){return d.data.color}
+              else{return "white"}
+          }
+      }
+
     //TODO: bei erstellen von json color für leaves mitgeben!!!
       var circle = g.selectAll("circle")
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
-          .style("opacity",function(d){if(d.depth ===0) return 0.5;
-                                        if(d.depth ===1) return 0.7;
-                                        if(d.depth ===2) return 0.8;
-                                        if(d.depth ===3) return 0.9;})
+          .style("fill", function(d) { if(window.current_site === "compare" ){ return d.children ? color(d.depth) : null;}
+                                        else{ return get_color(d) }})
+          .style("stroke",function (d){if(window.current_site !== "compare" ){return "grey"}return null;})
+          .style("opacity",function(d){return get_opacity(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
@@ -171,7 +186,10 @@ $(document).ready(function(){
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+          .style("fill", function(d) {  if(window.current_site === "profile" ){return get_color(d)}
+                                        else{return d.children ? color(d.depth) : null; }})
+          .style("stroke",function (d){if(window.current_site !== "compare" ){return "grey"}return null;})
+          .style("opacity",function(d){return get_opacity(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
