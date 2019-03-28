@@ -15,9 +15,9 @@ $(document).ready(function(){
         .enter()
         .append("circle")
             .attr("cx",function (d,i) {
-                if(i>=7){return 130}else{return 15}
+                if(i>=3&&i<6){return 130}else if(i>=6&&i<9){return 245}else if(i>=9&&i<12){return 360}else{return 15}
             })
-            .attr("cy",function (d,i) {return 15 + (i * 25)%175 })
+            .attr("cy",function (d,i) {return 15 + (i * 25)%75 })
             .attr("r", 7)
             .style("fill", function (d){return d.color});
 
@@ -25,8 +25,8 @@ $(document).ready(function(){
         .data(data)
         .enter()
         .append("text")
-        .attr("x",function (d,i) { if(i>=7){return 145}else{return 30} })
-        .attr("y",function (d,i){return 15 + (i * 25)%175 } )
+        .attr("x",function (d,i) { if(i>=3&&i<6){return 145}else if(i>=6&&i<9){return 260}else if(i>=9&&i<12){return 375}else{return 30} })
+        .attr("y",function (d,i){return 15 + (i * 25)%75 } )
         .text(function (d) { return d.application_name })
         .attr("text-anchor","left")
         .attr("alignment-baseline","middle");

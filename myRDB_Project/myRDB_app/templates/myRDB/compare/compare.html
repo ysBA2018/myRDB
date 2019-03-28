@@ -4,8 +4,6 @@
     <script>
         var trash_table_count = {{ delete_list_count }};
         var transfer_table_count = {{ transfer_list_count }};
-        var transferlistdata = {{ transfer_list | asjson }};
-        var trashlistdata = {{ delete_list | asjson }};
         var compare_jsondata = {{ compareUser_graph_data | asjson }};
         var jsondata = {{ jsondata | asjson }};
         var current_site = "{{ current_site }}";

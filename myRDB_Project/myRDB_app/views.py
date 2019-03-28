@@ -295,6 +295,8 @@ class Search_All(generic.ListView):
                                 model_tf['tf_owner_orga']['team'],
                                 model_tf['tf_application']['application_name'], model_tf['tf_description'], '',
                                 user['deleted']]
+                        lines.append(line)
+                        '''
                         if self.extra_context.keys().__contains__(
                                 'tf_owner_orga') and self.extra_context.keys().__contains__('tf_application'):
                             if model_tf['tf_owner_orga']['team'] == self.request.GET['tf_owner_orga'] and \
@@ -311,6 +313,7 @@ class Search_All(generic.ListView):
                                 lines.append(line)
                         else:
                             lines.append(line)
+                            '''
         return lines
 
 
@@ -565,13 +568,13 @@ class Compare(generic.ListView):
         self.extra_context['transfer_list_table_data'] = transfer_list_table_data
         self.extra_context['transfer_list_count'] = transfer_list_count
 
-        self.extra_context['transfer_list'] = {"children": transfer_list}
+        self.extra_context['transferlist'] = {"children": transfer_list}
         delete_list = user_json_data['delete_list']
         delete_list, delete_list_with_category = prepare_delete_list(delete_list)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
-        self.extra_context['delete_list'] = {"children": delete_list}
+        self.extra_context['deletelist'] = {"children": delete_list}
 
         self.extra_context['jsondata'] = user_json_data
         afs = user_json_data['children']
@@ -592,14 +595,23 @@ class Compare(generic.ListView):
 
 class ProfileRightsAnalysis(generic.ListView):
     model = User
-    template_name = 'myRDB/profile/templates/myRDB/profileRightsAnalysis/profile_rights_analysis.html'
+    template_name = 'myRDB/profileRightsAnalysis/profile_rights_analysis.html'
     extra_context = {}
 
     def get_queryset(self):
         self.extra_context['current_site'] = "analysis"
+        setViewMode(self.request, self.extra_context)
 
         user_data = self.request.session.get('user_data')
         table_data = self.request.session.get('table_data')
+        delete_graph_data = self.request.session.get('delete_list_graph_data')
+        transfer_graph_data = self.request.session.get('transfer_list_graph_data')
+        delete_table_data = self.request.session.get('delete_list_table_data')
+        transfer_table_data = self.request.session.get('transfer_list_table_data')
+        self.extra_context['delete_list_table_data'] = delete_table_data
+        self.extra_context['transfer_list_table_data'] = delete_table_data
+        self.extra_context['deletelist'] = delete_graph_data
+        self.extra_context['transferlist'] = delete_graph_data
 
         if self.request.GET.keys().__contains__("level"):
             self.extra_context['level'] = self.request.GET['level']
@@ -614,6 +626,29 @@ class ProfileRightsAnalysis(generic.ListView):
         equalRightsStats = []
         unequalRightsStats = []
 
+        equalModelRights, equalRights, equalRightsStats, unequalModelRights, unequalRights, unequalRightsStats = self.compare_right_and_modelright(
+            equalModelRights, equalRights, equalRightsStats, headers, unequalModelRights, unequalRights,
+            unequalRightsStats, user_data)
+
+        self.extra_context['equal_rights'] = sorted(equalRights, key=lambda k: k['name'])
+        self.extra_context['unequal_rights'] = sorted(unequalRights, key=lambda k: k['name'])
+        self.extra_context['equal_model_rights'] = sorted(equalModelRights, key=lambda k: k['name'])
+        self.extra_context['unequal_model_rights'] = sorted(unequalModelRights, key=lambda k: k['name'])
+        self.extra_context['equal_rights_stats'] = sorted(equalRightsStats, key=lambda k: k['right_name'])
+        self.extra_context['unequal_rights_stats'] = sorted(unequalRightsStats, key=lambda k: k['right_name'])
+
+        self.extra_context['user_identity'] = user_data['identity']
+        self.extra_context['user_first_name'] = user_data['first_name']
+        self.extra_context['user_name'] = user_data['name']
+        self.extra_context['user_department'] = user_data['department']
+        self.extra_context['role_count'] = self.request.session.get('role_count')
+        self.extra_context['af_count'] = self.request.session.get('af_count')
+        self.extra_context['gf_count'] = self.request.session.get('gf_count')
+        self.extra_context['tf_count'] = self.request.session.get('tf_count')
+        return None
+
+    def compare_right_and_modelright(self, equalModelRights, equalRights, equalRightsStats, headers, unequalModelRights,
+                                     unequalRights, unequalRightsStats, user_data):
         if self.extra_context['level'] == "AF":
             afs = sorted(user_data['children'], key=lambda k: k['name'])
             for af in afs:
@@ -644,6 +679,7 @@ class ProfileRightsAnalysis(generic.ListView):
                             stats,
                             unequalRightsStats,
                             equalRightsStats)
+                        through = True;
                         break
 
                 # else:
@@ -664,9 +700,14 @@ class ProfileRightsAnalysis(generic.ListView):
             model_gfs = iter(sorted(model_gfs, key=lambda k: k['gf_name']))
 
             for gf in gfs:
+                through = False
                 # if gf['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
-                while True:
-                    current_model = next(model_gfs)
+                while not through:
+                    try:
+                        current_model = next(model_gfs)
+                    except StopIteration:
+                        print("in GF-StopIteration!")
+                        through = True
                     if gf['name'] == current_model['gf_name']:
                         stats = {}
                         stats['right_name'] = current_model['gf_name']
@@ -684,28 +725,12 @@ class ProfileRightsAnalysis(generic.ListView):
                             stats,
                             unequalRightsStats,
                             equalRightsStats)
-
+                        through = True
                         break
 
                 # else:
                 #    gfs.remove(gf)
-
-        self.extra_context['equal_rights'] = sorted(equalRights, key=lambda k: k['name'])
-        self.extra_context['unequal_rights'] = sorted(unequalRights, key=lambda k: k['name'])
-        self.extra_context['equal_model_rights'] = sorted(equalModelRights, key=lambda k: k['name'])
-        self.extra_context['unequal_model_rights'] = sorted(unequalModelRights, key=lambda k: k['name'])
-        self.extra_context['equal_rights_stats'] = sorted(equalRightsStats, key=lambda k: k['right_name'])
-        self.extra_context['unequal_rights_stats'] = sorted(unequalRightsStats, key=lambda k: k['right_name'])
-
-        self.extra_context['user_identity'] = user_data['identity']
-        self.extra_context['user_first_name'] = user_data['first_name']
-        self.extra_context['user_name'] = user_data['name']
-        self.extra_context['user_department'] = user_data['department']
-        self.extra_context['role_count'] = self.request.session.get('role_count')
-        self.extra_context['af_count'] = self.request.session.get('af_count')
-        self.extra_context['gf_count'] = self.request.session.get('gf_count')
-        self.extra_context['tf_count'] = self.request.session.get('tf_count')
-        return None
+        return equalModelRights, equalRights, equalRightsStats, unequalModelRights, unequalRights, unequalRightsStats
 
     def compareRightToModel(self, userRight, compareModel, equalRights, unequalRights, equalModelRights,
                             unequalModelRights, isAF, isGF, stats, unequalRightsStats, equalRightsStats):
@@ -733,6 +758,7 @@ class ProfileRightsAnalysis(generic.ListView):
                     currentGFModel = next(modelGFIter)
                 except StopIteration:
                     print("in StopIteration")
+                    break
 
                 if gf['name'] == currentGFModel['name']:
                     equalGFSum += 1
@@ -820,7 +846,10 @@ class Profile(generic.ListView):
         logged_in_user_token = self.request.user.auth_token
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
 
-        self.extra_context['legendData'] = get_tf_applications(headers)['results']
+        legend_data = get_tf_applications(headers)['results']
+        sorted_legend_data = sorted(legend_data,key=lambda r: r["application_name"])
+        self.extra_context['legendData'] = sorted_legend_data
+
 
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
@@ -830,27 +859,32 @@ class Profile(generic.ListView):
         user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
         self.extra_context['scatterData'] = scatterData
 
+        transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
+        transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
+        self.extra_context['transfer_list_table_data'] = transfer_list_table_data
+        self.extra_context['transfer_list_count'] = transfer_list_count
+        self.extra_context['transferlist'] = {"children": transfer_list}
+
         delete_list = user_json_data['delete_list']
         delete_list, delete_list_with_category = prepare_delete_list(delete_list)
-        # del_af_count, del_gf_count, del_tf_count = get_delete_list_counts(delete_list_with_category)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
-        # self.extra_context['delete_list_table_data'] = get_extra_paginator("delete_list",delete_list_table_data,self.request)
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
-        self.extra_context['delete_list'] = {"children": delete_list}
-
+        self.extra_context['deletelist'] = {"children": delete_list}
         # user_json_data = update_user_data(user_json_data, delete_list_with_category)
 
         afs = user_json_data['children']
         data, gf_count, tf_count = prepareTableData(user_json_data, roles, afs, headers)
 
         self.request.session['user_data'] = user_json_data
-        '''
+
         self.request.session['table_data'] = data
         self.request.session['delete_list_graph_data'] = {"children":delete_list}
         self.request.session['delete_list_table_data'] = delete_list_table_data
         self.request.session['delete_list_count'] = delete_list_count
-        '''
+        self.request.session['transfer_list_graph_data'] = {"children": transfer_list}
+        self.request.session['transfer_list_table_data'] = transfer_list_table_data
+        self.request.session['transfer_list_count'] = transfer_list_count
 
         self.extra_context['role_count'] = len(roles)
         self.extra_context['af_count'] = len(afs)
