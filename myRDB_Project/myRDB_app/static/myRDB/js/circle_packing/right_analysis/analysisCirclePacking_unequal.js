@@ -1,7 +1,7 @@
 (function(){
 $(document).ready(function(){
     var svgIndex = window.iUnequal;
-    window.iUnequal=window.iUnequal+1
+    window.iUnequal=window.iUnequal+1;
 
 
     var svg = d3.select("#analysisCirclePackingSVG_unequal"+svgIndex),
@@ -36,7 +36,7 @@ $(document).ready(function(){
           .style("opacity",0);
 
       function compare_graphs(d){
-          var compare_data = data_root['children'];
+          var compare_data = window['jsonModeldata_unequal'+svgIndex]['children'];
           if(d.depth===1){
               for(i in compare_data){
                   if(compare_data[i].name===d.data.name) return true;
@@ -74,16 +74,58 @@ $(document).ready(function(){
               return "white";
           }
           else{
-              console.log(window.current_site);
-              if(compare_graphs(d)){
-                  if(d.depth===1)return "darkgrey";
-                  if(d.depth===2)return "grey";
-                  if(d.depth===3)return "lightgrey";
-              }else{
-                  if(d.depth===3){return d.data.color}
-                  else{return "white"}
+              var exists_in_compare_graph = compare_graphs(d);
+              if(window.level === "Role"){
+                  if(exists_in_compare_graph){
+                      if(d.depth===1)return "darkgrey";
+                      if(d.depth===2)return "grey";
+                      if(d.depth===3)return "lightgrey";
+                  }else{
+                      if(d.depth===3){return d.data.color}
+                      else{return "white"}
+                  }
+              }
+              else if(window.level === "AF"){
+                  if(exists_in_compare_graph){
+                      if(d.depth===1)return "grey";
+                      if(d.depth===2)return "lightgrey";
+                  }else{
+                      if(d.depth===2){return d.data.color}
+                      else{return "white"}
+                  }
+              }
+              else if (window.level === "GF"){
+                  if(exists_in_compare_graph){
+                      if(d.depth===1)return "lightgrey";
+                  }else{
+                      if(d.depth===1){return d.data.color}
+                      else{return "white"}
+                  }
               }
           }
+      }
+      function get_tooltip_text(d) {
+          var text;
+          if (window.level === "Role") {
+              if(d.depth === 1){
+                  text = "<b>AF:</b> "+d.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.data.description
+              }else if(d.depth === 2){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
+              }else if(d.depth === 3){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
+              }
+          }else if (window.level === "AF") {
+              if(d.depth === 1){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
+              }else if(d.depth === 2){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
+              }
+          }else if(window.level === "GF"){
+              if(d.depth === 1){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"
+              }
+          }
+          return text
       }
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -102,14 +144,7 @@ $(document).ready(function(){
               div.transition()
                   .duration(200)
                   .style("opacity",9);
-              var text;
-              if(d.depth === 1){
-                  text = "<b>AF:</b> "+d.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.data.description
-              }else if(d.depth === 2){
-                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
-              }else if(d.depth === 3){
-                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
-              }
+              var text = get_tooltip_text(d);
               div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
@@ -188,7 +223,7 @@ $(document).ready(function(){
       //        return d.r*k;
       //    });
       //}
-    function update(updated_data){
+    function update(updated_data, svgIndex){
           console.log(updated_data);
           root = updated_data;
 
@@ -279,8 +314,8 @@ $(document).ready(function(){
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
     }
-    window.updateCP=function () {
-        update(window.jsondata)
+    window.updateUnequalCP=function (originSvgIndex) {
+        update(window['jsondata_unequal'+originSvgIndex],originSvgIndex)
     };
     function deletefunction(d,i){
         d3.event.preventDefault();
@@ -340,8 +375,8 @@ $(document).ready(function(){
 
                 d3.select("body").selectAll("#CPtooltip").remove();
 
-                d3.select('#circlePackingSVG').select("g").data(window.jsondata).exit().remove();
-                update(window['jsondata']);
+                d3.select("#analysisCirclePackingSVG_unequal"+svgIndex).select("g").data(window['jsondata_unequal'+svgIndex]).exit().remove();
+                update(window['jsondata_unequal'+svgIndex],svgIndex);
 
                 d3.select('#trashSVG').select('g').data(window.trashlistdata).exit().remove();
                 window.updateTrash();
@@ -350,6 +385,7 @@ $(document).ready(function(){
                     d3.select('#compareCirclePackingSVG').select('g').data(window.compare_jsondata).exit().remove();
                     window.updateCompareCP();
                 }
+
                 alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
                 //update_session();
             }

@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .forms import CustomUserCreationForm, SomeForm, ApplyRightForm, DeleteRightForm, AcceptChangeForm, \
-    DeclineChangeForm
+    DeclineChangeForm, CustomAuthenticationForm
 from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application, User_AF, User_TF, \
     User_GF, ChangeRequests
 from rest_framework import viewsets, status
@@ -21,6 +21,7 @@ from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSeriali
 from django.views import generic
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView, PasswordResetDoneView
 
 User = get_user_model()
 
@@ -195,11 +196,12 @@ class CSVtoMongoDB(generic.FormView):
         return user_af
 
 
-class Login(generic.TemplateView):
+class Login(LoginView):
     template_name = 'myRDB/registration/login.html'
+    authentication_form = CustomAuthenticationForm
 
 
-class Logout(generic.TemplateView):
+class Logout(LogoutView):
     template_name = 'myRDB/registration/logout.html'
 
 
@@ -209,19 +211,19 @@ class Register(generic.CreateView):
     template_name = 'myRDB/registration/register.html'
 
 
-class Password_Reset(generic.TemplateView):
+class Password_Reset(PasswordResetView):
     template_name = 'myRDB/registration/password_reset_form.html'
 
 
-class Password_Reset_Done(generic.TemplateView):
+class Password_Reset_Done(PasswordResetDoneView):
     template_name = 'myRDB/registration/password_reset_done.html'
 
 
-class Password_Reset_Confirm(generic.TemplateView):
+class Password_Reset_Confirm(PasswordResetConfirmView):
     template_name = 'myRDB/registration/password_reset_confirm.html'
 
 
-class Password_Reset_Complete(generic.TemplateView):
+class Password_Reset_Complete(PasswordResetCompleteView):
     template_name = 'myRDB/registration/password_reset_complete.html'
 
 
@@ -556,7 +558,7 @@ class Compare(generic.ListView):
 
         self.request.session['user_identity'] = self.extra_context['identity_param']
         logged_in_user_token = self.request.user.auth_token
-        headers = headers = get_headers(self.request)
+        headers = get_headers(self.request)
         user_json_data = get_user_by_key(self.extra_context['identity_param'], headers)
 
         roles = user_json_data['roles']
@@ -608,10 +610,14 @@ class ProfileRightsAnalysis(generic.ListView):
         transfer_graph_data = self.request.session.get('transfer_list_graph_data')
         delete_table_data = self.request.session.get('delete_list_table_data')
         transfer_table_data = self.request.session.get('transfer_list_table_data')
+        transfer_list_count = self.request.session.get('transfer_list_count')
+        delete_list_count = self.request.session.get('delete_list_count')
         self.extra_context['delete_list_table_data'] = delete_table_data
-        self.extra_context['transfer_list_table_data'] = delete_table_data
+        self.extra_context['transfer_list_table_data'] = transfer_table_data
         self.extra_context['deletelist'] = delete_graph_data
-        self.extra_context['transferlist'] = delete_graph_data
+        self.extra_context['transferlist'] = transfer_graph_data
+        self.extra_context['transfer_list_count'] = transfer_list_count
+        self.extra_context['delete_list_count'] = delete_list_count
 
         if self.request.GET.keys().__contains__("level"):
             self.extra_context['level'] = self.request.GET['level']
@@ -821,7 +827,7 @@ class ProfileRightsAnalysis(generic.ListView):
 
 
 class Profile(generic.ListView):
-    model = User
+    # model = User
     template_name = 'myRDB/profile/profile.html'
     # paginate_by = 10
     context_object_name = "table_data"
@@ -831,25 +837,22 @@ class Profile(generic.ListView):
         self.extra_context['current_site'] = "profile"
 
         setViewMode(self.request, self.extra_context)
-
+        print(self.request.get_host())
         if not "identity" in self.request.GET.keys():
             user = self.request.user
             self.request.session['user_identity'] = user.identity
-            url = 'http://127.0.0.1:8000/users/%s' % user.identity
+            url = 'http://'+self.request.get_host()+'/users/%s' % user.identity
             self.extra_context['identity_param'] = user.identity
         else:
             # TODO: hier noch lösung mit Params über API finden!
             self.extra_context['identity_param'] = self.request.GET['identity']
             self.request.session['user_identity'] = self.extra_context['identity_param']
-            url = 'http://127.0.0.1:8000/users/%s' % self.request.GET['identity']
+            url = 'http://'+self.request.get_host()+'/users/%s' % self.request.GET['identity']
 
-        logged_in_user_token = self.request.user.auth_token
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-
+        headers = get_headers(self.request)
         legend_data = get_tf_applications(headers)['results']
-        sorted_legend_data = sorted(legend_data,key=lambda r: r["application_name"])
+        sorted_legend_data = sorted(legend_data, key=lambda r: r["application_name"])
         self.extra_context['legendData'] = sorted_legend_data
-
 
         res = requests.get(url, headers=headers)
         user_json_data = res.json()
@@ -879,7 +882,7 @@ class Profile(generic.ListView):
         self.request.session['user_data'] = user_json_data
 
         self.request.session['table_data'] = data
-        self.request.session['delete_list_graph_data'] = {"children":delete_list}
+        self.request.session['delete_list_graph_data'] = {"children": delete_list}
         self.request.session['delete_list_table_data'] = delete_list_table_data
         self.request.session['delete_list_count'] = delete_list_count
         self.request.session['transfer_list_graph_data'] = {"children": transfer_list}
@@ -1026,7 +1029,7 @@ class MyRequests(generic.ListView):
                         model = None
                     else:
                         model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
-                                            self.request)
+                                                self.request)
                 else:
                     right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
                                                 requesting_user['delete_list'])
@@ -1416,7 +1419,9 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
                 tf['size'] = 3000
 
                 # TODO: scatter-graph für zugewiesen, auf delete-list gesetzt, gelöscht
-                scatterData.append({"name": tf['name'],"gf_name": gf['name'],"af_name":af['name'],"af_applied": af_applied, "color": tf['color']})
+                scatterData.append(
+                    {"name": tf['name'], "gf_name": gf['name'], "af_name": af['name'], "af_applied": af_applied,
+                     "color": tf['color']})
 
     if not compareUser:
         scatterData.sort(key=lambda r: r["af_applied"])

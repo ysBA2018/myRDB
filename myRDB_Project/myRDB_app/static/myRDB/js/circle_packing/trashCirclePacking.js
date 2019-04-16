@@ -283,7 +283,12 @@ $(document).ready(function(){
                     });
             if(successful===true){
                 var trash = window.trashlistdata['children'];
-                var rights = window.jsondata['children'];
+                var rights;
+                if (window.current_site === 'analysis') {
+                    rights = window['jsondata_unequal'+svgIndex];
+                }else{
+                    rights = window.jsondata['children'];
+                }
                 update_rights(trash,rights,d);
 
                 d3.select("body").selectAll("#trashTooltip").remove();
@@ -291,10 +296,12 @@ $(document).ready(function(){
                 d3.select('#trashSVG').select("g").data(window.trashlistdata).exit().remove();
                 updateTrash(window['trashlistdata']);
 
+                if (window.current_site === 'analysis') {
 
+                }else{
                 d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
-                window.updateCP();
-
+                    window.updateCP();
+                }
                 if(window.current_site==="compare"){
                     d3.select('#compareCirclePackingSVG').select('g').data(window.compare_jsondata).exit().remove();
                     window.updateCompareCP();

@@ -1,15 +1,24 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, UsernameField
 from django.utils.safestring import mark_safe
+
+from django.contrib.auth import get_user_model
 
 from .models import User, Orga, Group, Department, ZI_Organisation, Role, AF, GF, TF, User_AF, User_GF, User_TF, \
     ChangeRequests
 
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm):
-        model = User
+class CustomAuthenticationForm(AuthenticationForm):
+    class Meta:
+        model = get_user_model()
         fields = ('identity',)
+
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('identity','email')
 
     # Validation von xvnummer abgeschaltet da dieses bei passwortvalidierung mit dabei
     '''
@@ -26,12 +35,12 @@ class CustomUserCreationForm(UserCreationForm):
             pass
         return identity
     '''
+
     def clean(self):
         print("in clean_password2")
         cd = self.cleaned_data
         password1 = cd.get("password1")
         password2 = cd.get("password2")
-        print(password1,password2)
         if password1 and password2 and password1 != password2:
             print("in passwords dont match")
 
@@ -116,14 +125,21 @@ class CustomUserChangeForm(UserChangeForm):
 class SomeForm(forms.Form):
     start_import = forms.FileInput()
 
+
 class ApplyRightForm(forms.Form):
-    reason_for_application = forms.CharField(widget=forms.Textarea(attrs={'rows':'4'}), min_length=20, max_length=500, label=mark_safe('<strong>Grund der Beantragung:</strong>'))
+    reason_for_application = forms.CharField(widget=forms.Textarea(attrs={'rows': '4'}), min_length=20, max_length=500,
+                                             label=mark_safe('<strong>Grund der Beantragung:</strong>'))
+
 
 class DeleteRightForm(forms.Form):
-    reason_for_deletion = forms.CharField(widget=forms.Textarea(attrs={'rows':'4'}), min_length=20, max_length=500, label=mark_safe('<strong>Grund der Löschung:</strong>'))
+    reason_for_deletion = forms.CharField(widget=forms.Textarea(attrs={'rows': '4'}), min_length=20, max_length=500,
+                                          label=mark_safe('<strong>Grund der Löschung:</strong>'))
+
 
 class AcceptChangeForm(forms.Form):
     change_in_IIQ_check = forms.BooleanField(label="Änderungen in IIQ beantragt?")
 
+
 class DeclineChangeForm(forms.Form):
-    reason_for_decline = forms.CharField(widget=forms.Textarea(attrs={'rows':'2'}), min_length=20, max_length=500, label=mark_safe('<strong>Grund der Ablehnung:</strong>'))
+    reason_for_decline = forms.CharField(widget=forms.Textarea(attrs={'rows': '2'}), min_length=20, max_length=500,
+                                         label=mark_safe('<strong>Grund der Ablehnung:</strong>'))

@@ -1,7 +1,7 @@
 (function(){
 $(document).ready(function(){
     var svgIndex = window.iUnequalModel;
-    window.iUnequalModel=window.iUnequalModel+1
+    window.iUnequalModel=window.iUnequalModel+1;
 
 
     var svg = d3.select("#analysisModelCirclePackingSVG_unequal"+svgIndex),
@@ -36,31 +36,61 @@ $(document).ready(function(){
           .style("opacity",0);
 
       //TODO: compare auch auf my_requests!
-      function compare_graphs(d, compare_data){
-          if(d.depth===1){
-              for(i in compare_data){
-                  if(compare_data[i].name===d.data.name) return true;
-              }
-          }
-          else if (d.depth === 2){
-              for(i in compare_data){
-                  if(compare_data[i].name===d.parent.data.name){
-                      var level_2 = compare_data[i]['children'];
-                      for(j in level_2){
-                          if(level_2[j].name===d.data.name) return true;
+      function compare_graphs(d, compare_data, transferbool){
+          if(transferbool){
+              if(window.level==='AF'){
+                  if (d.depth === 1){
+                      for(i in compare_data){
+                          if(compare_data[i].name===d.parent.data.name){
+                              var level_2 = compare_data[i]['children'];
+                              for(j in level_2){
+                                  if(level_2[j].name===d.data.name) return true;
+                              }
+                          }
+                      }
+                  }
+                  else if (d.depth === 2){
+                      for(i in compare_data){
+                          if(compare_data[i].name===d.parent.parent.data.name){
+                              var level_2 = compare_data[i]['children'];
+                              for(j in level_2){
+                                  if(level_2[j].name===d.parent.data.name){
+                                      var level_3 = level_2[j]['children'];
+                                      for(k in level_3){
+                                          if(level_3[k].name===d.data.name) return true;
+                                      }
+                                  }
+                              }
+                          }
                       }
                   }
               }
-          }
-          else if (d.depth === 3){
-              for(i in compare_data){
-                  if(compare_data[i].name===d.parent.parent.data.name){
-                      var level_2 = compare_data[i]['children'];
-                      for(j in level_2){
-                          if(level_2[j].name===d.parent.data.name){
-                              var level_3 = level_2[j]['children'];
-                              for(k in level_3){
-                                  if(level_3[k].name===d.data.name) return true;
+          }else{
+              if(d.depth===1){
+                  for(i in compare_data){
+                      if(compare_data[i].name===d.data.name) return true;
+                  }
+              }
+              else if (d.depth === 2){
+                  for(i in compare_data){
+                      if(compare_data[i].name===d.parent.data.name){
+                          var level_2 = compare_data[i]['children'];
+                          for(j in level_2){
+                              if(level_2[j].name===d.data.name) return true;
+                          }
+                      }
+                  }
+              }
+              else if (d.depth === 3){
+                  for(i in compare_data){
+                      if(compare_data[i].name===d.parent.parent.data.name){
+                          var level_2 = compare_data[i]['children'];
+                          for(j in level_2){
+                              if(level_2[j].name===d.parent.data.name){
+                                  var level_3 = level_2[j]['children'];
+                                  for(k in level_3){
+                                      if(level_3[k].name===d.data.name) return true;
+                                  }
                               }
                           }
                       }
@@ -69,20 +99,70 @@ $(document).ready(function(){
           }
           return false;
       }
-      function get_color(d) {
+      function get_color(d, svgIndex) {
           if(d.depth===0){
               return "white";
           }
           else{
-              if(compare_graphs(d,data_root['children'])||compare_graphs(d,window.transferlistdata['children'])){
-                  if(d.depth===1)return "darkgrey";
-                  if(d.depth===2)return "grey";
-                  if(d.depth===3)return "lightgrey";
-              }else{
-                  if(d.depth===3){return d.data.color}
-                  else{return "white"}
+              var exists_in_compar_graph = compare_graphs(d,window['jsondata_unequal'+svgIndex]['children'],false);
+              var exists_in_transfer_graph = compare_graphs(d,window.transferlistdata['children'], true);
+              if(window.level === "Role"){
+                  if(exists_in_compar_graph||exists_in_transfer_graph){
+                      d['exists'] = true;
+                      if(d.depth===1)return "darkgrey";
+                      if(d.depth===2)return "grey";
+                      if(d.depth===3)return "lightgrey";
+                  }else{
+                      d['exists'] = false;
+                      if(d.depth===3){return d.data.tf_application.color}
+                      else{return "white"}
+                  }
+              }
+              else if(window.level === "AF"){
+                  if(exists_in_compar_graph||exists_in_transfer_graph){
+                      d['exists'] = true;
+                      if(d.depth===1)return "grey";
+                      if(d.depth===2)return "lightgrey";
+                  }else{
+                      d['exists'] = false;
+                      if(d.depth===2){return d.data.tf_application.color}
+                      else{return "white"}
+                  }
+              }
+              else if (window.level === "GF"){
+                  if(exists_in_compar_graph||exists_in_transfer_graph){
+                      d['exists'] = true;
+                      if(d.depth===1)return "lightgrey";
+                  }else{
+                      d['exists'] = false;
+                      if(d.depth===1){return d.data.tf_application.color}
+                      else{return "white"}
+                  }
               }
           }
+      }
+      function get_tooltip_text(d) {
+          var text;
+          if (window.level === "Role") {
+              if(d.depth === 1){
+                  text = "<b>AF:</b> "+d.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.data.description
+              }else if(d.depth === 2){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
+              }else if(d.depth === 3){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
+              }
+          }else if (window.level === "AF") {
+              if(d.depth === 1){
+                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
+              }else if(d.depth === 2){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
+              }
+          }else if(window.level === "GF"){
+              if(d.depth === 1){
+                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"
+              }
+          }
+          return text
       }
 
     //TODO: bei erstellen von json color für leaves mitgeben!!!
@@ -91,24 +171,17 @@ $(document).ready(function(){
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
           .style("stroke","grey")
-          .style("fill", function(d) {return get_color(d)})
+          .style("fill", function(d) {return get_color(d,svgIndex)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){transferfunction(d,i)})
+          .on("contextmenu",function(d,i){transferfunction(d,i,svgIndex)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
                   .duration(200)
                   .style("opacity",9);
-              var text;
-              if(d.depth === 1){
-                  text = "<b>AF:</b> "+d.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.data.description
-              }else if(d.depth === 2){
-                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
-              }else if(d.depth === 3){
-                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
-              }
+              var text = get_tooltip_text(d);
               div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
@@ -187,11 +260,11 @@ $(document).ready(function(){
       //        return d.r*k;
       //    });
       //}
-    function update(updated_data){
+    function update(updated_data,svgIndex){
           console.log(updated_data);
           root = updated_data;
 
-          svg = d3.select("#compareCirclePackingSVG"),
+          svg = d3.select("#analysisModelCirclePackingSVG_unequal"+svgIndex),
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
@@ -224,24 +297,17 @@ $(document).ready(function(){
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
           .style("stroke","grey")
-          .style("fill", function(d) {return get_color(d)})
+          .style("fill", function(d) {return get_color(d,svgIndex)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){transferfunction(d,i)})
+          .on("contextmenu", function(d,i){transferfunction(d,i,svgIndex)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
                   .duration(200)
                   .style("opacity",9);
-              var text;
-              if(d.depth === 1){
-                  text = "<b>AF:</b> "+d.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.data.description
-              }else if(d.depth === 2){
-                  text = "<b>GF:</b> "+d.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.data.description
-              }else if(d.depth === 3){
-                  text = "<b>TF:</b> "+d.data.name+"<br/>"+"<b>GF:</b> "+d.parent.data.name+"<br/>"+ "<b>AF:</b> "+d.parent.parent.data.name+"<br/>"+"<b>AF-Beschreibung:</b> "+d.parent.parent.data.description
-              }
+              var text = get_tooltip_text(d);
               div .html(text)
                   .style("left",(d3.event.pageX)+"px")
                   .style("top",(d3.event.pageY-28)+"px")
@@ -278,65 +344,34 @@ $(document).ready(function(){
 
       zoomTo([root.x, root.y, root.r * 2 + margin]);
     }
-    window.updateCompareCP=function () {
-        update(window.compare_jsondata)
+    window.updateUnequalModelCP=function (originSvgIndex) {
+        update(window['jsonModeldata_unequal'+originSvgIndex],originSvgIndex)
     };
 
-    function check_user_rights_for_existance(d,right_type, parent, grandparent, user_rights, transfer_rights) {
+    function check_user_rights_for_existance(d,right_type) {
         var exists_in_user_rights = false;
         var exists_in_transfer_rights = false;
         if(right_type==="af"){
-            for(i in user_rights){
-                if(user_rights[i]['name']===d.data.name){
-                    exists_in_user_rights = true
-                }
-            }
-            for(i in transfer_rights){
-                if(transfer_rights[i]['name']===d.data.name){
-                    exists_in_transfer_rights = true;
-                }
-            }
-            if (!exists_in_user_rights && !exists_in_transfer_rights){
+            if (!d.exists){
                 return false;
             }else{
                 alert("AF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
-
         }
         if(right_type==="gf"){
-            var parent_exists_in_user_rights=false;
-            var parent_exists_in_transfer_rights=false;
-            var transferable = true;
-            for(i in user_rights){
-                if(user_rights[i]['name']===parent){
-                    parent_exists_in_user_rights = true;
-                    var rights_lev_2 = user_rights[i]['children'];
-                    for(j in rights_lev_2){
-                        if(rights_lev_2[j]['name']===d.data.name){
-                            exists_in_user_rights = true;
-                        }
+            if(!d.exists){
+                if(window.level === 'Role'){
+                    if(d.parent.exists){
+                        return false
+                    }
+                    else{
+                        alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                        return true;
                     }
                 }
-            }
-            for(i in transfer_rights){
-                if(transfer_rights[i]['name']===parent){
-                    parent_exists_in_transfer_rights = true;
-                    var rights_lev_2 = transfer_rights[i]['children'];
-                    for(j in rights_lev_2){
-                        if(rights_lev_2[j]['name']===d.data.name){
-                            exists_in_transfer_rights = true;
-                        }
-                    }
-                }
-            }
-            if(!exists_in_user_rights && !exists_in_transfer_rights){
-                if(parent_exists_in_user_rights || parent_exists_in_transfer_rights){
-                    return false
-                }
-                else{
-                    alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
-                    return true;
+                if(window.level === 'AF'){
+                    return false;
                 }
             }else{
                 alert("GF existiert bereits\nund kann nicht übertragen werden!");
@@ -344,53 +379,27 @@ $(document).ready(function(){
             }
         }
         if(right_type==="tf") {
-            var grandparent_exists_in_user_rights = false;
-            var parent_exists_in_user_rights = false;
-            var grandparent_exists_in_transfer_rights = false;
-            var parent_exists_in_transfer_rights = false;
-            for (i in user_rights) {
-                if (user_rights[i]['name'] === grandparent) {
-                    grandparent_exists_in_user_rights = true;
-                    var rights_lev_2 = user_rights[i]['children'];
-                    for (j in rights_lev_2) {
-                        if (rights_lev_2[j]['name'] === parent) {
-                            parent_exists_in_user_rights = true;
-                            var rights_lev_3 = rights_lev_2[j]['children'];
-                            for (k in rights_lev_3) {
-                                if (rights_lev_3[k]['name'] === d.data.name) {
-                                    exists_in_user_rights = true
-                                }
-                            }
-                        }
+            if (!d.exists) {
+                if(window.level === 'Role'){
+                    if (d.parent.exists && d.parent.parent.exists) {
+                        return false;
+                    }else if (!d.parent.exists && d.parent.parent.exists) {
+                        alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                        return true;
+                    }else if (!d.parent.exists && !d.parent.parent.exists) {
+                        alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die benötigte AF!");
+                        return true;
                     }
                 }
-            }
-            for (i in transfer_rights) {
-                if (transfer_rights[i]['name'] === grandparent) {
-                    grandparent_exists_in_transfer_rights = true;
-                    var rights_lev_2 = transfer_rights[i]['children'];
-                    for (j in rights_lev_2) {
-                        if (rights_lev_2[j]['name'] === parent) {
-                            parent_exists_in_transfer_rights = true;
-                            var rights_lev_3 = rights_lev_2[j]['children'];
-                            for (k in rights_lev_3) {
-                                if (rights_lev_3[k]['name'] === d.data.name) {
-                                    exists_in_transfer_rights = true
-                                }
-                            }
-                        }
+                if(window.level === 'AF'){
+                    if (d.parent.exists) {
+                        return false;
+                    }else{
+                        alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                        return true;
                     }
-                }
-            }
-            if (!exists_in_user_rights && !exists_in_transfer_rights) {
-                if ((grandparent_exists_in_user_rights && parent_exists_in_user_rights)||(grandparent_exists_in_transfer_rights && parent_exists_in_transfer_rights)) {
+                }else if(window.level === 'GF'){
                     return false;
-                } else if (!grandparent_exists_in_user_rights && !grandparent_exists_in_transfer_rights) {
-                    alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
-                    return true;
-                } else if ((grandparent_exists_in_user_rights && !parent_exists_in_user_rights)||(grandparent_exists_in_transfer_rights && !parent_exists_in_transfer_rights)) {
-                    alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
-                    return true;
                 }
             }else{
                 alert("TF existiert bereits\nund kann nicht übertragen werden!");
@@ -398,20 +407,40 @@ $(document).ready(function(){
             }
         }
     }
-    function transferfunction(d,i){
-        d3.event.preventDefault();
+    function get_type_and_parents(d){
         var right_type="",right_parent = "",right_grandparent = "";
-        if(d.depth===1) right_type="af";
-        else if(d.depth===2) {
-            right_type="gf";
-            right_parent = d.parent.data.name;
-        }
-        else if(d.depth===3){
-            right_type="tf";
+        if (window.level === "Role") {
+            if(d.depth===1) right_type="af";
+            else if(d.depth===2) {
+                right_type="gf";
+                right_parent = d.parent.data.name;
+            }
+            else if(d.depth===3){
+                right_type="tf";
+                right_grandparent = d.parent.parent.data.name;
+                right_parent = d.parent.data.name;
+            }
+        }else if (window.level === "AF") {
+            if(d.depth===1){
+                right_type="gf";
+                right_parent = d.parent.data.name;
+            }
+            else if(d.depth===2) {
+                right_type="tf";
+                right_grandparent = d.parent.parent.data.name;
+                right_parent = d.parent.data.name;
+            }
+        }else if (window.level === "GF") {
+            if(d.depth===1) right_type="tf";
             right_grandparent = d.parent.parent.data.name;
             right_parent = d.parent.data.name;
         }
-        if(check_user_rights_for_existance(d,right_type,right_parent,right_grandparent, window.jsondata['children'],window.transferlistdata['children'])){
+        return [right_type,right_parent,right_grandparent]
+    }
+    function transferfunction(d,i,svgIndex){
+        d3.event.preventDefault();
+        var right_info = get_type_and_parents(d);
+        if(check_user_rights_for_existance(d,right_info[0])){
             return;
         }
         var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n");
@@ -443,7 +472,7 @@ $(document).ready(function(){
                 }
             });
 
-            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user,"compare_user":window.compare_user,"action_type":"transfer","right_type":right_type,"right_name":d.data.name,"parent":right_parent,"grandparent":right_grandparent};
+            var data = {"X-CSRFToken":getCookie("csrftoken"),"X_METHODOVERRIDE":'PATCH',"user_pk":window.user,"action_type":"analysis_transfer","right_type":right_info[0],"right_name":d.data.name,"right_pk":d.data.pk,"parent":right_info[1],"grandparent":right_info[2]};
             var successful=false;
             $.ajax({type:'POST',
                     data:data,
@@ -454,15 +483,15 @@ $(document).ready(function(){
                     error: function(res){console.log(res);}
                     });
             if(successful===true){
-                var compare_rights = window.compare_jsondata['children'];
-                var user_rights = window.jsondata['children'];
+                var compare_rights = window['jsonModeldata_unequal'+svgIndex]['children'];
+                var user_rights = window['jsondata_unequal'+svgIndex]['children'];
                 var transfer = window.transferlistdata['children'];
                 update_rights(user_rights,compare_rights, transfer, d);
 
                 d3.select("body").selectAll("#compareCPtooltip").remove();
 
-                d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
-                update(window['compare_jsondata']);
+                d3.select("#analysisModelCirclePackingSVG_unequal"+svgIndex).select("g").data(window['jsonModeldata_unequal'+svgIndex]).exit().remove();
+                update(window['jsonModeldata_unequal'+svgIndex],svgIndex);
 
                 d3.select('#transferSVG').select('g').data(window.transferlistdata).exit().remove();
                 window.updateTransfer();
@@ -534,9 +563,13 @@ $(document).ready(function(){
             for (i in compare_rights) {
                 if (compare_rights[i]['name'] === d.data.name) {
                     console.log(i + "," + d.data.name);
-                    update_right_counters(compare_rights[i],"af");
-                    transfer.push(compare_rights[i]);
-                    //user_rights.push(compare_rights[i]);
+                    if(window.level==="Role") {
+                        update_right_counters(compare_rights[i], "af");
+                        transfer.push(compare_rights[i]);
+                    }else if(window.level==="AF") {
+                        update_right_counters(compare_rights[i], "gf");
+                        add_to_transfer_list(transfer,compare_rights[i],d.parent.data,null,'gf');
+                    }
                     return;
                 }
             }
@@ -550,9 +583,14 @@ $(document).ready(function(){
                         if (right_lev_2['name'] === d.data.name) {
                             console.log(j + "," + d.data.name);
                             right_lev_2["parent"]=d.parent.data.name;
-                            update_right_counters(right_lev_2,"gf");
-                            //user_rights.push(right_lev_2);
-                            add_to_transfer_list(transfer,right_lev_2,right,null,'gf');
+                            if(window.level==="Role"){
+                                update_right_counters(right_lev_2,"gf");
+                                add_to_transfer_list(transfer,right_lev_2,right,null,'gf');
+                            }
+                            if(window.level==="AF"){
+                                update_right_counters(right_lev_2,"tf");
+                                add_to_transfer_list(transfer,right_lev_2,right,d.parent.parent.data,'tf');
+                            }
                             return;
                         }
                     }

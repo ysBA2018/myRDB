@@ -186,8 +186,8 @@ $(document).ready(function(){
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-          .style("fill", function(d) {  if(window.current_site === "profile" ){return get_color(d)}
-                                        else{return d.children ? color(d.depth) : null; }})
+          .style("fill", function(d) {  if(window.current_site === "compare" ){return d.children ? color(d.depth) : null;}
+                                        else{return get_color(d)}})
           .style("stroke",function (d){if(window.current_site !== "compare" ){return "grey"}return null;})
           .style("opacity",function(d){return get_opacity(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
@@ -242,6 +242,51 @@ $(document).ready(function(){
     window.updateTransfer=function () {
         updateTransfer(window.transferlistdata);
     };
+    function find_svgIndex(d) {
+        var svgIndex = 0;
+        var data;
+        var found =false;
+        while(found===false){
+            data = window['jsonModeldata_unequal'+svgIndex];
+
+                if(window.level==='AF'){
+                    if(d.depth===1) {
+                        if (d.data.name === data.name) {
+                            return svgIndex;
+                        }
+                    }else if(d.depth===2) {
+                        if (d.parent.data.name === data.name) {
+                            return svgIndex;
+                        }
+                    }else if(d.depth===3) {
+                        if (d.parent.parent.data.name === data.name) {
+                            return svgIndex;
+                        }
+                    }
+                }else if(window.level==='GF'){
+                    if(d.depth===1) {
+                        for (i in d.children) {
+                            if (d.children[i].data.name === data.name) {
+                                return svgIndex;
+                            }
+                        }
+                    }else if(d.depth===2) {
+                        if (d.data.name === data.name) {
+                            return svgIndex;
+                        }
+                    }else if(d.depth===3) {
+                        if (d.parent.data.name === data.name) {
+                            return svgIndex;
+                        }
+                    }
+                }
+
+            console.log(data);
+            svgIndex+=1;
+        }
+        return svgIndex
+    }
+
     function restorefunction(d,i){
         d3.event.preventDefault();
         var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Transferliste entfernen?\n\n");
@@ -296,18 +341,25 @@ $(document).ready(function(){
                         successful=true},
                     error: function(res){console.log(res);}
                     });
-            if(successful===true){
+            if(successful===true) {
                 var transfer = window.transferlistdata['children'];
                 //var rights = window.jsondata['children'];
-                update_rights(transfer,data['right_type'],d);
+                update_rights(transfer, data['right_type'], d);
 
                 d3.select("body").selectAll("#transferTooltip").remove();
 
                 d3.select('#transferSVG').select("g").data(window.transferlistdata).exit().remove();
                 updateTransfer(window.transferlistdata);
 
-                d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
-                window.updateCompareCP();
+                if (window.current_site === 'compare') {
+                    d3.select('#compareCirclePackingSVG').select("g").data(window.compare_jsondata).exit().remove();
+                    window.updateCompareCP();
+                }
+                if (window.current_site === 'analysis') {
+                    var svgIndex = find_svgIndex(d);
+                    d3.select("#analysisModelCirclePackingSVG_unequal"+svgIndex).select("g").data(window['jsonModeldata_unequal'+svgIndex]).exit().remove();
+                    window.updateUnequalModelCP(svgIndex);
+                }
             }
             else{
                 alert("Beim entfernen der Berechtigung\nvon der Transferliste\nist ein Fehler aufgetreten!")
