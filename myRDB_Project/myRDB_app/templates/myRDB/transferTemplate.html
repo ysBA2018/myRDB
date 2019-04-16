@@ -9,6 +9,7 @@
         <script>
             var transferlistdata = {{ transferlist | asjson }};
             var transfer_table_data = {{ transfer_list_table_data | safe }};
+            var transfer_table_count = {{ transfer_list_count }};
             var updateTransfer;
         </script>
         <svg class="transfer" id="transferSVG" width="180" height="180"></svg>

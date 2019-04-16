@@ -180,8 +180,65 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             instance = self.perform_action(instance, data)
         elif data['action_type'] == "decline_action":
             instance = self.decline_action(instance, data)
+        elif data['action_type'] == "analysis_transfer":
+            instance = self.add_to_transfer_list_from_analysis(instance, data)
         instance.save()
 
+        return instance
+
+    def add_to_transfer_list_from_analysis(self,instance,data):
+        print('in add to transfer fom analysis')
+        print(data)
+        if data['right_type']=='tf':
+            tf = TF.objects.get(pk=data['right_pk'])
+            new_user_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=int(float(tf.pk)), color=tf.tf_application.color,
+                                  transfer=True)
+            for af in instance.transfer_list:
+                if af.af_name == data['grandparent']:
+                    for gf in af.gfs:
+                        if gf.gf_name == data['parent']:
+                            gf.tfs.append(new_user_tf)
+                            return instance
+                    gf = GF.objects.get(gf_name=data['parent'])
+                    help_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[new_user_tf])
+                    af.gfs.append(help_gf)
+                    return instance
+            gf = GF.objects.get(gf_name=data['parent'])
+            help_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[new_user_tf])
+            af = AF.objects.get(af_name=data['grandparent'])
+            help_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[help_gf])
+            instance.transfer_list.append(help_af)
+            return instance
+        if data['right_type']=='gf':
+            gf = GF.objects.get(pk=data['right_pk'])
+            new_user_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=int(float(gf.pk)), tfs=[])
+            for tf_id in gf.tfs_id:
+                tf = TF.objects.get(pk=tf_id)
+                u_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=int(float(tf.pk)), color=tf.tf_application.color,
+                                  transfer=True)
+                new_user_gf.tfs.append(u_tf)
+            for af in instance.transfer_list:
+                if af.af_name == data['parent']:
+                    af.gfs.append(new_user_gf)
+                    return instance
+            af = AF.objects.get(af_name=data['parent'])
+            help_af = User_AF(af_name=af.af_name, model_af_pk=af.pk, gfs=[new_user_gf])
+            instance.transfer_list.append(help_af)
+            return instance
+
+        if data['right_type']=='af':
+            af = AF.objects.get(pk=data['right_pk'])
+            new_user_af = User_AF(af_name=af.af_name, model_af_pk=int(float(af.pk)), gfs=[])
+            for gf_id in af.gfs_id:
+                gf = GF.objects.get(pk = gf_id)
+                u_gf = User_GF(gf_name=gf.gf_name, model_gf_pk=gf.pk, tfs=[])
+                for tf_id in gf.tfs_id:
+                    tf = TF.objects.get(pk=tf_id)
+                    u_tf = User_TF(tf_name=tf.tf_name, model_tf_pk=int(float(tf.pk)), color=tf.tf_application.color,
+                                  transfer=True)
+                    u_gf.tfs.append(u_tf)
+                new_user_af.gfs.append(u_gf)
+            instance.transfer_list.append(new_user_af)
         return instance
 
     def reverse_action(self, instance, data):
@@ -711,17 +768,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class TFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = TF
-        fields = ('tf_name', 'tf_description')
+        fields = ('pk','tf_name', 'tf_description','tf_application')
 
+    pk = serializers.IntegerField()
     tf_name = serializers.CharField(max_length=150)
     tf_description = serializers.CharField(max_length=250)
+    tf_application = TF_ApplicationSerializer()
 
 
 class GFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = GF
-        fields = ('gf_name', 'gf_description', 'tfs')
+        fields = ('pk','gf_name', 'gf_description', 'tfs')
 
+    pk = serializers.IntegerField()
     gf_name = serializers.CharField(max_length=150)
     gf_description = serializers.CharField(max_length=250)
     tfs = TFModelRightsSerializer(many=True, read_only=True)
@@ -730,8 +790,9 @@ class GFModelRightsSerializer(serializers.Serializer):
 class AFModelRightsSerializer(serializers.Serializer):
     class Meta:
         model = AF
-        fields = ('af_name', 'af_description', 'gfs')
+        fields = ('pk','af_name', 'af_description', 'gfs')
 
+    pk = serializers.IntegerField()
     af_name = serializers.CharField(max_length=150)
     af_description = serializers.CharField(max_length=250)
     gfs = GFModelRightsSerializer(many=True, read_only=True)

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +21,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9)%e4jg5_#xbrdf6^%1f#rnrdo6#-5szxn3&%^jr&zqb2ixvn2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+env = environ.Env(
+    SECRET_KEY=(str,''),
+    ALLOWED_HOSTS=(list,['127.0.0.1']),
+)
+root_path = environ.Path(__file__) -2
+environ.Env.read_env(root_path('.env'))
+
+DEBUG = env('DEBUG')
+#if DEBUG:
+#    SECRET_KEY = '9)%e4jg5_#xbrdf6^%1f#rnrdo6#-5szxn3&%^jr&zqb2ixvn2'
+#else:
+SECRET_KEY = env('SECRET_KEY')
+
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',],

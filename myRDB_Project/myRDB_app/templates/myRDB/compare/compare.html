@@ -2,8 +2,6 @@
 {% block content %}
     {% load asjson %}
     <script>
-        var trash_table_count = {{ delete_list_count }};
-        var transfer_table_count = {{ transfer_list_count }};
         var compare_jsondata = {{ compareUser_graph_data | asjson }};
         var jsondata = {{ jsondata | asjson }};
         var current_site = "{{ current_site }}";

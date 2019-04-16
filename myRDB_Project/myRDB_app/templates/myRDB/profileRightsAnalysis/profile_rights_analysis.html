@@ -4,8 +4,11 @@
 <div class="container-fluid">
     {% include 'myRDB/profile/profile_head.html' %}
     <script>
-        var trashlistdata = {{ trash_graph_data | asjson}};
-        var transferlistdata = {{ transfer_graph_data | asjson}};
+        var trashlistdata = {{ deletelist | asjson}};
+        var transferlistdata = {{ transferlist | asjson}};
+        var current_site = "{{ current_site }}";
+        var user = "{{ user_identity }}";
+        var level = "{{ level }}";
     </script>
     <div class="card">
         <div class="card-body">

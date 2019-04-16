@@ -230,6 +230,8 @@ class CustomAccountManager(BaseUserManager):
 
 class User(AbstractUser):
     identity = models.CharField(max_length=7, unique=True)
+    email = models.EmailField()
+    avatar = models.ImageField()
     name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     deleted = models.BooleanField(default=False)
