@@ -138,7 +138,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){deletefunction(d,i)})
+          .on("contextmenu",function(d,i){confirm_delete(d,i)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -264,7 +264,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){deletefunction(d,i)})
+          .on("contextmenu", function(d,i){confirm_delete(d,i)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -317,10 +317,16 @@ $(document).ready(function(){
     window.updateUnequalCP=function (originSvgIndex) {
         update(window['jsondata_unequal'+originSvgIndex],originSvgIndex)
     };
+      function confirm_delete(d,i) {
+          d3.event.preventDefault();
+          bootbox.confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Löschliste hinzufügen?\n\n", function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result===true){
+                    deletefunction(d,i)
+                }
+            });
+      }
     function deletefunction(d,i){
-        d3.event.preventDefault();
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Löschliste hinzufügen?\n\n");
-        if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -386,13 +392,13 @@ $(document).ready(function(){
                     window.updateCompareCP();
                 }
 
-                alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
+                bootstrap.alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
                 //update_session();
             }
             else{
-                alert("Beim Löschen der Berechtigung\nist ein Fehler aufgetreten!")
+                bootstrap.alert("Beim Löschen der Berechtigung\nist ein Fehler aufgetreten!")
             }
-        }
+
       }
       /**
       function update_session() {

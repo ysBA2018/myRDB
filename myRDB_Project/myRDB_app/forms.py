@@ -143,3 +143,6 @@ class AcceptChangeForm(forms.Form):
 class DeclineChangeForm(forms.Form):
     reason_for_decline = forms.CharField(widget=forms.Textarea(attrs={'rows': '2'}), min_length=20, max_length=500,
                                          label=mark_safe('<strong>Grund der Ablehnung:</strong>'))
+
+class ProfileHeaderForm(forms.Form):
+    compare_to = forms.CharField(label="",widget=forms.TextInput(attrs={'placeholder': 'vergleiche mit...'}))

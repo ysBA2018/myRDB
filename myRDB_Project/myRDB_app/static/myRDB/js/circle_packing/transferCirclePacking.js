@@ -60,7 +60,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){restorefunction(d,i)})
+          .on("contextmenu",function(d,i){confirm_restore(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -193,7 +193,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){restorefunction(d,i)})
+          .on("contextmenu", function(d,i){confirm_restore(d,i)})
           .on("mouseover",function (d) {
               div.transition()
                   .duration(200)
@@ -286,11 +286,17 @@ $(document).ready(function(){
         }
         return svgIndex
     }
+    function confirm_restore(d,i) {
+          d3.event.preventDefault();
+          bootbox.confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Transferliste entfernen?\n\n", function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result===true){
+                    restorefunction(d,i)
+                }
+            });
+      }
 
     function restorefunction(d,i){
-        d3.event.preventDefault();
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Transferliste entfernen?\n\n");
-        if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -360,11 +366,12 @@ $(document).ready(function(){
                     d3.select("#analysisModelCirclePackingSVG_unequal"+svgIndex).select("g").data(window['jsonModeldata_unequal'+svgIndex]).exit().remove();
                     window.updateUnequalModelCP(svgIndex);
                 }
+                bootbox.alert("Berechtigung "+d.data.name+" von\n\nTransferliste entfernt!\n");
             }
             else{
-                alert("Beim entfernen der Berechtigung\nvon der Transferliste\nist ein Fehler aufgetreten!")
+                bootbox.alert("Beim entfernen der Berechtigung "+d.data.name+" von der Transferliste\nist ein Fehler aufgetreten!")
             }
-        }
+
       }
       function update_right_counters(right,type){
         if (type === "af"){
@@ -393,8 +400,6 @@ $(document).ready(function(){
                     transfer.splice(transfer_item, 1);
                     console.log("transfer");
                     console.log(transfer);
-
-                    alert("Berechtigung von\n\nTransferliste entfernt!\n");
                     return;
                 }
             }
@@ -408,7 +413,6 @@ $(document).ready(function(){
                             console.log(j + "," + d.data.name);
                             update_right_counters(lev_2[j],level);
                             lev_2.splice(j, 1);
-                            alert("Berechtigung von\n\nTransferliste entfernt!\n");
                             return;
                         }
                     }
@@ -427,7 +431,6 @@ $(document).ready(function(){
                                     console.log(k + "," + d.data.name);
                                     update_right_counters(lev_3[k], level);
                                     lev_3.splice(k, 1);
-                                    alert("Berechtigung von\n\nTransferliste entfernt!\n");
                                     return;
                                 }
                             }

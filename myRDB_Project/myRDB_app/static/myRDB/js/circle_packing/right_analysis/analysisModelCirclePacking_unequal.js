@@ -175,7 +175,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){transferfunction(d,i,svgIndex)})
+          .on("contextmenu",function(d,i){confirm_transfer(d,i,svgIndex)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -301,7 +301,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){transferfunction(d,i,svgIndex)})
+          .on("contextmenu", function(d,i){confirm_transfer(d,i,svgIndex)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -355,7 +355,7 @@ $(document).ready(function(){
             if (!d.exists){
                 return false;
             }else{
-                alert("AF existiert bereits\nund kann nicht übertragen werden!");
+                bootbox.alert("AF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
         }
@@ -366,7 +366,7 @@ $(document).ready(function(){
                         return false
                     }
                     else{
-                        alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                        bootbox.alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
                         return true;
                     }
                 }
@@ -374,7 +374,7 @@ $(document).ready(function(){
                     return false;
                 }
             }else{
-                alert("GF existiert bereits\nund kann nicht übertragen werden!");
+                bootbox.alert("GF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
         }
@@ -384,10 +384,10 @@ $(document).ready(function(){
                     if (d.parent.exists && d.parent.parent.exists) {
                         return false;
                     }else if (!d.parent.exists && d.parent.parent.exists) {
-                        alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                        bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
                         return true;
                     }else if (!d.parent.exists && !d.parent.parent.exists) {
-                        alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die benötigte AF!");
+                        bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die benötigte AF!");
                         return true;
                     }
                 }
@@ -395,14 +395,14 @@ $(document).ready(function(){
                     if (d.parent.exists) {
                         return false;
                     }else{
-                        alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                        bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
                         return true;
                     }
                 }else if(window.level === 'GF'){
                     return false;
                 }
             }else{
-                alert("TF existiert bereits\nund kann nicht übertragen werden!");
+                bootbox.alert("TF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
         }
@@ -437,14 +437,20 @@ $(document).ready(function(){
         }
         return [right_type,right_parent,right_grandparent]
     }
-    function transferfunction(d,i,svgIndex){
+    function confirm_transfer(d,i,svgIndex) {
         d3.event.preventDefault();
+          bootbox.confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n", function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result===true){
+                    transferfunction(d,i,svgIndex)
+                }
+            });
+    }
+    function transferfunction(d,i,svgIndex){
         var right_info = get_type_and_parents(d);
         if(check_user_rights_for_existance(d,right_info[0])){
             return;
         }
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n");
-        if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -497,13 +503,13 @@ $(document).ready(function(){
                 window.updateTransfer();
                 //d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
                 //window.updateCP();
-                alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
+                bootbox.alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
                 //update_session();
             }
             else{
-                alert('Beim Übertragen der Berechtigung\nist ein Fehler aufgetreten!')
+                bootbox.alert('Beim Übertragen der Berechtigung\nist ein Fehler aufgetreten!')
             }
-        }
+
       }
       function update_right_counters(right,type){
         if (type === "af"){

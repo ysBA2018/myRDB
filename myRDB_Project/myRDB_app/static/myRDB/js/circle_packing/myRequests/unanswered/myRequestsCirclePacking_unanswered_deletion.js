@@ -20,6 +20,9 @@ $(document).ready(function(){
         .padding(2);
 
     var root = window['jsondata_unanswered_delete'+svgDeletionIndex];
+    if(root == null){
+        root = {'name':'doesnt exist','size' : 2000}
+    }
         window.iUnansweredDelete=window.iUnansweredDelete+1;
       root = d3.hierarchy(root)
           .sum(function(d) { return d.size; })
@@ -31,6 +34,7 @@ $(document).ready(function(){
 
 
       function get_color(d) {
+          if(d.data.name === "doesnt exist" && d.depth ===0){return "lightgrey"}
           if(!d.hasOwnProperty('children')){return d.data.color}
           else{return "white"}
       }
@@ -61,15 +65,15 @@ $(document).ready(function(){
       var leaves = d3.selectAll("circle").filter(function(d){
         return d.children === null;
       });
-/*
+
       var text = g.selectAll("text")
         .data(nodes)
         .enter().append("text")
           .attr("class", "label")
-          .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-          .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
-          .text(function(d) { return d.data.name; });
-*/
+          .style("fill-opacity", function(d) {return d ;})
+          .style("display", function(d) {  return d ;})
+          .text(function(d) { if(d.data.name==="doesnt exist" && d.depth ===0) return "Berechtigung wurde von Löschliste entfernt!"; });
+
       var node = g.selectAll("circle,text");
 
       svg

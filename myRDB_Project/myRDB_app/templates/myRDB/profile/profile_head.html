@@ -1,3 +1,4 @@
+{% load crispy_forms_tags %}
 <div class="card top-buffer">
     <div class="card-body">
         <div class="container">
@@ -52,10 +53,15 @@
                     <div class="col-4 input-group mb-3">
                         <form id=”search” method=”POST” action="{% url 'myRDB:compare' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="user_identity" value="{{ user_identity }}">
-                            <input type=”text” class=”form-control” id=”txtSearch” name='user_search'
-                                   placeholder="compare to...">
-                            <button type="submit" class="btn btn-light btn-outline-secondary ">Compare</button>
+                            <div class="row">
+                                <input type="hidden" name="user_identity" value="{{ user_identity }}">
+                                <div class="col-8">
+                                    {{ profile_header_form| crispy}}
+                                </div>
+                                <div class="col-3">
+                                    <button type="submit" class="btn btn-light btn-outline-secondary ">Compare</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 {% endif %}

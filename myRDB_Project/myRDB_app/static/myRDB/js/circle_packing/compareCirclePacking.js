@@ -92,7 +92,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){transferfunction(d,i)})
+          .on("contextmenu",function(d,i){confirm_transfer(d,i)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -225,7 +225,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){transferfunction(d,i)})
+          .on("contextmenu", function(d,i){confirm_transfer(d,i)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -296,7 +296,7 @@ $(document).ready(function(){
             if (!exists_in_user_rights && !exists_in_transfer_rights){
                 return false;
             }else{
-                alert("AF existiert bereits\nund kann nicht übertragen werden!");
+                bootbox.alert("AF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
 
@@ -332,11 +332,11 @@ $(document).ready(function(){
                     return false
                 }
                 else{
-                    alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                    bootbox.alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
                     return true;
                 }
             }else{
-                alert("GF existiert bereits\nund kann nicht übertragen werden!");
+                bootbox.alert("GF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
         }
@@ -383,20 +383,28 @@ $(document).ready(function(){
                 if ((grandparent_exists_in_user_rights && parent_exists_in_user_rights)||(grandparent_exists_in_transfer_rights && parent_exists_in_transfer_rights)) {
                     return false;
                 } else if (!grandparent_exists_in_user_rights && !grandparent_exists_in_transfer_rights) {
-                    alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                    bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
                     return true;
                 } else if ((grandparent_exists_in_user_rights && !parent_exists_in_user_rights)||(grandparent_exists_in_transfer_rights && !parent_exists_in_transfer_rights)) {
-                    alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                    bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
                     return true;
                 }
             }else{
-                alert("TF existiert bereits\nund kann nicht übertragen werden!");
+                bootbox.alert("TF existiert bereits\nund kann nicht übertragen werden!");
                 return true;
             }
         }
     }
-    function transferfunction(d,i){
+    function confirm_transfer(d,i) {
         d3.event.preventDefault();
+          bootbox.confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n", function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result===true){
+                    transferfunction(d,i)
+                }
+            });
+    }
+    function transferfunction(d,i){
         var right_type="",right_parent = "",right_grandparent = "";
         if(d.depth===1) right_type="af";
         else if(d.depth===2) {
@@ -411,8 +419,6 @@ $(document).ready(function(){
         if(check_user_rights_for_existance(d,right_type,right_parent,right_grandparent, window.jsondata['children'],window.transferlistdata['children'])){
             return;
         }
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nwirklich zu Transferliste hinzufügen?\n\n");
-        if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -465,13 +471,13 @@ $(document).ready(function(){
                 window.updateTransfer();
                 //d3.select('#circlePackingSVG').select('g').data(window.jsondata).exit().remove();
                 //window.updateCP();
-                alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
+                bootbox.alert("Berechtigung "+d.data.name+" zur Transferliste hinzugefügt\n");
                 //update_session();
             }
             else{
-                alert('Beim Übertragen der Berechtigung\nist ein Fehler aufgetreten!')
+                bootbox.alert('Beim Übertragen der Berechtigung '+d.data.name+' ist ein Fehler aufgetreten!')
             }
-        }
+
       }
       function update_right_counters(right,type){
         if (type === "af"){
