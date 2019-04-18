@@ -54,7 +54,7 @@ $(document).ready(function(){
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu",function(d,i){restorefunction(d,i)})
+          .on("contextmenu",function(d,i){confirm_restore(d,i)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -152,6 +152,7 @@ $(document).ready(function(){
         margin = 20,
         diameter = +svg.attr("width"),
         g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+        svg.select("g").style('transform','translate(50%, 50%)');
 
         color = d3.scaleLinear()
             .domain([-1, 5])
@@ -180,12 +181,13 @@ $(document).ready(function(){
         .data(nodes)
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+          .style("opacity",function(d){return get_opacity(d)})
           .style("stroke","grey")
           .style("fill", function(d) { return get_color(d)})
           .on("click", function(d) { if(d3.event.defaultPrevented) return;
                 console.log("clicked");
               if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-          .on("contextmenu", function(d,i){restorefunction(d,i)})
+          .on("contextmenu", function(d,i){confirm_restore(d,i)})
           .on("mouseover",function (d) {
               d3.select(this).style("stroke","black");
               div.transition()
@@ -236,15 +238,22 @@ $(document).ready(function(){
     window.updateTrash=function () {
         updateTrash(window.trashlistdata);
     };
+      function confirm_restore(d,i) {
+          d3.event.preventDefault();
+          bootbox.confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Löschliste entfernen\n\nund wiederherstellen?\n\n", function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result===true){
+                    restorefunction(d,i)
+                }
+            });
+      }
     function restorefunction(d,i){
-        d3.event.preventDefault();
-
         if(d.depth !== 1){
-            alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+            bootbox.alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!",function(){
+                    console.log("Berechtigungen können nur komplett wiederhergestellt werden");
+            });
             return;
         }
-        var r = confirm("Berechtigung:\n\n"+d.data.name+"\n\nvon Löschliste entfernen\n\nund wiederherstellen?\n\n");
-        if (r === true){
             function getCookie(name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -306,10 +315,15 @@ $(document).ready(function(){
                     d3.select('#compareCirclePackingSVG').select('g').data(window.compare_jsondata).exit().remove();
                     window.updateCompareCP();
                 }
+                bootbox.alert("Berechtigung "+d.data.name+" erfolgreich wiederhergestellt!",function(){
+                    console.log(d.data.name+'wiederhergestellt!');
+                });
             }else{
-                alert("Beim Wiederherstellen der Berechtigung\n ist ein Fehler aufgetreten!")
+                bootbox.alert("Beim Wiederherstellen der Berechtigung "+d.data.name+" ist ein Fehler aufgetreten!",function(){
+                    console.log("Fehler beim wiederherstellen von "+d.data.name+'!');
+                });
             }
-        }
+
       }
       function update_right_counters(right){
         //TODO: Counters in Profile-head anpassen!
@@ -379,14 +393,14 @@ $(document).ready(function(){
                     rechain_right_to_rights(trash[trash_item], rights);
                     update_right_counters(trash[trash_item]);
                     trash.splice(trash_item, 1);
-                    alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
+                    //alert("Berechtigung von\n\nLöschliste entfernt\n\nund wiederhergestellt!\n");
                     break;
                 }
             }
         }
-        else{
-            alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
-        }
+        //else{
+        //    alert("Berechtigung:\n\n"+d.data.name+"\n\nkonnte nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+        //}
             /*for (trash_item in trash){
                 if(trash[trash_item]['name']===d.data.name){
                     console.log(trash_item+","+d.data.name);

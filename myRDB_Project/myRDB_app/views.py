@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .forms import CustomUserCreationForm, SomeForm, ApplyRightForm, DeleteRightForm, AcceptChangeForm, \
-    DeclineChangeForm, CustomAuthenticationForm
+    DeclineChangeForm, CustomAuthenticationForm, ProfileHeaderForm
 from .models import Role, AF, GF, TF, Orga, Group, Department, ZI_Organisation, TF_Application, User_AF, User_TF, \
     User_GF, ChangeRequests
 from rest_framework import viewsets, status
@@ -21,7 +21,8 @@ from .serializers import UserSerializer, RoleSerializer, AFSerializer, GFSeriali
 from django.views import generic
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView, PasswordResetDoneView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, \
+    PasswordResetCompleteView, PasswordResetDoneView
 
 User = get_user_model()
 
@@ -241,12 +242,11 @@ class Search_All(generic.ListView):
     extra_context = {}
 
     def get_queryset(self):
-        logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/searchlistings/'
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
+        url = 'http://' + self.request.get_host() + '/searchlistings/'
+        headers = get_headers(self.request)
         lis = ['zi_organisations', 'orgas', 'tf_applications', 'departments', 'roles', 'groups']
         for e in lis:
-            self.extra_context[e] = populate_choice_fields(headers, e)
+            self.extra_context[e] = populate_choice_fields(headers, e, self.request)
         params, changed = build_url_params(self.request, self.extra_context)
         if 'entries_per_page' in self.request.GET:
             self.paginate_by = self.request.GET['entries_per_page']
@@ -262,8 +262,7 @@ class Search_All(generic.ListView):
         url = url + params
 
         if not self.extra_context.keys().__contains__('data') or changed == True:
-            res = requests.get(url, headers=headers)
-            user_json_data = res.json()
+            user_json_data = get_by_url(url, headers)
             self.extra_context['data'] = self.prepare_table_data(user_json_data, headers)
         self.extra_context['params_for_pagination'] = params
         return self.extra_context['data']
@@ -275,9 +274,7 @@ class Search_All(generic.ListView):
     def prepare_table_data(self, json_data, headers):
         lines = []
 
-        url = 'http://127.0.0.1:8000/tfs/'
-        res = requests.get(url, headers=headers)
-        tf_json_data = res.json()
+        tf_json_data = get_tfs(get_headers(self.request), self.request)
         for user in json_data:
             for af in user['user_afs']:
                 if self.request.GET.keys().__contains__('af_name'):
@@ -325,11 +322,11 @@ class Users(generic.ListView):
 
     def get_queryset(self):
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/userlistings/'
+        url = 'http://' + self.request.get_host() + '/userlistings/'
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         lis = ['zi_organisations', 'orgas', 'departments', 'roles', 'groups']
         for e in lis:
-            self.extra_context[e] = populate_choice_fields(headers, e)
+            self.extra_context[e] = populate_choice_fields(headers, e, self.request)
         params, changed = build_url_params(self.request, self.extra_context)
         if 'entries_per_page' in self.request.GET:
             self.paginate_by = self.request.GET['entries_per_page']
@@ -368,10 +365,9 @@ class Users(generic.ListView):
         return response.data['users']
 
 
-def populate_choice_fields(headers, field):
-    url = 'http://127.0.0.1:8000/' + field + '/'
-    res = requests.get(url, headers=headers)
-    json_data = res.json()
+def populate_choice_fields(headers, field, request):
+    url = 'http://' + request.get_host() + '/' + field + '/'
+    json_data = get_by_url(url,get_headers(request))
     if type(json_data) == list:
         results = {field: json_data}
     if type(json_data) == dict:
@@ -523,13 +519,11 @@ class Compare(generic.ListView):
             compareUserIdentity = self.request.session.get('user_search')
 
         self.request.session['user_search'] = compareUserIdentity
-        print(compareUserIdentity)
 
-        # TODO: hier noch lösung mit Params über API finden! <-xv-nummer als SLUG-Field - dann urlrequest mit xv möglich
         headers = get_headers(self.request)
-        user_json_data = get_user_by_key(compareUserIdentity, headers=headers)
+        user_json_data = get_user_by_key(compareUserIdentity, headers=headers, request=self.request)
 
-        user_json_data, scatterData = prepareJSONdata(compareUserIdentity, user_json_data, True, headers)
+        user_json_data, scatterData = prepareJSONdata(compareUserIdentity, user_json_data, True, headers,self.request)
 
         compUserRoles = user_json_data['roles']
         compUserAfs = user_json_data['children']
@@ -559,11 +553,11 @@ class Compare(generic.ListView):
         self.request.session['user_identity'] = self.extra_context['identity_param']
         logged_in_user_token = self.request.user.auth_token
         headers = get_headers(self.request)
-        user_json_data = get_user_by_key(self.extra_context['identity_param'], headers)
+        user_json_data = get_user_by_key(self.extra_context['identity_param'], headers, self.request)
 
         roles = user_json_data['roles']
 
-        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
+        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers,self.request)
 
         transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
         transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
@@ -659,8 +653,9 @@ class ProfileRightsAnalysis(generic.ListView):
             afs = sorted(user_data['children'], key=lambda k: k['name'])
             for af in afs:
                 through = False
-                model_afs = iter(sorted(get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs'],
-                                        key=lambda k: k['af_name']))
+                model_afs = iter(
+                    sorted(get_user_model_rights_by_key(user_data['pk'], headers, self.request)['direct_connect_afs'],
+                           key=lambda k: k['af_name']))
                 # if af['name'] != "":  # wegen direct_connect_gfs <-> af.af_name = "" <-> muss noch beim einlesen der daten umgebaut werden
                 while not through:
                     try:
@@ -698,7 +693,7 @@ class ProfileRightsAnalysis(generic.ListView):
                     gfs.append(gf)
             gfs = sorted(gfs, key=lambda k: k['name'])
 
-            model_afs = get_user_model_rights_by_key(user_data['pk'], headers)['direct_connect_afs']
+            model_afs = get_user_model_rights_by_key(user_data['pk'], headers, self.request)['direct_connect_afs']
             model_gfs = []
             for af in model_afs:
                 for gf in af['gfs']:
@@ -835,31 +830,30 @@ class Profile(generic.ListView):
 
     def get_queryset(self):
         self.extra_context['current_site'] = "profile"
-
+        self.extra_context['profile_header_form'] = ProfileHeaderForm
         setViewMode(self.request, self.extra_context)
         print(self.request.get_host())
         if not "identity" in self.request.GET.keys():
             user = self.request.user
             self.request.session['user_identity'] = user.identity
-            url = 'http://'+self.request.get_host()+'/users/%s' % user.identity
+            user_id = user.identity
             self.extra_context['identity_param'] = user.identity
         else:
             # TODO: hier noch lösung mit Params über API finden!
             self.extra_context['identity_param'] = self.request.GET['identity']
             self.request.session['user_identity'] = self.extra_context['identity_param']
-            url = 'http://'+self.request.get_host()+'/users/%s' % self.request.GET['identity']
+            user_id = self.request.GET['identity']
 
         headers = get_headers(self.request)
-        legend_data = get_tf_applications(headers)['results']
+        legend_data = get_tf_applications(headers, self.request)['results']
         sorted_legend_data = sorted(legend_data, key=lambda r: r["application_name"])
         self.extra_context['legendData'] = sorted_legend_data
 
-        res = requests.get(url, headers=headers)
-        user_json_data = res.json()
+        user_json_data = get_user_by_key(user_id,headers,self.request)
 
         roles = user_json_data['roles']
 
-        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
+        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers,self.request)
         self.extra_context['scatterData'] = scatterData
 
         transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
@@ -914,11 +908,7 @@ class RequestPool(generic.ListView):
     context_object_name = 'list_data'
 
     def get_queryset(self):
-        logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/changerequests/'
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        res = requests.get(url, headers=headers)
-        change_requests_json_data = res.json()
+        change_requests_json_data = get_changerequests(get_headers(self.request), self.request)
         print(change_requests_json_data)
         requests_by_users = self.repack_data(change_requests_json_data)
         print(requests_by_users)
@@ -939,7 +929,7 @@ class RequestPool(generic.ListView):
             for user in list_by_user:
                 if user['requesting_user'] == data['requesting_user']:
                     requesting_user = get_user_by_key(data['requesting_user'],
-                                                      headers=get_headers(self.request))
+                                                      headers=get_headers(self.request), request=self.request)
                     if data['status'] == "unanswered":
                         # TODO: xv-nummer als SLUG-Field -> dann url über xvnummer aufrufbar
                         if data['action'] == 'apply':
@@ -957,7 +947,10 @@ class RequestPool(generic.ListView):
                         else:
                             right = get_right_from_list(requesting_user, data['right_type'], data['right_name'],
                                                         requesting_user['delete_list'])
-                            model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],
+                            if right is None:
+                                model = None
+                            else:
+                                model = get_model_right(requesting_user, data['right_type'], right['model_right_pk'],
                                                     self.request)
                             user["delete_requests"].append({'right': right, 'model': model, 'type': data['right_type'],
                                                             'right_name': data['right_name'],
@@ -985,7 +978,7 @@ class MyRequests(generic.ListView):
             user_identity = self.request.user.identity
         self.extra_context['requesting_user'] = user_identity
         # setViewMode(self.request, self.extra_context)
-        user = get_user_by_key(user_identity, get_headers(self.request))
+        user = get_user_by_key(user_identity, get_headers(self.request), self.request)
         request_list = self.get_my_requests(user)
         repacked_request_list = self.repack_list(request_list)
         unanswered_list, accepted_list, declined_list = self.presort(repacked_request_list)
@@ -996,7 +989,8 @@ class MyRequests(generic.ListView):
     def repack_list(self, list):
         repacked_list = []
         for request in list:
-            requesting_user = get_user_by_key(request['requesting_user'], headers=get_headers(self.request))
+            requesting_user = get_user_by_key(request['requesting_user'], headers=get_headers(self.request),
+                                              request=self.request)
             if request['action'] == 'apply':
                 # TODO: wenn berechtigung auf comp_user oder user seite gelöscht wurde -> zuerst modell-recht anzeigen -> wenn auch gelöscht - dann erst None setzen und damit esatz-circle anzeigen
                 if request['status'] == "accepted":
@@ -1008,10 +1002,14 @@ class MyRequests(generic.ListView):
                         model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
                                                 self.request)
                 elif request['status'] == "declined":
-                    compare_user = get_user_by_key(request['compare_user'], headers=get_headers(self.request))
+                    compare_user = get_user_by_key(request['compare_user'], headers=get_headers(self.request),
+                                                   request=self.request)
                     right = get_right_from_list(compare_user, request['right_type'], request['right_name'],
                                                 compare_user['user_afs'])
-                    model = get_model_right(compare_user, request['right_type'], right['model_right_pk'],
+                    if right is None:
+                        model = None
+                    else:
+                        model = get_model_right(compare_user, request['right_type'], right['model_right_pk'],
                                             self.request)
                 else:
                     right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
@@ -1033,7 +1031,10 @@ class MyRequests(generic.ListView):
                 else:
                     right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
                                                 requesting_user['delete_list'])
-                    model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                    if right is None:
+                        model = None
+                    else:
+                        model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
                                             self.request)
             repacked_list.append({'right': right, 'model': model, 'request': request})
         return repacked_list
@@ -1079,19 +1080,15 @@ class RightApplication(generic.ListView):
         user_identity = self.request.session.get('user_identity')
         self.extra_context['requesting_user'] = user_identity
         # setViewMode(self.request, self.extra_context)
-
-        logged_in_user_token = self.request.user.auth_token
-        url = 'http://127.0.0.1:8000/users/%s' % user_identity
-        headers = {'Authorization': 'Token ' + logged_in_user_token.key}
-        res = requests.get(url, headers=headers)
-        user_json_data = res.json()
+        headers = get_headers(self.request)
+        user_json_data = get_user_by_key(user_identity, headers, self.request)
 
         roles = user_json_data['roles']
 
-        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers)
+        user_json_data, scatterData = prepareJSONdata(user_json_data['identity'], user_json_data, False, headers,self.request)
 
         transfer_list, transfer_list_with_category = prepareTransferJSONdata(user_json_data['transfer_list'])
-        model_transfer_list = get_model_list(transfer_list_with_category, headers)
+        model_transfer_list = get_model_list(transfer_list_with_category, headers, self.request)
         # transfer_list_table_data, transfer_list_count = prepareTransferTabledata(transfer_list)
         # self.extra_context['transfer_list_table_data'] = transfer_list_table_data
         # self.extra_context['transfer_list_count'] = transfer_list_count
@@ -1103,7 +1100,7 @@ class RightApplication(generic.ListView):
 
         delete_list = user_json_data['delete_list']
         delete_list, delete_list_with_category = prepare_delete_list(delete_list)
-        model_delete_list = get_model_list(delete_list_with_category, headers)
+        model_delete_list = get_model_list(delete_list_with_category, headers, self.request)
         delete_list_table_data, delete_list_count = prepareTrashTableData(delete_list)
         # self.extra_context['delete_list_table_data'] = delete_list_table_data
         # self.extra_context['delete_list_count'] = delete_list_count
@@ -1134,13 +1131,13 @@ class RightApplication(generic.ListView):
 
 def get_model_right(comp_user, type, pk, request):
     if type == 'AF':
-        model = get_af_by_key(pk, get_headers(request))
+        model = get_af_by_key(pk, get_headers(request), request)
         model['right_description'] = model.pop('af_description')
     if type == 'GF':
-        model = get_gf_by_key(pk, get_headers(request))
+        model = get_gf_by_key(pk, get_headers(request), request)
         model['right_description'] = model.pop('gf_description')
     if type == 'TF':
-        model = get_tf_by_key(pk, get_headers(request))
+        model = get_tf_by_key(pk, get_headers(request), request)
         model['right_description'] = model.pop('tf_description')
     return model
 
@@ -1179,20 +1176,20 @@ def get_right_from_list(comp_user, type, right, rights):
                         return tf
 
 
-def get_model_list(transfer_list_with_category, headers):
+def get_model_list(transfer_list_with_category, headers, request):
     model_list = []
     for right in transfer_list_with_category:
         model = None
         if right['type'] == 'af':
-            model = get_af_by_key(pk=right['right']['model_af_pk'], headers=headers)
+            model = get_af_by_key(pk=right['right']['model_af_pk'], headers=headers, request=request)
             model['right_name'] = model.pop('af_name')
             model['description'] = model.pop('af_description')
         if right['type'] == 'gf':
-            model = get_gf_by_key(pk=right['right']['model_gf_pk'], headers=headers)
+            model = get_gf_by_key(pk=right['right']['model_gf_pk'], headers=headers, request=request)
             model['right_name'] = model.pop('gf_name')
             model['description'] = model.pop('gf_description')
         if right['type'] == 'tf':
-            model = get_tf_by_key(pk=right['right']['model_tf_pk'], headers=headers)
+            model = get_tf_by_key(pk=right['right']['model_tf_pk'], headers=headers, request=request)
             model['right_name'] = model.pop('tf_name')
             model['description'] = model.pop('tf_description')
         model['type'] = right['type'].upper()
@@ -1347,43 +1344,57 @@ def get_headers(request):
     return headers
 
 
-def get_tf_applications(headers):
-    url = 'http://127.0.0.1:8000/tf_applications/'
+def get_tf_applications(headers, request):
+    url = 'http://' + request.get_host() + '/tf_applications/'
     res = requests.get(url, headers=headers)
     tf_applications_json = res.json()
     return tf_applications_json
 
 
-def get_af_by_key(pk, headers):
-    url = 'http://127.0.0.1:8000/afs/%d' % pk
+def get_af_by_key(pk, headers, request):
+    url = 'http://' + request.get_host() + '/afs/%d' % pk
     res = requests.get(url, headers=headers)
     af_json = res.json()
     return af_json
 
 
-def get_gf_by_key(pk, headers):
-    url = 'http://127.0.0.1:8000/gfs/%d' % pk
+def get_gf_by_key(pk, headers, request):
+    url = 'http://' + request.get_host() + '/gfs/%d' % pk
     res = requests.get(url, headers=headers)
     gf_json = res.json()
     return gf_json
 
 
-def get_tf_by_key(pk, headers):
-    url = 'http://127.0.0.1:8000/tfs/%d' % pk
+def get_tf_by_key(pk, headers, request):
+    url = 'http://' + request.get_host() + '/tfs/%d' % pk
     res = requests.get(url, headers=headers)
     tf_json = res.json()
     return tf_json
 
 
-def get_user_model_rights_by_key(pk, headers):
-    url = 'http://127.0.0.1:8000/usermodelrights/%d' % pk
+def get_user_model_rights_by_key(pk, headers, request):
+    url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
     res = requests.get(url, headers=headers)
-    gf_json = res.json()
-    return gf_json
+    json = res.json()
+    return json
 
 
-def get_user_by_key(pk, headers):
-    url = 'http://127.0.0.1:8000/users/%s' % pk
+def get_user_by_key(pk, headers, request):
+    url = 'http://' + request.get_host() + '/users/%s' % pk
+    res = requests.get(url, headers=headers)
+    json = res.json()
+    return json
+
+
+def get_changerequests(headers, request):
+    url = 'http://' + request.get_host() + '/changerequests/'
+    res = requests.get(url, headers=headers)
+    json = res.json()
+    return json
+
+
+def get_tfs(headers, request):
+    url = 'http://' + request.get_host() + '/tfs/'
     res = requests.get(url, headers=headers)
     json = res.json()
     return json
@@ -1395,7 +1406,7 @@ def get_by_url(url, headers):
     return json
 
 
-def prepareJSONdata(identity, user_json_data, compareUser, headers):
+def prepareJSONdata(identity, user_json_data, compareUser, headers,request):
     print(type(user_json_data), user_json_data)
     user_json_data['children'] = user_json_data.pop('user_afs')
     scatterData = []
@@ -1405,7 +1416,7 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers):
     for af in user_json_data['children']:
         af['name'] = af.pop('af_name')
         af['children'] = af.pop('gfs')
-        model_af = get_af_by_key(pk=af['model_af_pk'], headers=headers)
+        model_af = get_af_by_key(pk=af['model_af_pk'], headers=headers,request=request)
         af['description'] = model_af['af_description']
         if af['af_applied'] is None:
             af_applied = ""
