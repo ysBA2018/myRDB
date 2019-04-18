@@ -1,19 +1,15 @@
 # The first instruction is what image we want to base our container on
 # We Use an official Python runtime as a parent image
-FROM python:3.6
+FROM python:3.7
 
-# The enviroment variable ensures that the python output is set straight
-# to the terminal with out buffering it first
-ENV PYTHONUNBUFFERED 1
-
-# create root directory for our project in the container
-RUN mkdir /myRDB_Project
-
-# Set the working directory to /music_service
 WORKDIR /myRDB_Project
 
-# Copy the current directory contents into the container at /music_service
-ADD . /myRDB_Project/
-
-# Install any needed packages specified in requirements.txt
+# By copying over requirements first, we make sure that Docker will cache
+# our installed requirements rather than reinstall them on every build
+COPY requirements.txt /myRDB_Project/requirements.txt
 RUN pip install -r requirements.txt
+
+# Now copy in our code, and run it
+COPY . /myRDB_Project
+EXPOSE 8000
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
