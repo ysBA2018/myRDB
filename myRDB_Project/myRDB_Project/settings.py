@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env(
     DEBUG=(bool, True),
-    SECRET_KEY=(str,''),
+    SECRET_KEY=(str,'supersecretkey'),
     ALLOWED_HOSTS=(list,['127.0.0.1']),
 )
 root_path = environ.Path(__file__) -2
