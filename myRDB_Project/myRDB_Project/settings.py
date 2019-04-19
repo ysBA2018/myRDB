@@ -53,16 +53,16 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'myRDB_app.apps.MyrdbAppConfig',
+    'django.contrib.contenttypes',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
-    'myRDB_app',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
