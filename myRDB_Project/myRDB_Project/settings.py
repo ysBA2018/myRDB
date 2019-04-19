@@ -53,8 +53,8 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
-    'myRDB_app.apps.MyrdbAppConfig',
     'django.contrib.contenttypes',
+    'myRDB_app.apps.MyrdbAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
