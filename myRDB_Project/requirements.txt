@@ -1,6 +1,8 @@
+Django==2.2
+djangorestframework==3.9.2
 djongo==1.2.30
 requests==2.21.0
 django-environ==0.4.5
+django-crispy-forms==1.7.2
 simplejson==3.16.0
-Django==2.2
-djangorestframework==3.9.2
+
