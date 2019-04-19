@@ -25,6 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 
 env = environ.Env(
+    DEBUG=(bool,False),
     SECRET_KEY=(str,''),
     ALLOWED_HOSTS=(list,['127.0.0.1']),
 )
