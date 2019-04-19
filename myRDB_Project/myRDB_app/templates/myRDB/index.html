@@ -1,0 +1,14 @@
+{% extends 'myRDB/base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1>Wilkommen in der RechteDB</h1>
+{% if user.is_authenticated %}
+Hi {{user.identity}} !
+<p><a href="{% url 'myRDB:logout' %}">logout</a></p>
+{% else %}
+<p>You are not logged in!</p>
+<a href="{% url 'myRDB:login' %}">login</a>
+<a href="{% url 'myRDB:register' %}">sign up</a>
+{% endif %}
+
+{% endblock %}

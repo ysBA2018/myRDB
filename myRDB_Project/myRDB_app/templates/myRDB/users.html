@@ -1,0 +1,180 @@
+{% extends 'myRDB/base.html' %}
+{% block content %}
+<h1>Users</h1>
+<form id=”search” method=”POST” action="{% url 'myRDB:users' %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="search">Suchkategorie:</label>
+                        <select class="form-control" id="search" name="search_what">
+                            {% if search_what == "identity" %}
+                                <option value="identity" selected>XVNummer</option>
+                            {% else %}
+                                <option value="identity">XVNummer</option>
+                            {% endif %}
+                            {% if search_what == "name" %}
+                                <option value="name" selected>Name</option>
+                            {% else %}
+                                <option value="name">Name</option>
+                            {%  endif %}
+                            {% if search_what == "first_name" %}
+                                <option value="first_name" selected>Vorname</option>
+                            {% else %}
+                                <option value="first_name">Vorname</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="txtSearch">Suchfeld:</label>
+                        <input class="form-control" type="text" id=”txtSearch” name='userSearch' value="{{ userSearch }}"
+                               placeholder="beginnt mit...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if zi_organisations %}
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <label for="zi_organisation">ZI-Organisation:</label>
+                <select class="form-control" name="zi_organisation" id="zi_organisation">
+                    <option>----</option>
+                    {% for e in zi_organisations %}
+                        {% if e.team == zi_organisation %}
+                            <option selected>{{ e.zi_organisation_name }}</option>
+                        {% else %}
+                            <option>{{ e.zi_organisation_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        {% if departments %}
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <label for="department">Abteilung:</label>
+                <select class="form-control" name="department" id="department">
+                    <option>----</option>
+                    {% for e in departments %}
+                        {% if e.team == department %}
+                            <option selected>{{ e.department_name }}</option>
+                        {% else %}
+                            <option>{{ e.department_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        {% if orgas %}
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <label for="orga">Team:</label>
+                <select class="form-control" name="orga" id="orga">
+                    <option>----</option>
+                    {% for e in orgas %}
+                        {% if e.team == orga %}
+                            <option selected>{{ e.team }}</option>
+                        {% else %}
+                            <option>{{ e.team }}</option>
+                        {% endif %}
+
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        {% if groups %}
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <label for="role">Rolle:</label>
+                <select class="form-control" name="role" id="role">
+                    <option>----</option>
+                    {% for e in groups %}
+                        {% if e.team == group %}
+                            <option selected>{{ e.group_name }}</option>
+                        {% else %}
+                            <option>{{ e.group_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        {% if roles %}
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <label for="role">Rolle:</label>
+                <select class="form-control" name="role" id="role">
+                    <option>----</option>
+                    {% for e in roles %}
+                        {% if e.team == role %}
+                            <option selected>{{ e.role_name }}</option>
+                        {% else %}
+                            <option>{{ e.role_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-6 col-sm-4 col-md col-lg col-xl">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="entries_per_page">Zeilen pro Seite:</label>
+                        <input class="form-control" type="text" id=”entries_per_page” name='entries_per_page' value="{{ paged_data.paginator.per_page }}"
+                               placeholder="... Zeilen">
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <label class="hidden">Suchen:</label>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-light btn-outline-secondary " id="sub-button">Suche</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<ul>
+    {% for user in object_list %}
+    <li>
+        <div class="row">
+            <div class="col-4 col-sm-2 col-md-2 col-lg-1 col-xl-1">
+                <a href="{% url 'myRDB:profile' %}?identity={{ user.identity }}" class="badge badge-info"> {{ user.identity }}</a>
+            </div>
+            <div class="col-6">
+                <p>{{ user.name }}, {{ user.first_name }} </p>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% if is_paginated %}
+<ul class="pagination">
+    {% if paged_data.has_previous %}
+    <li><a href="{{ params_for_pagination }}&page={{ paged_data.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paged_data.paginator.page_range %}
+    {% if paged_data.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+    <li><a href="{{ params_for_pagination }}&page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if paged_data.has_next %}
+    <li><a href="{{ params_for_pagination }}&page={{ paged_data.next_page_number }}">&raquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+{% endif %}
+{% endblock %}
