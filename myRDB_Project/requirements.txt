@@ -1,6 +1,6 @@
 djongo==1.2.30
 requests==2.21.0
-environ==1.0
+django-environ==0.4.5
 simplejson==3.16.0
 Django==2.2
 djangorestframework==3.9.2
