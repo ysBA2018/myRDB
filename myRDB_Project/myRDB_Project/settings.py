@@ -109,6 +109,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'myRDB_app',
+        'HOST': 'http://148.100.245.159/',
+        'PORT': 27017,
     }
 }
 
