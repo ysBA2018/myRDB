@@ -109,7 +109,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'myRDB_app',
-        'HOST': 'mongodb://0.0.0.0',
+        'HOST': 'mongodb://172.17.0.2',
         'PORT': 27017,
     }
 }
