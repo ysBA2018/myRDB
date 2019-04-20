@@ -25,7 +25,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, 
     PasswordResetCompleteView, PasswordResetDoneView
 
 User = get_user_model()
-docker_container_ip = "0.0.0.0:8000"
+docker_container_ip = "http://148.100.245.159:8000"
 #docker_container_ip = "http://0.0.0.0:8000"
 
 
