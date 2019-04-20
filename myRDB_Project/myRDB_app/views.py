@@ -25,6 +25,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, 
     PasswordResetCompleteView, PasswordResetDoneView
 
 User = get_user_model()
+docker_container_ip = "172.17.0.3"
 
 
 class CSVtoMongoDB(generic.FormView):
@@ -242,7 +243,8 @@ class Search_All(generic.ListView):
     extra_context = {}
 
     def get_queryset(self):
-        url = 'http://' + self.request.get_host() + '/searchlistings/'
+        #url = 'http://' + self.request.get_host() + '/searchlistings/'
+        url = 'http://' + docker_container_ip + '/searchlistings/'
         headers = get_headers(self.request)
         lis = ['zi_organisations', 'orgas', 'tf_applications', 'departments', 'roles', 'groups']
         for e in lis:
@@ -322,7 +324,8 @@ class Users(generic.ListView):
 
     def get_queryset(self):
         logged_in_user_token = self.request.user.auth_token
-        url = 'http://' + self.request.get_host() + '/userlistings/'
+        #url = 'http://' + self.request.get_host() + '/userlistings/'
+        url = 'http://' + docker_container_ip + '/userlistings/'
         headers = {'Authorization': 'Token ' + logged_in_user_token.key}
         lis = ['zi_organisations', 'orgas', 'departments', 'roles', 'groups']
         for e in lis:
@@ -366,7 +369,8 @@ class Users(generic.ListView):
 
 
 def populate_choice_fields(headers, field, request):
-    url = 'http://' + request.get_host() + '/' + field + '/'
+    #url = 'http://' + request.get_host() + '/' + field + '/'
+    url = 'http://' + docker_container_ip + '/' + field + '/'
     json_data = get_by_url(url,get_headers(request))
     if type(json_data) == list:
         results = {field: json_data}
@@ -1345,56 +1349,64 @@ def get_headers(request):
 
 
 def get_tf_applications(headers, request):
-    url = 'http://' + request.get_host() + '/tf_applications/'
+    #url = 'http://' + request.get_host() + '/tf_applications/'
+    url = 'http://' + docker_container_ip + '/tf_applications/'
     res = requests.get(url, headers=headers)
     tf_applications_json = res.json()
     return tf_applications_json
 
 
 def get_af_by_key(pk, headers, request):
-    url = 'http://' + request.get_host() + '/afs/%d' % pk
+    #url = 'http://' + request.get_host() + '/afs/%d' % pk
+    url = 'http://' + docker_container_ip + '/afs/%d' % pk
     res = requests.get(url, headers=headers)
     af_json = res.json()
     return af_json
 
 
 def get_gf_by_key(pk, headers, request):
-    url = 'http://' + request.get_host() + '/gfs/%d' % pk
+    #url = 'http://' + request.get_host() + '/gfs/%d' % pk
+    url = 'http://' + docker_container_ip + '/gfs/%d' % pk
     res = requests.get(url, headers=headers)
     gf_json = res.json()
     return gf_json
 
 
 def get_tf_by_key(pk, headers, request):
-    url = 'http://' + request.get_host() + '/tfs/%d' % pk
+    #url = 'http://' + request.get_host() + '/tfs/%d' % pk
+    url = 'http://' + docker_container_ip + '/tfs/%d' % pk
     res = requests.get(url, headers=headers)
     tf_json = res.json()
     return tf_json
 
 
 def get_user_model_rights_by_key(pk, headers, request):
-    url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
+    #url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
+    url = 'http://' + docker_container_ip + '/usermodelrights/%d' % pk
     res = requests.get(url, headers=headers)
     json = res.json()
     return json
 
 
 def get_user_by_key(pk, headers, request):
-    url = 'http://' + request.get_host() + '/users/%s' % pk
+    #url = 'http://' + request.get_host() + '/users/%s' % pk
+    url = 'http://' + docker_container_ip + '/users/%s' % pk
     res = requests.get(url, headers=headers)
     json = res.json()
     return json
 
 
 def get_changerequests(headers, request):
-    url = 'http://' + request.get_host() + '/changerequests/'
+    #url = 'http://' + request.get_host() + '/changerequests/'
+    url = 'http://' + docker_container_ip + '/changerequests/'
     res = requests.get(url, headers=headers)
     json = res.json()
     return json
 
 
 def get_tfs(headers, request):
-    url = 'http://' + request.get_host() + '/tfs/'
+    #url = 'http://' + request.get_host() + '/tfs/'
+    url = 'http://' + docker_container_ip + '/tfs/'
     res = requests.get(url, headers=headers)
     json = res.json()
     return json
