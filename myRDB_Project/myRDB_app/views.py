@@ -27,6 +27,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, 
 User = get_user_model()
 docker_container_ip = "http://148.100.245.159:8000"
 #docker_container_ip = "http://0.0.0.0:8000"
+#docker_container_ip = "http://127.0.0.1:8000"
 
 
 class CSVtoMongoDB(generic.FormView):
@@ -1353,22 +1354,23 @@ def get_tf_applications(headers, request):
     #url = 'http://' + request.get_host() + '/tf_applications/'
     url = docker_container_ip + '/tf_applications/'
     try:
-        res = requests.get(url, headers=headers)
+        tf_applications_json = requests.get(url, headers=headers).json()
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
-    tf_applications_json = res.json()
+        tf_applications_json = {"results":None}
+        print(requests.exceptions.ConnectionError.__traceback__)
     return tf_applications_json
+
 
 
 def get_af_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/afs/%d' % pk
     url = docker_container_ip + '/afs/%d' % pk
     try:
-        res = requests.get(url, headers=headers)
+        af_json = requests.get(url, headers=headers).json()
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+        af_json = None
+        print(requests.exceptions.ConnectionError.__traceback__)
 
-    af_json = res.json()
     return af_json
 
 
@@ -1378,7 +1380,7 @@ def get_gf_by_key(pk, headers, request):
     try:
         res = requests.get(url, headers=headers)
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+        print(requests.exceptions.ConnectionError.__traceback__)
     gf_json = res.json()
     return gf_json
 
@@ -1389,7 +1391,7 @@ def get_tf_by_key(pk, headers, request):
     try:
         res = requests.get(url, headers=headers)
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+        print(requests.exceptions.ConnectionError.__traceback__)
     tf_json = res.json()
     return tf_json
 
@@ -1400,7 +1402,7 @@ def get_user_model_rights_by_key(pk, headers, request):
     try:
         res = requests.get(url, headers=headers)
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+        print(requests.exceptions.ConnectionError.__traceback__)
     json = res.json()
     return json
 
@@ -1411,7 +1413,7 @@ def get_user_by_key(pk, headers, request):
     try:
         res = requests.get(url, headers=headers)
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+        print(requests.exceptions.ConnectionError.__traceback__)
     json = res.json()
     return json
 
@@ -1421,8 +1423,8 @@ def get_changerequests(headers, request):
     url = docker_container_ip + '/changerequests/'
     try:
         res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+    except requests.exceptions.ConnectionError :
+        print(requests.exceptions.ConnectionError.__traceback__)
     json = res.json()
     return json
 
@@ -1433,17 +1435,17 @@ def get_tfs(headers, request):
     try:
         res = requests.get(url, headers=headers)
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
+        print(requests.exceptions.ConnectionError.__traceback__)
     json = res.json()
     return json
 
 
 def get_by_url(url, headers):
     try:
-        res = requests.get(url, headers=headers)
+        json = requests.get(url, headers=headers).json()
     except requests.exceptions.ConnectionError:
-        requests.status_codes = "connection refused"
-    json = res.json()
+        json = None
+        print(requests.exceptions.ConnectionError.__traceback__)
     return json
 
 
