@@ -1352,7 +1352,10 @@ def get_headers(request):
 def get_tf_applications(headers, request):
     #url = 'http://' + request.get_host() + '/tf_applications/'
     url = docker_container_ip + '/tf_applications/'
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     tf_applications_json = res.json()
     return tf_applications_json
 
@@ -1360,7 +1363,11 @@ def get_tf_applications(headers, request):
 def get_af_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/afs/%d' % pk
     url = docker_container_ip + '/afs/%d' % pk
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
+
     af_json = res.json()
     return af_json
 
@@ -1368,7 +1375,10 @@ def get_af_by_key(pk, headers, request):
 def get_gf_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/gfs/%d' % pk
     url = docker_container_ip + '/gfs/%d' % pk
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     gf_json = res.json()
     return gf_json
 
@@ -1376,7 +1386,10 @@ def get_gf_by_key(pk, headers, request):
 def get_tf_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/tfs/%d' % pk
     url = docker_container_ip + '/tfs/%d' % pk
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     tf_json = res.json()
     return tf_json
 
@@ -1384,7 +1397,10 @@ def get_tf_by_key(pk, headers, request):
 def get_user_model_rights_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
     url = docker_container_ip + '/usermodelrights/%d' % pk
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     json = res.json()
     return json
 
@@ -1392,7 +1408,10 @@ def get_user_model_rights_by_key(pk, headers, request):
 def get_user_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/users/%s' % pk
     url = docker_container_ip + '/users/%s' % pk
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     json = res.json()
     return json
 
@@ -1400,7 +1419,10 @@ def get_user_by_key(pk, headers, request):
 def get_changerequests(headers, request):
     #url = 'http://' + request.get_host() + '/changerequests/'
     url = docker_container_ip + '/changerequests/'
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     json = res.json()
     return json
 
@@ -1408,13 +1430,19 @@ def get_changerequests(headers, request):
 def get_tfs(headers, request):
     #url = 'http://' + request.get_host() + '/tfs/'
     url = docker_container_ip + '/tfs/'
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     json = res.json()
     return json
 
 
 def get_by_url(url, headers):
-    res = requests.get(url, headers=headers)
+    try:
+        res = requests.get(url, headers=headers)
+    except requests.exceptions.ConnectionError:
+        requests.status_codes = "connection refused"
     json = res.json()
     return json
 
