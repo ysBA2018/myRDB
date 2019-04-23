@@ -24,4 +24,4 @@ VOLUME /myvol
 # Now copy in our code, and run it
 COPY . /myRDB_Project
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "148.100.245.159:8000"]
