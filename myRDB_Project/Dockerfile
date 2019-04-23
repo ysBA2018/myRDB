@@ -15,6 +15,11 @@ RUN pip install --upgrade pip
 COPY requirements.txt /myRDB_Project/requirements.txt
 RUN pip install -r requirements.txt
 
+#create a volume for data storage
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol
+
 # Now copy in our code, and run it
 COPY . /myRDB_Project
 EXPOSE 8000
