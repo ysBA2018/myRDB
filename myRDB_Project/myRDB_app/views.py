@@ -852,7 +852,8 @@ class Profile(generic.ListView):
 
         headers = get_headers(self.request)
 
-        legend_data = get_tf_applications(headers, self.request)['results']
+        legend_data = get_tf_applications(headers, self.request)
+
         sorted_legend_data = sorted(legend_data, key=lambda r: r["application_name"])
         self.extra_context['legendData'] = sorted_legend_data
 
@@ -1355,6 +1356,11 @@ def get_tf_applications(headers, request):
     #url = 'http://' + request.get_host() + '/tf_applications/'
     url = docker_container_ip + '/tf_applications/'
     tf_applications_json = requests.get(url, headers=headers).json()
+    if 'results' in tf_applications_json:
+        tf_applications_json = tf_applications_json['results']
+    else:
+        print(tf_applications_json['detail'])
+        raise ConnectionError(tf_applications_json['detail'])
     return tf_applications_json
 
 
@@ -1363,6 +1369,11 @@ def get_af_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/afs/%d' % pk
     url = docker_container_ip + '/afs/%d' % pk
     af_json = requests.get(url, headers=headers).json()
+    if 'results' in af_json:
+        af_json = af_json['results']
+    else:
+        print(af_json['detail'])
+        raise ConnectionError(af_json['detail'])
     return af_json
 
 
@@ -1370,6 +1381,11 @@ def get_gf_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/gfs/%d' % pk
     url = docker_container_ip + '/gfs/%d' % pk
     gf_json = requests.get(url, headers=headers).json()
+    if 'results' in gf_json:
+        gf_json = gf_json['results']
+    else:
+        print(gf_json['detail'])
+        raise ConnectionError(gf_json['detail'])
     return gf_json
 
 
@@ -1377,6 +1393,11 @@ def get_tf_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/tfs/%d' % pk
     url = docker_container_ip + '/tfs/%d' % pk
     tf_json = requests.get(url, headers=headers).json()
+    if 'results' in tf_json:
+        tf_json = tf_json['results']
+    else:
+        print(tf_json['detail'])
+        raise ConnectionError(tf_json['detail'])
     return tf_json
 
 
@@ -1384,6 +1405,11 @@ def get_user_model_rights_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
     url = docker_container_ip + '/usermodelrights/%d' % pk
     json = requests.get(url, headers=headers).json()
+    if 'results' in json:
+        json = json['results']
+    else:
+        print(json['detail'])
+        raise ConnectionError(json['detail'])
     return json
 
 
@@ -1391,6 +1417,11 @@ def get_user_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/users/%s' % pk
     url = docker_container_ip + '/users/%s' % pk
     json = requests.get(url, headers=headers).json()
+    if 'results' in json:
+        json = json['results']
+    else:
+        print(json['detail'])
+        raise ConnectionError(json['detail'])
     return json
 
 
@@ -1398,22 +1429,33 @@ def get_changerequests(headers, request):
     #url = 'http://' + request.get_host() + '/changerequests/'
     url = docker_container_ip + '/changerequests/'
     json = requests.get(url, headers=headers).json()
+    if 'results' in json:
+        json = json['results']
+    else:
+        print(json['detail'])
+        raise ConnectionError(json['detail'])
     return json
 
 
 def get_tfs(headers, request):
     #url = 'http://' + request.get_host() + '/tfs/'
     url = docker_container_ip + '/tfs/'
-    try:
-        res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        print(requests.exceptions.ConnectionError.__traceback__)
-    json = res.json()
+    json = requests.get(url, headers=headers).json()
+    if 'results' in json:
+        json = json['results']
+    else:
+        print(json['detail'])
+        raise ConnectionError(json['detail'])
     return json
 
 
 def get_by_url(url, headers):
     json = requests.get(url, headers=headers).json()
+    if 'results' in json:
+        json = json['results']
+    else:
+        print(json['detail'])
+        raise ConnectionError(json['detail'])
     return json
 
 
