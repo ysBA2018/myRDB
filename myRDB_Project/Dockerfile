@@ -2,6 +2,7 @@
 # We Use an official Python runtime as a parent image
 FROM python:3.7
 
+USER root
 WORKDIR /myRDB_Project
 
 RUN apt-get update \
