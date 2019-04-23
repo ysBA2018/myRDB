@@ -851,6 +851,7 @@ class Profile(generic.ListView):
             user_id = self.request.GET['identity']
 
         headers = get_headers(self.request)
+
         legend_data = get_tf_applications(headers, self.request)['results']
         sorted_legend_data = sorted(legend_data, key=lambda r: r["application_name"])
         self.extra_context['legendData'] = sorted_legend_data
@@ -1353,11 +1354,7 @@ def get_headers(request):
 def get_tf_applications(headers, request):
     #url = 'http://' + request.get_host() + '/tf_applications/'
     url = docker_container_ip + '/tf_applications/'
-    try:
-        tf_applications_json = requests.get(url, headers=headers).json()
-    except requests.exceptions.ConnectionError:
-        tf_applications_json = {"results":None}
-        print(requests.exceptions.ConnectionError.__traceback__)
+    tf_applications_json = requests.get(url, headers=headers).json()
     return tf_applications_json
 
 
@@ -1365,67 +1362,42 @@ def get_tf_applications(headers, request):
 def get_af_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/afs/%d' % pk
     url = docker_container_ip + '/afs/%d' % pk
-    try:
-        af_json = requests.get(url, headers=headers).json()
-    except requests.exceptions.ConnectionError:
-        af_json = None
-        print(requests.exceptions.ConnectionError.__traceback__)
-
+    af_json = requests.get(url, headers=headers).json()
     return af_json
 
 
 def get_gf_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/gfs/%d' % pk
     url = docker_container_ip + '/gfs/%d' % pk
-    try:
-        res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        print(requests.exceptions.ConnectionError.__traceback__)
-    gf_json = res.json()
+    gf_json = requests.get(url, headers=headers).json()
     return gf_json
 
 
 def get_tf_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/tfs/%d' % pk
     url = docker_container_ip + '/tfs/%d' % pk
-    try:
-        res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        print(requests.exceptions.ConnectionError.__traceback__)
-    tf_json = res.json()
+    tf_json = requests.get(url, headers=headers).json()
     return tf_json
 
 
 def get_user_model_rights_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
     url = docker_container_ip + '/usermodelrights/%d' % pk
-    try:
-        res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        print(requests.exceptions.ConnectionError.__traceback__)
-    json = res.json()
+    json = requests.get(url, headers=headers).json()
     return json
 
 
 def get_user_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/users/%s' % pk
     url = docker_container_ip + '/users/%s' % pk
-    try:
-        res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError:
-        print(requests.exceptions.ConnectionError.__traceback__)
-    json = res.json()
+    json = requests.get(url, headers=headers).json()
     return json
 
 
 def get_changerequests(headers, request):
     #url = 'http://' + request.get_host() + '/changerequests/'
     url = docker_container_ip + '/changerequests/'
-    try:
-        res = requests.get(url, headers=headers)
-    except requests.exceptions.ConnectionError :
-        print(requests.exceptions.ConnectionError.__traceback__)
-    json = res.json()
+    json = requests.get(url, headers=headers).json()
     return json
 
 
@@ -1441,11 +1413,7 @@ def get_tfs(headers, request):
 
 
 def get_by_url(url, headers):
-    try:
-        json = requests.get(url, headers=headers).json()
-    except requests.exceptions.ConnectionError:
-        json = None
-        print(requests.exceptions.ConnectionError.__traceback__)
+    json = requests.get(url, headers=headers).json()
     return json
 
 
