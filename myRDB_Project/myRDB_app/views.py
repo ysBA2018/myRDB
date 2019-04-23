@@ -1369,7 +1369,7 @@ def get_tf_applications(headers, request):
 def get_af_by_key(pk, headers, request):
     #url = 'http://' + request.get_host() + '/afs/%d' % pk
     url = docker_container_ip + '/afs/%d' % pk
-    af_json = requests.get(url, headers=headers,proxies=proxies).json()
+    af_json = requests.get(url, headers=headers).json()
     if 'results' in af_json:
         af_json = af_json['results']
     else:
