@@ -7,6 +7,11 @@ from .models import Orga, Department, Group, ZI_Organisation, TF_Application, TF
 
 
 class ChangeRequestsSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+        Serializer for REST-API
+        inhabitats update methods for changerequests
+            accept or decline
+    '''
     class Meta:
         model = ChangeRequests
         fields = (
@@ -129,6 +134,11 @@ class UserAFSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+            Serializer for REST-API
+            inhabitats update methods for users
+                delete, transfer, restore,
+        '''
     class Meta:
         model = User
         fields = (

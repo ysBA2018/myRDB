@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required,permission_required
 from . import views
 
 app_name = 'myRDB'
+'''
+    sets App urls
+'''
 urlpatterns = [
     #path('', include('django.contrib.auth.urls')),
     path('', views.IndexView.as_view(), name='index'),

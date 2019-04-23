@@ -26,12 +26,19 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, 
 
 User = get_user_model()
 docker_container_ip = "http://148.100.245.159:8000"
-proxies = {'http':"http://172.17.0.3:8000"}
+#proxies = {'http':"http://172.17.0.3:8000"}
 #docker_container_ip = "http://0.0.0.0:8000"
 #docker_container_ip = "http://127.0.0.1:8000"
 
 
 class CSVtoMongoDB(generic.FormView):
+    '''
+        dataimport-view: reads IIQ-csv (currently hardcoded) line by line and populates Database
+            1 line equals 1 user-right
+            creates user-profiles to be available for activation by signing-up user
+            if element deosnt exist -> create and add reference to user model
+            else add reference to user model
+    '''
     template_name = 'myRDB/csvToMongo.html'
     form_class = SomeForm
     success_url = '#'
@@ -94,7 +101,6 @@ class CSVtoMongoDB(generic.FormView):
                     try:
                         af = AF.objects.get(af_name=line[5])
                     except(KeyError, AF.DoesNotExist):
-                        # TODO: Daten werden noch nicht korreckt eingetragen -> immer Null
                         af = AF(af_name=line[5], af_description=line[6])
 
                     af.save()
@@ -202,37 +208,63 @@ class CSVtoMongoDB(generic.FormView):
 
 
 class Login(LoginView):
+    '''
+        standard Loginview uses  django.auth includes CustomAuthentication-form
+    '''
     template_name = 'myRDB/registration/login.html'
     authentication_form = CustomAuthenticationForm
 
 
 class Logout(LogoutView):
+    '''
+        standard Logoutview uses django.auth includes CustomAuthentication-form
+    '''
     template_name = 'myRDB/registration/logout.html'
 
 
 class Register(generic.CreateView):
+    '''
+        standard Register view uses  django.auth includes CustomUserCreationForm-form
+        currently without email-verification
+    '''
     form_class = CustomUserCreationForm
     success_url = '/myRDB/login'
     template_name = 'myRDB/registration/register.html'
 
 
 class Password_Reset(PasswordResetView):
+    '''
+        TODO: pw-reset not implemented yet due to not yet implemented email-verification
+    '''
     template_name = 'myRDB/registration/password_reset_form.html'
 
 
 class Password_Reset_Done(PasswordResetDoneView):
+    '''
+       TODO: pw-reset not implemented yet due to not yet implemented email-verification
+    '''
     template_name = 'myRDB/registration/password_reset_done.html'
 
 
 class Password_Reset_Confirm(PasswordResetConfirmView):
+    '''
+       TODO: pw-reset not implemented yet due to not yet implemented email-verification
+    '''
     template_name = 'myRDB/registration/password_reset_confirm.html'
 
 
 class Password_Reset_Complete(PasswordResetCompleteView):
+    '''
+       TODO: pw-reset not implemented yet due to not yet implemented email-verification
+    '''
     template_name = 'myRDB/registration/password_reset_complete.html'
 
 
 class IndexView(generic.ListView):
+    '''
+       Welcome-Page after login:
+        loads user-data of logged-in user to welcome after login
+    '''
     template_name = 'myRDB/index.html'
     queryset = User.objects.all()
 
@@ -242,6 +274,13 @@ class IndexView(generic.ListView):
 
 
 class Search_All(generic.ListView):
+    '''
+        Search-Function of the old RDB-APP:
+            rebuilt to work with mongodb
+            fills selectboxes for filters with data
+            builds url by selected filters and requests data from REST-API
+            prepares data for display in Table (before filter: all rights of all users, sorted by user)
+    '''
     template_name = 'myRDB/search_all.html'
     extra_context = {}
 
@@ -322,6 +361,12 @@ class Search_All(generic.ListView):
 
 
 class Users(generic.ListView):
+    '''
+        Userlisting:
+            requests all users from REST-API and displays them as paginated list
+            selectbox filters get populated
+            links to userprofiles of each user in list
+    '''
     template_name = 'myRDB/users.html'
     extra_context = {}
 
@@ -372,6 +417,10 @@ class Users(generic.ListView):
 
 
 def populate_choice_fields(headers, field, request):
+    '''
+        method to populate selectboxes with data from REST-API
+        used by search and users
+    '''
     #url = 'http://' + request.get_host() + '/' + field + '/'
     url = docker_container_ip + '/' + field + '/'
     json_data = get_by_url(url,get_headers(request))
@@ -384,6 +433,10 @@ def populate_choice_fields(headers, field, request):
 
 
 def build_url_params(request, extra_context):
+    '''
+        method for url-buildup for REST-API -requests
+        used by search and users
+    '''
     params = ""
     changed = False
     if 'userSearch' in request.GET:
@@ -512,6 +565,15 @@ def build_url_params(request, extra_context):
 
 
 class Compare(generic.ListView):
+    '''
+        compare-view:
+            compares userdata with data of a selected user
+            reachable by form from each user-profile
+            requests user- and compareuser-data from REST-API andprepares data for presentation as
+                circlepacking or table, scatterplot
+                sets context-variables for use in templates and session variables
+
+    '''
     model = User
     template_name = 'myRDB/compare/compare.html'
     # paginate_by = 10
@@ -597,6 +659,15 @@ class Compare(generic.ListView):
 
 
 class ProfileRightsAnalysis(generic.ListView):
+    '''
+        rights-analysis-view:
+            uses session data from userprofile
+            presorts userrights for display in equal and unequal in comparison to original-right-model
+            prepares data for display as circlepacking structures
+            counts matching and nonmatching rights in a rightspackage
+            switchable between AF- and GF- analysis
+            includes linkage to right-application-view for applying transfered or deleted rights
+    '''
     model = User
     template_name = 'myRDB/profileRightsAnalysis/profile_rights_analysis.html'
     extra_context = {}
@@ -829,6 +900,13 @@ class ProfileRightsAnalysis(generic.ListView):
 
 
 class Profile(generic.ListView):
+    '''
+        profile-view:
+            gets specific user data from REST-API
+            prepares it for display as circlepacking or table, scatterplot
+            loads legend-data
+            sets contextvariables for use in templates, sets sessionvariables for use in other views
+    '''
     # model = User
     template_name = 'myRDB/profile/profile.html'
     # paginate_by = 10
@@ -877,7 +955,6 @@ class Profile(generic.ListView):
         self.extra_context['delete_list_table_data'] = delete_list_table_data
         self.extra_context['delete_list_count'] = delete_list_count
         self.extra_context['deletelist'] = {"children": delete_list}
-        # user_json_data = update_user_data(user_json_data, delete_list_with_category)
 
         afs = user_json_data['children']
         data, gf_count, tf_count = prepareTableData(user_json_data, roles, afs, headers)
@@ -911,6 +988,12 @@ class Profile(generic.ListView):
 
 
 class RequestPool(generic.ListView):
+    '''
+        changerequest-collection-view:
+            displays all changerequests sorted, grouped by users
+            prepares data and forms for display
+            sets context-variable
+    '''
     model = ChangeRequests
     template_name = 'myRDB/requestPool/request_pool.html'
     extra_context = {}
@@ -970,6 +1053,13 @@ class RequestPool(generic.ListView):
 
 
 class MyRequests(generic.ListView):
+    '''
+        user-changerequests:
+            gets specific user-changerequest-fata over REST-API
+            presorts requests in accepted,declined and unanswered
+            prepares data for display as circlepackings
+            sets contextvariables
+    '''
     model = ChangeRequests
     template_name = 'myRDB/myRequests/my_requests.html'
     extra_context = {}
@@ -1078,6 +1168,13 @@ class MyRequests(generic.ListView):
 
 
 class RightApplication(generic.ListView):
+    '''
+        rightapplication-view:
+            gets user-data by REST-API
+            prepares all data of transfer- and deletelist of user as circlepackings to display
+            sets context variables
+
+    '''
     model = User
     template_name = 'myRDB/rightApplication/right_application.html'
     extra_context = {}
@@ -1120,7 +1217,6 @@ class RightApplication(generic.ListView):
         self.extra_context['model_delete_list'] = model_delete_list
         self.extra_context['delete_form'] = DeleteRightForm
 
-        # user_json_data = update_user_data(user_json_data, delete_list_with_category)
         self.extra_context['jsondata'] = user_json_data
 
         # afs = user_json_data['children']
@@ -1139,6 +1235,14 @@ class RightApplication(generic.ListView):
 
 
 def get_model_right(comp_user, type, pk, request):
+    '''
+        method for getting right-model-data for display in my_requests and request_pool
+    :param comp_user:
+    :param type:
+    :param pk:
+    :param request:
+    :return:
+    '''
     if type == 'AF':
         model = get_af_by_key(pk, get_headers(request), request)
         model['right_description'] = model.pop('af_description')
@@ -1152,6 +1256,15 @@ def get_model_right(comp_user, type, pk, request):
 
 
 def get_right_from_list(comp_user, type, right, rights):
+    '''
+        method used by my_requests and request_pool for finding specific right in a list and
+        preparing right_data for display as circlePacking
+    :param comp_user:
+    :param type:
+    :param right:
+    :param rights:
+    :return:
+    '''
     for af in rights:
         if type == 'AF':
             if af['af_name'] == right:
@@ -1186,6 +1299,13 @@ def get_right_from_list(comp_user, type, right, rights):
 
 
 def get_model_list(transfer_list_with_category, headers, request):
+    '''
+        method for building up list of model-rights to some rights-list(transfer-, delete-, userright-)
+    :param transfer_list_with_category:
+    :param headers:
+    :param request:
+    :return:
+    '''
     model_list = []
     for right in transfer_list_with_category:
         model = None
@@ -1207,6 +1327,11 @@ def get_model_list(transfer_list_with_category, headers, request):
 
 
 def prepareTransferJSONdata(transfer_json_data):
+    '''
+    method to prepare transferlist-data for display as circlepacking
+    :param transfer_json_data:
+    :return:
+    '''
     transfer_list_with_category = []
     for right in transfer_json_data:
         right["name"] = right.pop('af_name')
@@ -1231,6 +1356,11 @@ def prepareTransferJSONdata(transfer_json_data):
 
 
 def prepareTransferTabledata(transfer_list):
+    '''
+    prepares transfer-data for display as table
+    :param transfer_list:
+    :return:
+    '''
     tfList = []
     gfList = []
     afList = []
@@ -1247,6 +1377,11 @@ def prepareTransferTabledata(transfer_list):
 
 
 def get_delete_list_counts(list):
+    '''
+    counts elements in delete list to keep correct count for display
+    :param list:
+    :return:
+    '''
     del_af_count = 0
     del_gf_count = 0
     del_tf_count = 0
@@ -1286,22 +1421,13 @@ def get_delete_list_counts(list):
         return HttpResponse(data, mimetype)
 '''
 
-
-def get_extra_paginator(identifyer, list, request):
-    extra_paginator = Paginator(list, 3)
-    page = request.GET.get(identifyer + '_page')
-
-    try:
-        list_data = extra_paginator.page(page)
-    except PageNotAnInteger:
-        list_data = extra_paginator.page(1)
-    except EmptyPage:
-        list_data = extra_paginator.page(extra_paginator.num_pages)
-
-    return list_data
-
-
 def setViewMode(request, extra_context):
+    '''
+        reads viewmode out of GET-request for any-view wher viewmode is switchable between graphic- and table- mode
+    :param request:
+    :param extra_context:
+    :return:
+    '''
     if request.GET.keys().__contains__("view_mode"):
         extra_context['view_mode'] = request.GET['view_mode']
     else:
@@ -1309,6 +1435,11 @@ def setViewMode(request, extra_context):
 
 
 def prepareTrashTableData(afs):
+    '''
+    prepares trash-data for display as table
+    :param afs:
+    :return:
+    '''
     tfList = []
     gfList = []
     afList = []
@@ -1328,6 +1459,14 @@ def prepareTrashTableData(afs):
 
 
 def prepareTableData(user, roles, afs, headers):
+    '''
+    prepares user-rights-data for display as table
+    :param user:
+    :param roles:
+    :param afs:
+    :param headers:
+    :return:
+    '''
     tfList = []
     gfList = []
     afList = []
@@ -1348,12 +1487,25 @@ def prepareTableData(user, roles, afs, headers):
 
 
 def get_headers(request):
+    '''
+    gets headers for API-Requests
+        loggedinusertoken for authentification with the drf-framework
+    :param request:
+    :return:
+    '''
     logged_in_user_token = request.user.auth_token
     headers = {'Authorization': 'Token ' + logged_in_user_token.key}
     return headers
 
 
 def get_tf_applications(headers, request):
+    '''
+        Get-Method for API-Requests
+        gets tf_applications-data for legend
+    :param headers:
+    :param request:
+    :return:
+    '''
     #url = 'http://' + request.get_host() + '/tf_applications/'
     url = docker_container_ip + '/tf_applications/'
     tf_applications_json = requests.get(url, headers=headers).json()
@@ -1367,6 +1519,13 @@ def get_tf_applications(headers, request):
 
 
 def get_af_by_key(pk, headers, request):
+    '''
+        Get-Method for API-Requests
+        gets specific AF by key
+    :param headers:
+    :param request:
+    :return:
+    '''
     #url = 'http://' + request.get_host() + '/afs/%d' % pk
     url = docker_container_ip + '/afs/%d' % pk
     af_json = requests.get(url, headers=headers).json()
@@ -1379,6 +1538,13 @@ def get_af_by_key(pk, headers, request):
 
 
 def get_gf_by_key(pk, headers, request):
+    '''
+            Get-Method for API-Requests
+            gets specific GF by key
+        :param headers:
+        :param request:
+        :return:
+        '''
     #url = 'http://' + request.get_host() + '/gfs/%d' % pk
     url = docker_container_ip + '/gfs/%d' % pk
     gf_json = requests.get(url, headers=headers).json()
@@ -1391,6 +1557,13 @@ def get_gf_by_key(pk, headers, request):
 
 
 def get_tf_by_key(pk, headers, request):
+    '''
+            Get-Method for API-Requests
+            gets specific TF by key
+        :param headers:
+        :param request:
+        :return:
+        '''
     #url = 'http://' + request.get_host() + '/tfs/%d' % pk
     url = docker_container_ip + '/tfs/%d' % pk
     tf_json = requests.get(url, headers=headers).json()
@@ -1403,6 +1576,13 @@ def get_tf_by_key(pk, headers, request):
 
 
 def get_user_model_rights_by_key(pk, headers, request):
+    '''
+        Get-Method for API-Requests
+        gets usermodelrights for data-compare with userrights
+    :param headers:
+    :param request:
+    :return:
+    '''
     #url = 'http://' + request.get_host() + '/usermodelrights/%d' % pk
     url = docker_container_ip + '/usermodelrights/%d' % pk
     json = requests.get(url, headers=headers).json()
@@ -1415,6 +1595,13 @@ def get_user_model_rights_by_key(pk, headers, request):
 
 
 def get_user_by_key(pk, headers, request):
+    '''
+        Get-Method for API-Requests
+        gets specific User by xvNumber as key
+    :param headers:
+    :param request:
+    :return:
+    '''
     #url = 'http://' + request.get_host() + '/users/%s' % pk
     url = docker_container_ip + '/users/%s' % pk
     json = requests.get(url, headers=headers).json()
@@ -1427,6 +1614,13 @@ def get_user_by_key(pk, headers, request):
 
 
 def get_changerequests(headers, request):
+    '''
+        Get-Method for API-Requests
+        gets changerequests for display in requestpool
+    :param headers:
+    :param request:
+    :return:
+    '''
     #url = 'http://' + request.get_host() + '/changerequests/'
     url = docker_container_ip + '/changerequests/'
     json = requests.get(url, headers=headers).json()
@@ -1439,6 +1633,13 @@ def get_changerequests(headers, request):
 
 
 def get_tfs(headers, request):
+    '''
+        Get-Method for API-Requests
+        gets tfs
+    :param headers:
+    :param request:
+    :return:
+    '''
     #url = 'http://' + request.get_host() + '/tfs/'
     url = docker_container_ip + '/tfs/'
     json = requests.get(url, headers=headers).json()
@@ -1451,6 +1652,13 @@ def get_tfs(headers, request):
 
 
 def get_by_url(url, headers):
+    '''
+        Get-Method for API-Requests
+        get anything from API by url
+    :param headers:
+    :param request:
+    :return:
+    '''
     json = requests.get(url, headers=headers).json()
     if 'results' in json:
         json = json['results']
@@ -1461,6 +1669,15 @@ def get_by_url(url, headers):
 
 
 def prepareJSONdata(identity, user_json_data, compareUser, headers,request):
+    '''
+    prepares Data for display as circlePacking and scatterplot
+    :param identity:
+    :param user_json_data:
+    :param compareUser:
+    :param headers:
+    :param request:
+    :return:
+    '''
     print(type(user_json_data), user_json_data)
     user_json_data['children'] = user_json_data.pop('user_afs')
     scatterData = []
@@ -1483,7 +1700,6 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers,request):
                 tf['name'] = tf.pop('tf_name')
                 tf['size'] = 3000
 
-                # TODO: scatter-graph für zugewiesen, auf delete-list gesetzt, gelöscht
                 scatterData.append(
                     {"name": tf['name'], "gf_name": gf['name'], "af_name": af['name'], "af_applied": af_applied,
                      "color": tf['color']})
@@ -1499,7 +1715,11 @@ def prepareJSONdata(identity, user_json_data, compareUser, headers,request):
 
 
 def prepare_delete_list(delete_list):
-    # TODO: umbauen auf db-delete-list <-> bei lösch-aktion zu del-list hinzufügen <- dann hier nur auslesen und json preparieren
+    '''
+    prepare delete_list for display as circlepacking
+    :param delete_list:
+    :return:
+    '''
     delete_list_with_category = []
 
     for right in delete_list:
@@ -1524,42 +1744,12 @@ def prepare_delete_list(delete_list):
     return delete_list, delete_list_with_category
 
 
-def update_user_data(user_json_data, delete_list):
-    for elem in delete_list:
-        if elem["type"] == "af":
-            for right in user_json_data['children']:
-                if right["name"] == elem["right"]["name"]:
-                    user_json_data['children'].remove(right)
-                    break
-        if elem["type"] == "gf":
-            for right in user_json_data['children']:
-                if right["name"] == elem["right"]["parent"]:
-                    for right_lev_2 in right['children']:
-                        if right_lev_2["name"] == elem["right"]["name"]:
-                            right['children'].remove(right_lev_2)
-                            break
-            else:
-                continue
-            break
-        if elem["type"] == "tf":
-            for right in user_json_data['children']:
-                if right["name"] == elem["right"]["grandparent"]:
-                    for right_lev_2 in right['children']:
-                        if right_lev_2["name"] == elem["right"]["parent"]:
-                            for right_lev_3 in right_lev_2['children']:
-                                if right_lev_3["name"] == elem["right"]["name"]:
-                                    right_lev_2['children'].remove(right_lev_3)
-                                    break
-                    else:
-                        continue
-                    break
-            else:
-                continue
-            break
-    return user_json_data
-
-
 class UserModelRightsViewSet(viewsets.ModelViewSet):
+    '''
+        API endpoint that allows usermodelrights to be listed and detail-viewed
+        special listing with all rights expanded
+    '''
+
     permission_classes = (IsAuthenticated,)
     serializer_class = UserModelRightsSerializer
 
@@ -1570,6 +1760,8 @@ class UserModelRightsViewSet(viewsets.ModelViewSet):
 class CompleteUserListingViewSet(viewsets.ModelViewSet):
     """
         API endpoint that allows users to be listed and detail-viewed
+        special listing with all rights expanded
+        filters request of search-view
         """
     permission_classes = (IsAuthenticated,)
     serializer_class = CompleteUserListingSerializer
@@ -1597,6 +1789,7 @@ class CompleteUserListingViewSet(viewsets.ModelViewSet):
 class UserListingViewSet(viewsets.ModelViewSet):
     """
         API endpoint that allows users to be listed and detail-viewed
+        filters users after users-view API-Request
         """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserListingSerializer
@@ -1624,6 +1817,7 @@ class UserListingViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
+
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
@@ -1741,6 +1935,7 @@ class TF_ApplicationViewSet(viewsets.ModelViewSet):
 class ChangeRequestsViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows ChangeRequests to be viewed or edited.
+    creates new changerequests after API-request from rightsapplication
     """
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangeRequestsSerializer

@@ -16,6 +16,11 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
+    '''
+        Form for password and xvNumber validation
+        also checks if Profile has already been activated by any user by creating pswd
+            otherwise create new
+    '''
     class Meta:
         model = get_user_model()
         fields = ('identity','email')

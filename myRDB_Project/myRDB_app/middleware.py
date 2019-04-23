@@ -7,17 +7,7 @@ class HttpPostTunnelingMiddleware(object):
 
     def __call__(self, request):
         '''
-        if 'action_type' in request.POST.keys():
-            if request.POST['action_type']=="update_session":
-                if "trash_table_data" in request.POST.keys():
-                    request.session['delete_list_table_data']=request.POST['trash_table_data']['data']
-                if "trash_graph_data" in request.POST.keys():
-                    request.session['delete_list_graph_data'] = request.POST['trash_graph_data']
-                if "user_graph_data" in request.POST.keys():
-                    request.session['user_data'] = request.POST['user_graph_data']
-                if "user_table_data" in request.POST.keys():
-                    request.session['table_data'] = request.POST['user_table_data']['data']
-                return self.get_response(request)
+            Matchin POST Requests on CRUD-Methods
         '''
         if 'X_METHODOVERRIDE' in request.POST.keys():
             http_method = request.POST['X_METHODOVERRIDE']

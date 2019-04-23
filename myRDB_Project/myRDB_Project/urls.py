@@ -19,6 +19,9 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from myRDB_app import views
 
+'''
+    sets REST-API urls
+'''
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, 'user')
 router.register(r'roles', views.RoleViewSet, 'role')
