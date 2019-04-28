@@ -1511,7 +1511,7 @@ def get_tf_applications(headers, request):
     tf_applications_json = requests.get(url, headers=headers).json()
     if 'results' in tf_applications_json:
         tf_applications_json = tf_applications_json['results']
-    else:
+    elif 'detail' in tf_applications_json:
         print(tf_applications_json['detail'])
         raise ConnectionError(tf_applications_json['detail'])
     return tf_applications_json
@@ -1531,7 +1531,7 @@ def get_af_by_key(pk, headers, request):
     af_json = requests.get(url, headers=headers).json()
     if 'results' in af_json:
         af_json = af_json['results']
-    else:
+    elif 'detail' in af_json:
         print(af_json['detail'])
         raise ConnectionError(af_json['detail'])
     return af_json
@@ -1550,7 +1550,7 @@ def get_gf_by_key(pk, headers, request):
     gf_json = requests.get(url, headers=headers).json()
     if 'results' in gf_json:
         gf_json = gf_json['results']
-    else:
+    elif 'detail' in gf_json:
         print(gf_json['detail'])
         raise ConnectionError(gf_json['detail'])
     return gf_json
@@ -1569,7 +1569,7 @@ def get_tf_by_key(pk, headers, request):
     tf_json = requests.get(url, headers=headers).json()
     if 'results' in tf_json:
         tf_json = tf_json['results']
-    else:
+    elif 'detail' in tf_json:
         print(tf_json['detail'])
         raise ConnectionError(tf_json['detail'])
     return tf_json
@@ -1588,7 +1588,7 @@ def get_user_model_rights_by_key(pk, headers, request):
     json = requests.get(url, headers=headers).json()
     if 'results' in json:
         json = json['results']
-    else:
+    elif 'detail' in json:
         print(json['detail'])
         raise ConnectionError(json['detail'])
     return json
@@ -1607,7 +1607,7 @@ def get_user_by_key(pk, headers, request):
     json = requests.get(url, headers=headers).json()
     if 'results' in json:
         json = json['results']
-    else:
+    elif 'detail' in json:
         print(json['detail'])
         raise ConnectionError(json['detail'])
     return json
@@ -1626,7 +1626,7 @@ def get_changerequests(headers, request):
     json = requests.get(url, headers=headers).json()
     if 'results' in json:
         json = json['results']
-    else:
+    elif 'detail'in json:
         print(json['detail'])
         raise ConnectionError(json['detail'])
     return json
@@ -1645,7 +1645,7 @@ def get_tfs(headers, request):
     json = requests.get(url, headers=headers).json()
     if 'results' in json:
         json = json['results']
-    else:
+    elif 'detail' in json:
         print(json['detail'])
         raise ConnectionError(json['detail'])
     return json
@@ -1662,7 +1662,7 @@ def get_by_url(url, headers):
     json = requests.get(url, headers=headers).json()
     if 'results' in json:
         json = json['results']
-    else:
+    elif 'detail' in json:
         print(json['detail'])
         raise ConnectionError(json['detail'])
     return json
