@@ -100,17 +100,25 @@ function remove_current_unanswered_card(form, card_id, collapse_id){
                             "</div></div></div>");
                         $("#content_container").append(empty_my_requests_div);
                     }
-                    alert("Request erfolgreich\nzurückgezogen!")
+                    bootbox.alert("Request erfolgreich\nzurückgezogen!", function () {
+                        console.log("Request erfolgreich\nzurückgezogen!");
+                    });
                 }else{
-                    alert("Beim zrückdrehen der Änderungen\nist ein Fehler aufgetreten!")
+                    bootbox.alert("Beim zrückdrehen der Änderungen\nist ein Fehler aufgetreten!", function () {
+                        console.log("Beim zrückdrehen der Änderungen\nist ein Fehler aufgetreten!");
+                    });
                 }
             }
             else{
-                alert("Beim Entfernen aus Requestpool\nist ein Fehler aufgetreten!")
+                bootbox.alert("Beim Entfernen aus Requestpool\nist ein Fehler aufgetreten!", function () {
+                    console.log("Beim Entfernen aus Requestpool\nist ein Fehler aufgetreten!");
+                });
             }
         }
         else{
-            alert("Beim Entfernen aus Listung\nist ein Fehler aufgetreten!")
+            bootbox.alert("Beim Entfernen aus Listung\nist ein Fehler aufgetreten!", function () {
+                console.log("Beim Entfernen aus Listung\nist ein Fehler aufgetreten!");
+            });
         }
     }
 }

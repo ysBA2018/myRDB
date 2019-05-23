@@ -82,7 +82,9 @@ $(document).ready(function() {
                     async:false,
                     success: function(res){console.log("Success!: "+res);
                         update_table_data(cell_data,right_type,row_data);
-                        alert("Berechtigung von\n\nTransferliste entfernt!\n");
+                        bootbox.alert("Berechtigung von\n\nTransferliste entfernt!\n", function () {
+                            console.log("Berechtigung von\n\nTransferliste entfernt!\n");
+                        });
                         },
                     error: function(res){console.log(res);}
                     });

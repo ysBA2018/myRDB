@@ -94,7 +94,9 @@ $(document).ready(function() {
                     url:'http://127.0.0.1:8000/users/'+window.user+'/',
                     async:false,
                     success: function(res){console.log(res);
-                        alert("Berechtigung zur\n\nLöschliste hinzugefügt\n");
+                        bootbox.alert("Berechtigung zur\n\nLöschliste hinzugefügt\n", function () {
+                            console.log("Berechtigung zur\n\nLöschliste hinzugefügt\n");
+                        });
                         successful=true},
                     error: function(res){console.log(res);}
                     });

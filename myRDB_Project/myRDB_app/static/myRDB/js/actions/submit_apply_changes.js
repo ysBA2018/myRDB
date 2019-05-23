@@ -11,6 +11,16 @@ function insert_change_request_to_database(formElement){
     console.log(repacked_objects);
     var r = confirm("Änderungen beantragen?\n\n");
     if (r === true) {
+        var res =make_changerequest(repacked_objects,requesting_user,csrf_middleware_token,compare_user);
+        if (res === true){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+}
+function make_changerequest(repacked_objects,requesting_user,csrf_middleware_token,compare_user){
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -75,19 +85,26 @@ function insert_change_request_to_database(formElement){
                         error: function(res){console.log(res);}
                     });
                 if(successful){
-                    alert("Antrag erfolgreich gestellt!");
+                    bootbox.alert("Antrag erfolgreich gestellt!",function(){
+                        console.log("Antrag erfolgreich gestellt!");
+                    });
                     return true;
                 }else{
-                    alert("Beim leeren der Transfer- und Deleteliste \n ist ein Fehler aufgetreten!")
+                    bootbox.alert("Beim leeren der Transfer- und Deleteliste \n ist ein Fehler aufgetreten!",function(){
+                        console.log("Beim leeren der Transfer- und Deleteliste \n ist ein Fehler aufgetreten!");
+                    });
                 }
             }else{
-                alert("Beim hinzufügen zu MyRequests \n ist ein Fehler aufgetreten!")
+                bootbox.alert("Beim hinzufügen zu MyRequests \n ist ein Fehler aufgetreten!",function(){
+                    console.log("Beim hinzufügen zu MyRequests \n ist ein Fehler aufgetreten!");
+                });
             }
         }
-        else{
-            alert("Beim erstellen der Requests \n ist ein Fehler aufgetreten!")
+        else {
+            bootbox.alert("Beim erstellen der Requests \n ist ein Fehler aufgetreten!", function () {
+                console.log("Beim erstellen der Requests \n ist ein Fehler aufgetreten!");
+            });
         }
-    }
     return false;
 }
 

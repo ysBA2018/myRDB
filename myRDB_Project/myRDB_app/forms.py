@@ -150,4 +150,4 @@ class DeclineChangeForm(forms.Form):
                                          label=mark_safe('<strong>Grund der Ablehnung:</strong>'))
 
 class ProfileHeaderForm(forms.Form):
-    compare_to = forms.CharField(label="",widget=forms.TextInput(attrs={'placeholder': 'vergleiche mit...'}))
+    user_search = forms.CharField(label="",widget=forms.TextInput(attrs={'placeholder': 'vergleiche mit...'}))

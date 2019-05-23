@@ -91,15 +91,19 @@ function change_request_state_to_accepted_and_perform_action(formElement, curren
                         "</div></div></div>");
                     $("#content_container").append(empty_my_requests_div);
                 }
-
-                alert("Antrag stattgegeben!");
-
+                bootbox.alert("Antrag stattgegeben!", function () {
+                    console.log("Antrag stattgegeben!");
+                });
             }
             else{
-                alert("Beim durchführen der Änderungen \n ist ein Fehler aufgetreten!")
+                bootbox.alert("Beim durchführen der Änderungen \n ist ein Fehler aufgetreten!", function () {
+                    console.log("Beim durchführen der Änderungen \n ist ein Fehler aufgetreten!");
+                });
             }
         }else{
-            alert("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!")
+            bootbox.alert("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!", function () {
+                console.log("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!");
+            });
         }
     }
 }

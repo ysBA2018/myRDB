@@ -10,7 +10,8 @@
         var current_site = "{{ current_site }}";
         var scatterData = {{ scatterData | asjson }};
         var jsondata = {{ jsondata | asjson }};
-        var trashlistdata = {{ delete_list | asjson }};
+        var trashlistdata = {{ deletelist | asjson }};
+        var transferlistdata = {{ transferlist | asjson }};
         var legendData = {{ legendData | asjson}};
         var user = "{{ identity_param }}";
     </script>

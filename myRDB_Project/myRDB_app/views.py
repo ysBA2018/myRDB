@@ -1113,7 +1113,10 @@ class MyRequests(generic.ListView):
                 else:
                     right = get_right_from_list(requesting_user, request['right_type'], request['right_name'],
                                                 requesting_user['transfer_list'])
-                    model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
+                    if right is None:
+                        model = None
+                    else:
+                        model = get_model_right(requesting_user, request['right_type'], right['model_right_pk'],
                                             self.request)
             if request['action'] == 'delete':
                 if request['status'] == "accepted":

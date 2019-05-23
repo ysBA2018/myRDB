@@ -91,15 +91,19 @@ function change_request_state_to_declined(formElement, current_card_id, current_
                         "</div></div></div>");
                     $("#content_container").append(empty_my_requests_div);
                 }
-
-                alert("Antrag abgewiesen!");
-
+                bootbox.alert("Antrag abgewiesen!", function () {
+                    console.log("Antrag abgewiesen!");
+                });
             }
             else{
-                alert("Beim durchführen der Abweisung \n ist ein Fehler aufgetreten!")
+                bootbox.alert("Beim durchführen der Abweisung \n ist ein Fehler aufgetreten!", function () {
+                    console.log("Beim durchführen der Abweisung \n ist ein Fehler aufgetreten!");
+                });
             }
         }else{
-            alert("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!")
+            bootbox.alert("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!", function () {
+                console.log("Beim ändern des Antragsstatus \n ist ein Fehler aufgetreten!");
+            });
         }
     }
 }

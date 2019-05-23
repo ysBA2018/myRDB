@@ -42,7 +42,9 @@ $(document).ready(function() {
                parentExists = true;
            }
         });
-        alert("parentexists: "+parentExists+"\ngrandparent&gparentexists: "+parentAndGrandparentExists);
+        bootbox.alert("parentexists: "+parentExists+"\ngrandparent&gparentexists: "+parentAndGrandparentExists, function () {
+            console.log("parentexists: "+parentExists+"\ngrandparent&gparentexists: "+parentAndGrandparentExists);
+        });
 
         if(colIndex===0&&parentAndGrandparentExists){
             right_type="tf";
@@ -54,7 +56,9 @@ $(document).ready(function() {
         }else if (colIndex===2){
             right_type="af";
         }else{
-            alert("Berechtigung:\n\n"+cell_data+"\n\nkann nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+            bootbox.alert("Berechtigung:\n\n"+cell_data+"\n\nkann nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!", function () {
+                console.log("Berechtigung:\n\n"+cell_data+"\n\nkann nicht wiederhergestellt werden!\n\nBerechtigungsbündel können nur\nkomplett wiederhergestellt werden!");
+            });
             return;
         }
         var r = confirm("Berechtigung:\n\n"+cell_data+"\n\nwirklich von Löschliste entfernen\nund wiederherstellen?\n\n");
@@ -96,7 +100,9 @@ $(document).ready(function() {
                         if(window.current_site==="compare"){
                             window.compare_data_table.draw();
                         }
-                        alert("Berechtigung von\n\nLöschliste entfernt\nund wieder hergestellt!\n");
+                        bootbox.alert("Berechtigung von\n\nLöschliste entfernt\nund wieder hergestellt!\n", function () {
+                            console.log("Berechtigung von\n\nLöschliste entfernt\nund wieder hergestellt!\n");
+                        });
                         },
                     error: function(res){console.log(res);}
                     });

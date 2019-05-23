@@ -56,7 +56,9 @@ $(document).ready(function() {
                 if(contains){
                     return true;
                 }
-                alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                bootbox.alert("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!", function () {
+                    console.log("GF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                });
                 return false;
             }
 
@@ -69,7 +71,9 @@ $(document).ready(function() {
                     return true;
                 }
                 else{
-                    alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                    bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!", function () {
+                        console.log("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                    });
                     return false;
                 }
             }
@@ -83,11 +87,15 @@ $(document).ready(function() {
                         return true;
                     }
                     else{
-                        alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                        bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!", function () {
+                            console.log("TF kann nicht übertragen werden!\n\nUser besitzt benötigte AF\naber nicht die nötige GF!");
+                        });
                         return false;
                     }
                 }
-                alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                bootbox.alert("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!", function () {
+                    console.log("TF kann nicht übertragen werden!\n\nUser besitzt nicht die nötige AF!");
+                });
                 return false;
             }
         }
@@ -120,7 +128,9 @@ $(document).ready(function() {
         if(!(this.parentElement.className==="darkgrey even")&&!(this.parentElement.className==="darkgrey odd")){
             var r = confirm("Berechtigung:\n\n"+cell_data+"\n\nwirklich zu Transferliste hinzufügen?\n\n");
         }else{
-            alert("Berechtigung existiert bereits!\n");
+            bootbox.alert("Berechtigung existiert bereits!\n", function () {
+                console.log("Berechtigung existiert bereits!\n");
+            });
             return;
         }
         if (r === true){
@@ -158,7 +168,9 @@ $(document).ready(function() {
                     url:'http://127.0.0.1:8000/users/'+window.user+'/',
                     async:false,
                     success: function(res){console.log(res);
-                        alert("Berechtigung zur\n\nTransferliste hinzugefügt\n");
+                        bootbox.alert("Berechtigung zur\n\nTransferliste hinzugefügt\n", function () {
+                            console.log("Berechtigung zur\n\nTransferliste hinzugefügt\n");
+                        });
                         successful=true},
                     error: function(res){console.log(res);}
                     });
