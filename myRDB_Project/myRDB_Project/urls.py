@@ -14,10 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
 from myRDB_app import views
+
+from myRDB_Project.myRDB_Project import settings
 
 '''
     sets REST-API urls
@@ -44,4 +47,4 @@ urlpatterns = [
     path('myRDB/', include('myRDB_app.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
-]
+]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
