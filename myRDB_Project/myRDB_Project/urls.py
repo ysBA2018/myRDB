@@ -20,7 +20,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from myRDB_app import views
 
-from myRDB_Project.myRDB_Project import settings
+from . import settings
 
 '''
     sets REST-API urls
