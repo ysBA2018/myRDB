@@ -1,6 +1,7 @@
 # The first instruction is what image we want to base our container on
 # We Use an official Python runtime as a parent image
-FROM tiangolo/meinheld-gunicorn:3.7
+FROM tiangolo/meinheld-gunicorn:python3.7
+
 
 USER root
 WORKDIR /myRDB_Project
