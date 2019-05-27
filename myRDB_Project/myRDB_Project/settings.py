@@ -53,15 +53,15 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.contenttypes',
-    'myRDB_app.apps.MyrdbAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'myRDB_app',
     'crispy_forms',
 ]
 
@@ -109,8 +109,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'myRDB_app',
-        'HOST': 'mongodb://172.17.0.2',
-        'PORT': 27017,
+        #'HOST': 'mongodb://172.17.0.2',
+        #'PORT': 27017,
     }
 }
 
