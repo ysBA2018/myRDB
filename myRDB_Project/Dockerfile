@@ -3,12 +3,12 @@
 FROM tiangolo/meinheld-gunicorn:python3.7
 
 
-USER root
-WORKDIR /myRDB_Project
+#USER root
+#WORKDIR /myRDB_Project
 
-RUN apt-get update \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update \
+#    && apt-get clean \
+#    && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
 
