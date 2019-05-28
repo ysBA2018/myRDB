@@ -1,5 +1,4 @@
 Django==2.2
-uwsgi==2.0.14
 djangorestframework==3.9.2
 sqlparse==0.2.4
 djongo==1.2.30

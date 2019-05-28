@@ -7,9 +7,10 @@ WORKDIR /myRDB_Project
 
 RUN apt-get update \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip install --upgrade pip
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get install -y \
+    && pip install --upgrade pip \
+    && pip install uwsgi
 
 # By copying over requirements first, we make sure that Docker will cache
 # our installed requirements rather than reinstall them on every build
