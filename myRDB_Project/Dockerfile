@@ -10,6 +10,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get install -y \
     && pip install --upgrade pip \
+    && pip install psycopg2 \
     && pip install uwsgi
 
 # By copying over requirements first, we make sure that Docker will cache
