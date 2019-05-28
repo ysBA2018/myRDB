@@ -19,4 +19,4 @@ RUN pip install -r requirements.txt
 # Now copy in our code, and run it
 COPY . /myRDB_Project
 EXPOSE 8000
-CMD ["uwsgi", "--http", ":8000", "--module", "myRDB_Project.wsgi"]
+CMD ["uwsgi", "--ini", ":8000", "/myRDB_Project/uwsgi.ini"]
