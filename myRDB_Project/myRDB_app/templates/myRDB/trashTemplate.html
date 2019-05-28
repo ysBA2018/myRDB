@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         {# Hier die Trash-Drop-Fläche realisieren #}
-        <script>
+        <script type="text/javascript" >
             var trashlistdata ={{ deletelist | asjson }};
             var trash_table_data = {{ delete_list_table_data | safe }};
             var trash_table_count = {{ delete_list_count }};

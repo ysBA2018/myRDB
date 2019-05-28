@@ -4,7 +4,7 @@
 {% load asjson %}
 {% load getdictitem %}
 {% block content %}
-    <script>
+    <script type="text/javascript" >
         var iDeletionUser = 0;
         var iApplicationUser = 0;
     </script>
@@ -16,7 +16,7 @@
                 <div class="container" id="outerToggleGroup{{ forloop.counter0 }}">
                     <div class="card top-buffer">
                         <div class="card-header">
-                            <script>
+                            <script type="text/javascript" >
                                 var user_apply_requests{{ forloop.counter0 }} = {{ user.apply_requests | asjson}};
                                 var user_delete_requests{{ forloop.counter0 }} = {{ user.delete_requests | asjson}};
                             </script>

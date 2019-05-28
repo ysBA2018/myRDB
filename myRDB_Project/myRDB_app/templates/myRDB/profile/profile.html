@@ -5,7 +5,7 @@
 <div class="container-fluid">
     {% include 'myRDB/profile/profile_head.html' %}
 
-    <script>
+    <script type="text/javascript" >
         var trash_table_count = {{ delete_list_count }};
         var current_site = "{{ current_site }}";
         var scatterData = {{ scatterData | asjson }};

@@ -6,7 +6,7 @@
 {% block content %}
     <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card.js' %}"></script>
     <script type="text/javascript" src="{% static 'myRDB/js/actions/remove_card_and_reverse_action.js' %}"></script>
-    <script>
+    <script type="text/javascript" >
         var accepted_apply = {{ accepted_list.apply | asjson}};
         var accepted_delete = {{ accepted_list.delete | asjson}};
         var declined_apply = {{ declined_list.apply | asjson}};

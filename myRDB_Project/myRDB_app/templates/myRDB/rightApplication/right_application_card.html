@@ -4,13 +4,13 @@
 {% load getdictitem %}
 {% load crispy_forms_tags %}
 
-<script>var iApplication = 0</script>
+<script type="text/javascript" >var iApplication = 0</script>
 
 <div class="card-body">
     <div class="row">
         <div class="col-4">
             {# hier right-to-delete circle packing #}
-            <script>
+            <script type="text/javascript" >
                 var jsondata_application{{ forloop.counter0 }} = {{ right | asjson }}
             </script>
             <svg id="rightApplicationSVG{{ forloop.counter0 }}" width="300" height="300"></svg>

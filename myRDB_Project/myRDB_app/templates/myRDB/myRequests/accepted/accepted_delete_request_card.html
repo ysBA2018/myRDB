@@ -9,7 +9,7 @@
         <div class="col-4">
             {# hier right-to-delete circle packing #}
 
-            <script>
+            <script type="text/javascript">
                 var jsondata_accepted_delete{{ forloop.counter0 }} = {{ delete_request.right | asjson }}
             </script>
             <svg id="acceptedDeletionSVG{{ forloop.counter0 }}" width="300" height="300"></svg>

@@ -3,14 +3,14 @@
 {% load asjson %}
 {% load getdictitem %}
 
-<script>var iUnequal = 0</script>
-<script>var iUnequalModel = 0</script>
+<script type="text/javascript" >var iUnequal = 0</script>
+<script type="text/javascript" >var iUnequalModel = 0</script>
 
 <div class="card-body">
     <div class="row">
         <div class="col">
             {# hier user_af, bzw _gf, _tf circle packing #}
-            <script>
+            <script type="text/javascript" >
                 var jsondata_unequal{{ forloop.counter0 }} = {{ right | asjson }}
             </script>
             <svg id="analysisCirclePackingSVG_unequal{{ forloop.counter0 }}" width="300" height="300"></svg>
@@ -26,7 +26,7 @@
         </div>
         <div class="col">
             {# hier model_af, bzw _gf, _tf circle packing #}
-            <script>var jsonModeldata_unequal{{ forloop.counter0 }} = {{ unequal_model_rights|index:forloop.counter0 | asjson}}</script>
+            <script type="text/javascript" >var jsonModeldata_unequal{{ forloop.counter0 }} = {{ unequal_model_rights|index:forloop.counter0 | asjson}}</script>
 
             <svg id="analysisModelCirclePackingSVG_unequal{{ forloop.counter0 }}" width="300" height="300"></svg>
             <script type="text/javascript" src="{% static 'myRDB/js/circle_packing/right_analysis/analysisModelCirclePacking_unequal.js' %}"></script>

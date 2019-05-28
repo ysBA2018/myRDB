@@ -1,7 +1,7 @@
 {% extends 'myRDB/base.html' %}
 {% block content %}
     {% load asjson %}
-    <script>
+    <script type="text/javascript">
         var compare_jsondata = {{ compareUser_graph_data | asjson }};
         var jsondata = {{ jsondata | asjson }};
         var current_site = "{{ current_site }}";
