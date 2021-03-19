@@ -1,5 +1,5 @@
 Django==2.2
-djangorestframework==3.9.2
+djangorestframework==3.11.2
 sqlparse==0.2.4
 djongo==1.2.30
 requests==2.21.0
